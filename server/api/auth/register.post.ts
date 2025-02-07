@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
         });
 
         setResponseStatus(event, 201);
+        await SendEmailRegister(user.email, user.username);
 
         return <RegisterResponse>{
             code: 201,

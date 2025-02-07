@@ -1,7 +1,7 @@
 import {$Enums} from "@prisma/client";
 import Gender = $Enums.Gender;
 import type {User} from "@prisma/client";
-import {ActionLog} from "./TypesModel"
+import {Action} from "./TypesModel"
 
 export interface RegisterRequest {
     username: string;
@@ -39,6 +39,6 @@ export interface UpdateUserRequest {
 
 export interface LogRequest {
     user_id: number;
-    action: ActionLog;
+    action: Action;
     description: string;
 }

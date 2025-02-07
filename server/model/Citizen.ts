@@ -81,11 +81,11 @@ export class Citizen {
                 dob: true,
                 gender: true,
                 address: true,
-                kk_id: true,
+                kk_id: false,
                 nik: true,
-                create_by: true,
-                create_at: true,
-                update_at: true,
+                create_by: false,
+                create_at: false,
+                update_at: false,
             },
         });
     };
@@ -97,19 +97,6 @@ export class Citizen {
     static deleteCitizen = async (id: number) => {
         return prisma.citizen.delete({
             where: {id}
-        })
-    }
-
-    static getCitizenByNIK = (nik: string) => {
-        return prisma.citizen.findUnique({
-            where: {nik},
-            select: {
-                id: true,
-                full_name: true,
-                dob: true,
-                gender: true,
-                address: true
-            }
         })
     }
 
