@@ -23,7 +23,7 @@ export class Log {
                 user: {
                     select: {
                         id: true,
-                        full_name: true,
+                        username: true,
                         email: true,
                         role: true,
                     }

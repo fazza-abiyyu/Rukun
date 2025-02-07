@@ -2,14 +2,14 @@ import { RefreshToken } from '~/server/model/RefreshToken';
 import { addToBlacklist } from '~/server/utils/tokenBlacklist';
 import { deleteRefreshToken, verifyToken } from '~/server/utils/jwt';
 import { createLog } from '~/server/utils/atLog';
-import {LogRequest} from "~/types/AuthType";
-import {ActionLog} from "~/types/TypesModel";
+import { LogRequest } from "~/types/AuthType";
+import { ActionLog } from "~/types/TypesModel";
 
 export default defineEventHandler(async (event) => {
     try {
-
-        const user = event.context.auth.user;
+        const user = event.context.auth?.user;
         if (!user) {
+            console.error('Pengguna tidak ditemukan di konteks');
             setResponseStatus(event, 403);
             return { code: 403, message: 'Pengguna tidak valid' };
         }
@@ -23,9 +23,9 @@ export default defineEventHandler(async (event) => {
         const token = authHeader.split(' ')[1];
         verifyToken(token);
 
-        addToBlacklist(token);
+        addToBlacklist(token); // Tambahkan token ke daftar hitam
 
-        const refreshToken = getCookie(event, 'refresh_token'); // Ensure the cookie name matches
+        const refreshToken = getCookie(event, 'refresh_token'); // Pastikan nama cookie sesuai
 
         if (!refreshToken) {
             setResponseStatus(event, 400);
@@ -34,13 +34,13 @@ export default defineEventHandler(async (event) => {
 
         await RefreshToken.deleteToken(refreshToken);
 
-        const payload : LogRequest = {
-            user_id : user.id,
-            action : ActionLog.LOGOUT,
-            description : `Pengguna dengan ID ${user.id}, berhasil keluar`,
-        }
+        const payload: LogRequest = {
+            user_id: user.id,
+            action: ActionLog.LOGOUT,
+            description: `Pengguna dengan ID ${user.id}, berhasil keluar`,
+        };
 
-        await createLog(payload)
+        await createLog(payload);
 
         deleteRefreshToken(event);
 

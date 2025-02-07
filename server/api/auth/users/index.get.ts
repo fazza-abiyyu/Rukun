@@ -1,5 +1,6 @@
 import { defineEventHandler, getQuery, sendError, createError, setResponseStatus } from 'h3';
 import { ApplicationLetter } from '~/server/model/ApplicationLetter';
+import { User } from '~/server/model/User';
 
 export default defineEventHandler(async (event) => {
     try {
@@ -43,16 +44,16 @@ export default defineEventHandler(async (event) => {
 
         } else if (user.role === 'admin') {
             // Logika untuk pengguna dengan peran 'Admin'
-            const application_letters = await ApplicationLetter.getAllApplicationLetters(page, pagesize);
-            const totalApplicationLetters = await ApplicationLetter.countAllApplicationLetters();
-            const totalPages = Math.ceil(totalApplicationLetters / pagesize);
-            const baseUrl = "/api/auth/application-letters";
+            const users = await User.getAllUsers(page, pagesize);
+            const totalUsers = await User.countAllUsers();
+            const totalPages = Math.ceil(totalUsers / pagesize);
+            const baseUrl = "/api/auth/users";
             const prevPage = page > 1 ? `${baseUrl}?page=${page - 1}&pagesize=${pagesize}` : null;
             const nextPage = page < totalPages ? `${baseUrl}?page=${page + 1}&pagesize=${pagesize}` : null;
 
             return {
-                message: "Data Surat Pengantar berhasil dikembalikan.",
-                data: { application_letters },
+                message: "Akun pengguna berhasil dikembalikan.",
+                data: { users },
                 meta: {
                     totalPages,
                     prev: prevPage,

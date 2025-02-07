@@ -84,7 +84,8 @@ export class User {
                 username: true,
                 email: true,
                 password: false,
-                role: true
+                role: true,
+                user_status: true,
             },
         });
     };

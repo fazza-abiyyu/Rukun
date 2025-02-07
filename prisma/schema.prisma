@@ -33,11 +33,11 @@ model User {
 }
 
 enum Action {
-  Login
-  Logout
-  Create
-  Update
-  Delete
+  LOGOUT
+  LOGIN
+  CREATE
+  UPDATE
+  DELETE
 }
 
 enum CategoryLetter {
@@ -84,11 +84,12 @@ model Citizen {
 }
 
 model Log {
-  id        Int      @id @unique @default(autoincrement())
-  user_id   Int
-  action    Action
-  create_at DateTime @default(now())
-  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id          Int      @id @unique @default(autoincrement())
+  user_id     Int
+  action      Action
+  description String
+  create_at   DateTime @default(now())
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model RefreshToken {
