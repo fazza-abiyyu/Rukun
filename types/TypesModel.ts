@@ -78,3 +78,8 @@ export enum ActionLog {
     UPDATE = 'UPDATE',
     DELETE = 'DELETE',
 }
+
+export enum Gender {
+    MALE = 'Laki-laki',
+    FEMALE = 'Perempuan',
+}

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import {PrismaClient, Role} from '@prisma/client';
 import {RegisterRequest, UpdateUserRequest} from "~/types/AuthType";
 
 const prisma = new PrismaClient();
@@ -8,19 +8,18 @@ export class User {
         return prisma.user.create({
             data: {
                 username: data.username,
-                password: data.password,
                 email: data.email,
-                full_name: data.full_name,
+                password: data.password,
             }
         });
     };
+
     static registerUser = (data: RegisterRequest) => {
         return prisma.user.create({
             data: {
                 username: data.username,
                 email: data.email,
                 password: data.password,
-                full_name: data.full_name
             },
         });
     };
@@ -36,7 +35,6 @@ export class User {
             },
             select: {
                 id: true,
-                full_name: true,
                 username: true,
                 email: true,
                 password: true,
@@ -50,18 +48,7 @@ export class User {
             where: { id },
             data: {
                 username: data.username,
-                email: data.email,
-                full_name: data.full_name,
-            },
-            select: {
-                id: true,
-                full_name: true,
-                username: true,
-                email: true,
-                password: false,
-                role: true,
-                profile: true,
-                quizResults: true,
+                email: data.email
             }
         });
     };
@@ -77,13 +64,10 @@ export class User {
             where: { id },
             select: {
                 id: true,
-                full_name: true,
                 username: true,
                 email: true,
                 password: false,
-                role: true,
-                profile: true,
-                quizResults: true,
+                role: true
             }
         });
     };
@@ -97,13 +81,10 @@ export class User {
             take: take,
             select: {
                 id: true,
-                full_name: true,
                 username: true,
                 email: true,
                 password: false,
-                role: true,
-                profile: true,
-                quizResults: true,
+                role: true
             },
         });
     };
@@ -123,11 +104,6 @@ export class User {
                     },
                     {
                         email: {
-                            contains: search,
-                        }
-                    },
-                    {
-                        full_name: {
                             contains: search,
                         }
                     }

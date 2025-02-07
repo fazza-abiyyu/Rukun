@@ -4,9 +4,9 @@ import {RegisterRequest, RegisterResponse} from "~/types/AuthType";
 
 export default defineEventHandler(async (event) => {
     try {
-        const data: RegisterRequest= await readBody(event);
+        const data: RegisterRequest = await readBody(event);
 
-        if (!data.full_name || !data.email || !data.password) {
+        if (!data.username || !data.email || !data.password) {
             setResponseStatus(event, 400);
             return {code: 400, message: "Harap berikan semua kolom yang diperlukan (nama lengkap, email, kata sandi)."};
         }
@@ -14,7 +14,6 @@ export default defineEventHandler(async (event) => {
         const hashedPassword = bcrypt.hashSync(data.password, 10);
 
         const user = await User.registerUser({
-            full_name: data.full_name,
             username: data.username,
             email: data.email,
             password: hashedPassword
@@ -28,9 +27,8 @@ export default defineEventHandler(async (event) => {
             data: {
                 user: {
                     id: user.id,
-                    full_name: user.full_name,
                     email: user.email,
-                    role : user.role,
+                    role: user.role,
                 }
             },
         };
@@ -40,4 +38,9 @@ export default defineEventHandler(async (event) => {
             createError({statusCode: 500, statusMessage: error.message || "Internal Server Error"})
         );
     }
+
+
 });
+
+
+

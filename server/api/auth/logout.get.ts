@@ -7,6 +7,7 @@ import {ActionLog} from "~/types/TypesModel";
 
 export default defineEventHandler(async (event) => {
     try {
+
         const user = event.context.auth.user;
         if (!user) {
             setResponseStatus(event, 403);

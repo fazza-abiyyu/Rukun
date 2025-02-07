@@ -1,57 +1,72 @@
-import UrlPattern from "url-pattern"
-import {decodeAccessToken} from "~/server/utils/jwt";
-import {User} from "~/server/model/User";
+import UrlPattern from 'url-pattern';
+import { decodeAccessToken } from '~/server/utils/jwt';
+import { User } from '~/server/model/User';
+import roleMiddleware from '~/server/middleware/role';
 
-export default defineEventHandler( async (event) => {
+export default defineEventHandler(async (event) => {
     try {
         const endpoints = [
-            '/api/auth/user',
-            '/api/auth/logs',
-            '/api/auth/logout',
-            '/api/auth/user',
-            '/api/auth/profile',
-            '/api/auth/quiz',
-            '/api/auth/quiz/:id',
-            '/api/auth/quiz?page=:page&pagesize=:pagesize',
-            '/api/auth/quiz-questions',
-            '/api/auth/quiz-questions/:id',
-            '/api/auth/quiz-questions?page=:page&pagesize=:pagesize',
-            '/api/auth/user-quiz-results',
-            '/api/auth/user-quiz-results/:id',
-            '/api/auth/user-quiz-results?page=:page&pageSize=:pagesize',
-            '/api/auth/stats',
-            '/api/auth/graph?year=:year',
-        ]
+            { path: '/api/auth/user', roles: ['Admin'] },
+            { path: '/api/auth/logs', roles: ['Admin'] },
+            { path: '/api/auth/logout', roles: ['User', 'Admin'] },
+            { path: '/api/auth/citizen', roles: ['Admin']},
+            { path: '/api/auth/citizen/:id', roles: ['Admin']},
+            { path: '/api/auth/citizen/search?q=:q', roles: ['Admin']},
+            { path: '/api/auth/citizen/page=:page&pagesize=:pagesize', roles: ['Admin']},
+            { path: '/api/auth/kk', roles: ['Admin'] },
+            { path: '/api/auth/kk/:id', roles: ['Admin']},
+            { path: '/api/auth/kk/search?q=:q', roles: ['Admin']},
+            { path: '/api/auth/kk/page=:page&pagesize=:pagesize', roles: ['Admin']},
+            { path: '/api/auth/cashflow', roles: ['Admin'] },
+            { path: '/api/auth/cashflow/:id', roles: ['Admin']},
+            { path: '/api/auth/cashflow/search?q=:q', roles: ['Admin']},
+            { path: '/api/auth/cashflow/page=:page&pagesize=:pagesize', roles: ['Admin']},
+            { path: '/api/auth/notification', roles: ['Admin'] },
+            { path: '/api/auth/notification/:id', roles: ['Admin']},
+            { path: '/api/auth/notification/search?q=:q', roles: ['Admin']},
+            { path: '/api/auth/notification/page=:page&pagesize=:pagesize', roles: ['Admin']},
+            { path: '/api/auth/application-letter', roles: ['Admin'] },
+            { path: '/api/auth/application-letter/:id', roles: ['Admin']},
+            { path: '/api/auth/application-letter/page=:page&pagesize=:pagesize', roles: ['Admin']},
+            { path: '/api/auth/user/application-letter', roles: ['Admin'] },
+            { path: '/api/auth/user/application-letter/:id', roles: ['Admin']},
+            { path: '/api/auth/user/application-letter/page=:page&pagesize=:pagesize', roles: ['Admin']},
+        ];
 
-        const isHandledByThisMiddleware = endpoints.some(endopoint => {
-            const pattern = new UrlPattern(endopoint)
-            return pattern.match(event.req.url as string)
-        })
+        const matchedEndpoint = endpoints.find((endpoint) => {
+            const pattern = new UrlPattern(endpoint.path);
+            return pattern.match(event.req.url as string);
+        });
 
-        if (!isHandledByThisMiddleware) {
-            return
+        if (!matchedEndpoint) {
+            return;
         }
 
-        const token = event.req.headers['authorization']?.split(' ')[1]
+        const token = event.req.headers['authorization']?.split(' ')[1];
 
-        const decoded = decodeAccessToken(token as string)
+        const decoded = decodeAccessToken(token as string);
 
         if (!decoded) {
-            return sendError(event, createError({
-                statusCode: 401,
-                statusMessage: 'Unauthorized'
-            }))
+            return sendError(
+                event,
+                createError({
+                    statusCode: 401,
+                    statusMessage: 'Unauthorized',
+                })
+            );
         }
-
 
         try {
-            const userId = decoded.id
+            const userId = decoded.id;
+            const user = await User.getUserById(userId);
+            event.context.auth = { user: user };
 
-            const user = await User.getUserById(userId)
-            event.context.auth = {user: user}
+            // Pengecekan role
+            await roleMiddleware(matchedEndpoint.roles)(event);
         } catch (error) {
-            return
+            return;
         }
     } catch (e) {
-        return
-    }})
+        return;
+    }
+});
