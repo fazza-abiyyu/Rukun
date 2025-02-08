@@ -2,7 +2,7 @@
   <div class="fixed bottom-4 right-4 z-[99999]">
     <button
         type="button"
-        class="m-1 ms-0 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-teal-600 text-white hover:bg-teal-700 focus:outline-none focus:bg-teal-700 disabled:opacity-50 disabled:pointer-events-none"
+        class="m-1 ms-0 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
         aria-haspopup="dialog"
         aria-expanded="false"
         aria-controls="hs-offcanvas-right"
@@ -43,7 +43,7 @@
             <div v-for="(message, index) in messages" :key="index" class="chat-message">
               <div :class="message.isUser ? 'text-right' : 'text-left'">
                 <div
-                    :class="message.isUser ? 'bg-teal-600 text-white p-4 rounded-2xl' : 'bg-gray-100 text-gray-800 p-4 rounded-2xl border border-gray-200'"
+                    :class="message.isUser ? 'bg-blue-600 text-white p-4 rounded-2xl' : 'bg-gray-100 text-gray-800 p-4 rounded-2xl border border-gray-200'"
                     class="inline-block max-w-lg"
                 >
                   <p class="text-sm">{{ message.text }}</p>
@@ -70,12 +70,12 @@
                 type="text"
                 cols="3"
                 placeholder="Type a message..."
-                class="w-full p-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-teal-500 focus:ring-teal-500 disabled:opacity-50 disabled:pointer-events-none"
+                class="w-full p-2 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 @keyup.enter="sendMessage"
             />
             <button
                 @click="sendMessage"
-                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-teal-600 text-white hover:bg-teal-700 focus:outline-none focus:bg-teal-700 disabled:opacity-50 disabled:pointer-events-none"
+                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
             >
               Send
             </button>
@@ -97,7 +97,7 @@ const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 // Chat state
 const userInput = ref('');
 const messages = ref([
-  { text: 'Hai aku HEALINGAI! Aku lagi ngobrolin kesehatan mental nih, ada yang mau gabung ngobrol? Atau mungkin ada info menarik tentang kesehatan mental yang bisa kita share bareng?', isUser: false },
+  { text: 'Hai aku PUSONAI! Aku lagi ngobrolin stunting nih, ada yang mau gabung ngobrol? Atau mungkin ada info menarik tentang pencegahan stunting yang bisa kita share bareng?', isUser: false },
 ]);
 const isTyping = ref<boolean>(false);
 
@@ -128,7 +128,7 @@ const getAIResponse = async (input: string): Promise<string> => {
   try {
     isTyping.value = true;
     userInput.value = '';
-    const result = await model.generateContent("Jawab kamu sebagai HEALINGAI. Response ini dengan text chatting biasa tanpa markdown dan pertanyaan di luar topik kesehatan mental anda harus jawab 'Saya hanya mengerti tentang kesehatan mental': "+input);
+    const result = await model.generateContent("Jawab kamu sebagai PUSONAI. Response ini dengan text chatting biasa tanpa markdown dan pertanyaan di luar topik stunting atau kesehatan anda harus jawab 'Saya hanya mengerti tentang stunting dan kesehatan': "+input);
     return result.response.text(); // Return the AI's response text
   } catch (error) {
     console.error('Error with Google Generative AI:', error);

@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 const config = useRuntimeConfig();
 
-export async function ApplicationLetterEmailSender(category: string, nik: string, create_by: number) {
+export async function ApplicationLetterEmailSender(title: string, description: string, date: string, category: string, nik: string, create_by: number) {
     // Create a transporter
     let transporter = nodemailer.createTransport(configOptionsMailer);
 
@@ -37,21 +37,92 @@ export async function ApplicationLetterEmailSender(category: string, nik: string
 
     // Generate email content based on the category
     let emailContent = `
-        <h1>${category}</h1>
-        <p>Full Name: ${citizen.full_name}</p>
-        <p>Date of Birth: ${citizen.dob}</p>
-        <p>Gender: ${citizen.gender}</p>
-        <p>Address: ${citizen.address}</p>
+        <h1>${title}</h1>
+        <p>${description}</p>
+        <p>Date: ${date}</p>
+        <p>Created by: ${citizen.full_name}</p>
         <p>NIK: ${nik}</p>
         <p>Best regards,</p>
         <p>YourApp Team</p>
     `;
 
+    if (category === 'SuratPengantarKTP') {
+        emailContent = `
+            <h1>${title}</h1>
+            <p>${description}</p>
+            <p>Date: ${date}</p>
+            <p>Category: Surat Pengantar KTP</p>
+            <p>Full Name: ${citizen.full_name}</p>
+            <p>Date of Birth: ${citizen.dob}</p>
+            <p>Gender: ${citizen.gender}</p>
+            <p>Address: ${citizen.address}</p>
+            <p>NIK: ${nik}</p>
+            <p>Best regards,</p>
+            <p>YourApp Team</p>
+        `;
+    } else if (category === 'SuratKeteranganDomisili') {
+        emailContent = `
+            <h1>${title}</h1>
+            <p>${description}</p>
+            <p>Date: ${date}</p>
+            <p>Category: Surat Keterangan Domisili</p>
+            <p>Full Name: ${citizen.full_name}</p>
+            <p>Date of Birth: ${citizen.dob}</p>
+            <p>Gender: ${citizen.gender}</p>
+            <p>Address: ${citizen.address}</p>
+            <p>NIK: ${nik}</p>
+            <p>Best regards,</p>
+            <p>YourApp Team</p>
+        `;
+    } else if (category === 'SuratKeteranganUsaha') {
+        emailContent = `
+            <h1>${title}</h1>
+            <p>${description}</p>
+            <p>Date: ${date}</p>
+            <p>Category: Surat Keterangan Usaha</p>
+            <p>Full Name: ${citizen.full_name}</p>
+            <p>Date of Birth: ${citizen.dob}</p>
+            <p>Gender: ${citizen.gender}</p>
+            <p>Address: ${citizen.address}</p>
+            <p>NIK: ${nik}</p>
+            <p>Best regards,</p>
+            <p>YourApp Team</p>
+        `;
+    } else if (category === 'SuratPengantarNikah') {
+        emailContent = `
+            <h1>${title}</h1>
+            <p>${description}</p>
+            <p>Date: ${date}</p>
+            <p>Category: Surat Pengantar Nikah</p>
+            <p>Full Name: ${citizen.full_name}</p>
+            <p>Date of Birth: ${citizen.dob}</p>
+            <p>Gender: ${citizen.gender}</p>
+            <p>Address: ${citizen.address}</p>
+            <p>NIK: ${nik}</p>
+            <p>Best regards,</p>
+            <p>YourApp Team</p>
+        `;
+    } else if (category === 'SuratKeteranganTidakMampu') {
+        emailContent = `
+            <h1>${title}</h1>
+            <p>${description}</p>
+            <p>Date: ${date}</p>
+            <p>Category: Surat Keterangan Tidak Mampu</p>
+            <p>Full Name: ${citizen.full_name}</p>
+            <p>Date of Birth: ${citizen.dob}</p>
+            <p>Gender: ${citizen.gender}</p>
+            <p>Address: ${citizen.address}</p>
+            <p>NIK: ${nik}</p>
+            <p>Best regards,</p>
+            <p>YourApp Team</p>
+        `;
+    }
+
     // Email message
     const mailOptions = {
         from: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`,
         to: user.email, // Recipient email
-        subject: `New ${category} Notification`,
+        subject: "New Application Letter Notification",
         html: emailContent
     };
 

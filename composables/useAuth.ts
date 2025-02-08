@@ -44,7 +44,7 @@ export default () => {
         return new Promise(async (resolve, reject) => {
             try {
                 const response: any = await useFetchApi('/api/auth/refresh', {
-                    method: 'GET',
+                    method: 'POST',
                 })
                 setToken(response?.access_token)
                 resolve(true)

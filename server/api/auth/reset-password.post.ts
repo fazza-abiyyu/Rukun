@@ -1,52 +1,77 @@
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { prisma } from '~/server/config/db';
-import { SendEmailResetPassword } from '~/server/utils/SendEmailResetPassword';
+import { RefreshToken } from '~/server/model/RefreshToken';
 
-// Fungsi untuk menghasilkan OTP 6 digit angka
-function generateOTP() {
-    return Math.floor(100000 + Math.random() * 900000);
-}
+const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN!;
 
 export default defineEventHandler(async (event) => {
     try {
-        const { email, base_url } = await readBody(event);
+        const { newPassword, confirmNewPassword } = await readBody(event);
+        const token = event.node.req.url?.split('token=')[1];
+        console.log('Token:', token);
 
-        // Validasi email
-        const user = await prisma.user.findUnique({
-            where: { email }
-        });
-        if (!user) {
-            setResponseStatus(event, 200);
-            return { code: 400, message: 'Tautan pengaturan ulang kata sandi telah dikirim ke email Anda jika terdaftar.' };
+        if (!token || !newPassword || !confirmNewPassword) {
+            setResponseStatus(event, 400);
+            return { code: 400, message: 'Dibutuhkan semua inputan' };
         }
 
-        // Menghasilkan OTP 6 digit angka
-        const otp = generateOTP();
+        if (newPassword !== confirmNewPassword) {
+            setResponseStatus(event, 400);
+            return { code: 400, message: 'Kata sandi tidak sama' };
+        }
 
-        // Simpan OTP di kolom otp dalam tabel user
+        // Periksa apakah token ada di database
+        const tokenInDb = await RefreshToken.findToken(token);
+        if (!tokenInDb) {
+            setResponseStatus(event, 403);
+            return { code: 403, message: 'Tidak valid atau token sudah kadaluarsa' };
+        }
+
+        // Verifikasi token reset
+        let decoded: any;
+        try {
+            decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
+        } catch (error) {
+            setResponseStatus(event, 403);
+            return { code: 403, message: 'Tidak valid atau token sudah kadaluarsa' };
+        }
+
+        // Periksa apakah users ada
+        const user = await prisma.user.findUnique({
+            where: { id: decoded.id }
+        });
+        if (!user) {
+            setResponseStatus(event, 403);
+            return { code: 403, message: 'Pengguna tidak valid dengan pengguna' };
+        }
+
+        // Periksa apakah kata sandi baru berbeda dari kata sandi lama
+        const isPasswordSame = bcrypt.compareSync(newPassword, user.password);
+        if (isPasswordSame) {
+            setResponseStatus(event, 400);
+            return { code: 400, message: 'Kata sandi baru tidak boleh sama dengan kata sandi lama.' };
+        }
+
+        // Hash new password
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+
+        // Update users password
         await prisma.user.update({
-            where: { email },
-            data: { otp } ,
+            where: { id: user.id },
+            data: { password: hashedPassword }
         });
 
-        // Buat konten email dalam format HTML
-        const emailHtml = `
-            <h1>Reset Password</h1>
-            <p>Use the OTP below to reset your password:</p>
-            <h2>${otp}</h2>
-            <p>This OTP is valid for 15 minutes.</p>
-        `;
+        // Hapus refresh token dari database setelah perubahan password berhasil
+        await RefreshToken.deleteToken(token);
 
-        // Kirim email dengan OTP
-        await SendEmailResetPassword(email, 'Setel Ulang Kata Sandi', `Gunakan OTP berikut untuk mengatur ulang kata sandi Anda: ${otp}`, emailHtml);
-
-        // Mengembalikan respons sukses
-        return { code: 200, message: 'Tautan pengaturan ulang kata sandi telah dikirim ke email Anda jika terdaftar.' };
+        // Return success response
+        return { code: 200, message: 'Kata sandi telah berhasil diatur ulang.' };
 
     } catch (error: any) {
-        console.error(error);
         return sendError(
             event,
-            createError({ statusCode: 500, message: 'Internal Server Error' })
+            createError({ statusCode: 500, statusMessage: 'Internal Server Error' })
         );
     }
 });

@@ -1,10 +1,9 @@
+import jwt from 'jsonwebtoken';
 import { prisma } from '~/server/config/db';
+import { RefreshToken } from '~/server/model/RefreshToken';
 import { SendEmailResetPassword } from '~/server/utils/SendEmailResetPassword';
 
-// Fungsi untuk menghasilkan OTP 6 digit angka
-function generateOTP() {
-    return Math.floor(100000 + Math.random() * 900000);
-}
+const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN!;
 
 export default defineEventHandler(async (event) => {
     try {
@@ -19,34 +18,30 @@ export default defineEventHandler(async (event) => {
             return { code: 400, message: 'Tautan pengaturan ulang kata sandi telah dikirim ke email Anda jika terdaftar.' };
         }
 
-        // Menghasilkan OTP 6 digit angka
-        const otp = generateOTP();
+        // Buat token reset dengan waktu berlaku 15 menit
+        const resetToken = jwt.sign({ id: user.id, email: user.email }, REFRESH_TOKEN_SECRET, { expiresIn: '15m' });
+        await RefreshToken.create(user.id, resetToken);
 
-        // Simpan OTP di kolom otp dalam tabel user
-        await prisma.user.update({
-            where: { email },
-            data: { otp } ,
-        });
+        // Buat URL reset kata sandi
+        const resetUrl = `${base_url}/auth/reset-password?token=${resetToken}`;
 
         // Buat konten email dalam format HTML
         const emailHtml = `
             <h1>Reset Password</h1>
-            <p>Use the OTP below to reset your password:</p>
-            <h2>${otp}</h2>
-            <p>This OTP is valid for 15 minutes.</p>
+            <p>Click the link below to reset your password:</p>
+            <a href="${resetUrl}">Reset Password</a>
         `;
 
-        // Kirim email dengan OTP
-        await SendEmailResetPassword(email, 'Setel Ulang Kata Sandi', `Gunakan OTP berikut untuk mengatur ulang kata sandi Anda: ${otp}`, emailHtml);
+        // Kirim email dengan URL reset kata sandi
+        await SendEmailResetPassword(email, 'Setel Ulang Kata Sandi', `Klik tautan untuk mengatur ulang kata sandi anda: ${resetUrl}`, emailHtml);
 
         // Mengembalikan respons sukses
         return { code: 200, message: 'Tautan pengaturan ulang kata sandi telah dikirim ke email Anda jika terdaftar.' };
 
     } catch (error: any) {
-        console.error(error);
         return sendError(
             event,
-            createError({ statusCode: 500, message: 'Internal Server Error' })
+            createError({ statusCode: 500, statusMessage: 'Internal Server Error' })
         );
     }
 });

@@ -3,6 +3,7 @@
     <div class="bg-white sm:border sm:border-gray-200 rounded-xl sm:shadow-sm w-[500px] md:max-w-[500px] mx-auto">
       <div class="p-4 sm:p-10">
         <div class="text-center">
+          <AppLogo/>
           <h1 class="block text-2xl font-bold text-gray-800 mt-4">Masuk</h1>
         </div>
 
@@ -14,7 +15,7 @@
                 <label for="email" class="block text-sm mb-2">Email</label>
                 <div class="relative">
                   <input v-model="email" type="email" id="email" name="email" placeholder="Masukan Email"
-                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-cyan-500 focus:ring-cyan-500 disabled:opacity-50 disabled:pointer-events-none"
+                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                          required aria-describedby="email-error">
                   <div class="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                     <svg class="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
@@ -34,15 +35,16 @@
               <div>
                 <div class="flex justify-between items-center">
                   <label for="password" class="block text-sm mb-2">Kata Sandi</label>
+                  <NuxtLink to="/auth/forget-password" class="text-sm text-blue-600">Lupa kata sandi?</NuxtLink>
                 </div>
                 <div class="relative">
                   <input v-model="password" id="password" type="password"
-                         class="py-3 ps-4 pe-10 block w-full border rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none border-gray-200 focus:border-cyan-500 focus:ring-cyan-500"
-                         placeholder="Ulangi Kata Sandi">
+                         class="py-3 ps-4 pe-10 block w-full border rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                         placeholder="Kata Sandi">
                   <button type="button" data-hs-toggle-password='{
         "target": "#password"
       }'
-                          class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-cyan-600">
+                          class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600">
                     <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -64,7 +66,7 @@
               <div class="flex items-center">
                 <div class="flex">
                   <input v-model="isRemember" id="remember-me" name="remember-me" type="checkbox"
-                         class="shrink-0 mt-0.5 border-gray-200 rounded text-cyan-600 focus:ring-cyan-500">
+                         class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500">
                 </div>
                 <div class="ms-3">
                   <label for="remember-me" class="text-sm">Ingat saya</label>
@@ -74,7 +76,7 @@
 
               <button type="submit"
                       :disabled="isLoading"
-                      class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-cyan-600 text-white hover:bg-cyan-700 focus:outline-none focus:bg-cyan-700 disabled:opacity-50 disabled:pointer-events-none">
+                      class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#F38200] text-white hover:bg-[#DA6E00] focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                 {{ isLoading ? "Loading..." : "Masuk" }}
               </button>
             </div>
@@ -82,8 +84,8 @@
           <!-- End Form -->
           <p class="mt-5 text-sm text-gray-600 text-center">
             Belum punya akun?
-            <a href="/register"
-               class="text-cyan-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium">Daftar
+            <a href="/auth/register"
+               class="text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium">Daftar
               disini</a>
           </p>
         </div>
