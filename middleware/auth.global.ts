@@ -1,13 +1,12 @@
 export default defineNuxtRouteMiddleware((to, from) => {
     const isAuthenticated = useCookie('isLoggedIn').value;
-    const isAuthPage = to.path === '/login' || to.path === '/register' || to.path === '/forget-password';
-    const isPageMustAuth = to.path === '/profile' || to.path === '/quizzies';
+    const isAuthPage = to.path === '/auth/login' || to.path === '/auth/register' || to.path === '/auth/forget-password' || to.path === '/auth/reset-password' || to.path === '/auth/verification';
 
     if (isAuthPage && isAuthenticated) {
         return navigateTo('/')
     }
 
-    if (!isAuthPage && !isAuthenticated && isPageMustAuth) {
-        return navigateTo('/login')
+    if (!isAuthPage && !isAuthenticated) {
+        return navigateTo('/auth/login')
     }
 });

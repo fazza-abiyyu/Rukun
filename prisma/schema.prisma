@@ -20,7 +20,7 @@ model User {
   password          String
   user_status       UserStatus          @default(Active)
   role              Role                @default(User)
-  otp               String?
+  otp               Int?
   create_at         DateTime            @default(now())
   update_at         DateTime            @updatedAt
   Log               Log[]

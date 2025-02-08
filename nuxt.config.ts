@@ -18,14 +18,14 @@ export default defineNuxtConfig({
   plugins: ["~/plugins/preline.client.ts"],
   app: {
     head: {
-      title: "Healing | Teman Anda dalam Menjaga Kesehatan Mental",
+      title: "Rukun | Management Data Warga RT",
       htmlAttrs: {
         lang: 'id'
       },
       meta: [
         {
           name: 'description',
-          content: 'Healing adalah platform yang mendukung kesehatan mental Anda. Dengan kuis interaktif dan data yang dipersonalisasi, kami membantu Anda memahami, memantau, dan meningkatkan kesejahteraan mental secara sederhana namun mendalam.'
+          content: 'Rukun adalah sistem manajement untuk data warga'
         }
       ],
     },

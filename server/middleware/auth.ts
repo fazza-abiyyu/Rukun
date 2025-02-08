@@ -13,7 +13,6 @@ const permissions = {
     [roles.ADMIN]: [
         '/api/auth/user',
         '/api/auth/users',
-        '/api/auth/logs',
         '/api/auth/citizen',
         '/api/auth/citizen/:id',
         '/api/auth/citizen/search?q=:q',
@@ -36,7 +35,8 @@ const permissions = {
 // Definisikan endpoint tanpa proteksi
 const unprotectedEndpoints = [
     '/api/auth/register',
-    '/api/auth/login'
+    '/api/auth/login',
+    '/api/auth/forget-password',
     // Tambahkan endpoint unprotected lainnya di sini
 ];
 
