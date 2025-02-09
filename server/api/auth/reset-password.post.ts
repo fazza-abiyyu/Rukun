@@ -1,74 +1,61 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { prisma } from '~/server/config/db';
-import { RefreshToken } from '~/server/model/RefreshToken';
-
-const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN!;
+import bcrypt from 'bcryptjs';
+import { getCookie, setCookie } from 'h3';
 
 export default defineEventHandler(async (event) => {
     try {
-        const { newPassword, confirmNewPassword } = await readBody(event);
-        const token = event.node.req.url?.split('token=')[1];
-        console.log('Token:', token);
+        // Membaca body dari request
+        const { otp, newPassword } = await readBody(event);
 
-        if (!token || !newPassword || !confirmNewPassword) {
-            setResponseStatus(event, 400);
-            return { code: 400, message: 'Dibutuhkan semua inputan' };
+        // Validasi input
+        if (!otp || !newPassword) {
+            return createError({ statusCode: 400, message: 'OTP dan kata sandi baru harus diisi.' });
         }
 
-        if (newPassword !== confirmNewPassword) {
-            setResponseStatus(event, 400);
-            return { code: 400, message: 'Kata sandi tidak sama' };
+        // Ambil email dari cookies
+        const resetEmail = getCookie(event, 'reset_email');
+        if (!resetEmail) {
+            return createError({ statusCode: 400, message: 'Sesi pengaturan ulang kata sandi tidak valid. Silakan coba lagi.' });
         }
 
-        // Periksa apakah token ada di database
-        const tokenInDb = await RefreshToken.findToken(token);
-        if (!tokenInDb) {
-            setResponseStatus(event, 403);
-            return { code: 403, message: 'Tidak valid atau token sudah kadaluarsa' };
-        }
-
-        // Verifikasi token reset
-        let decoded: any;
-        try {
-            decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
-        } catch (error) {
-            setResponseStatus(event, 403);
-            return { code: 403, message: 'Tidak valid atau token sudah kadaluarsa' };
-        }
-
-        // Periksa apakah users ada
+        // Cari pengguna berdasarkan email
         const user = await prisma.user.findUnique({
-            where: { id: decoded.id }
+            where: { email: resetEmail },
         });
+
         if (!user) {
-            setResponseStatus(event, 403);
-            return { code: 403, message: 'Pengguna tidak valid dengan pengguna' };
+            return createError({ statusCode: 400, message: 'Pengguna tidak ditemukan.' });
         }
 
-        // Periksa apakah kata sandi baru berbeda dari kata sandi lama
-        const isPasswordSame = bcrypt.compareSync(newPassword, user.password);
-        if (isPasswordSame) {
-            setResponseStatus(event, 400);
-            return { code: 400, message: 'Kata sandi baru tidak boleh sama dengan kata sandi lama.' };
+        // Validasi OTP
+        if (user.otp !== parseInt(otp, 10)) {
+            return createError({ statusCode: 400, message: 'OTP tidak valid atau sudah kedaluwarsa.' });
         }
 
-        // Hash new password
+        // Hash kata sandi baru
         const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
-        // Update users password
+        // Perbarui kata sandi pengguna dan hapus OTP
         await prisma.user.update({
-            where: { id: user.id },
-            data: { password: hashedPassword }
+            where: { email: resetEmail },
+            data: {
+                password: hashedPassword,
+                otp: null, // Hapus OTP setelah digunakan
+            },
         });
 
-        // Hapus refresh token dari database setelah perubahan password berhasil
-        await RefreshToken.deleteToken(token);
+        console.log('Kata sandi berhasil diperbarui untuk pengguna:', resetEmail);
 
-        // Return success response
-        return { code: 200, message: 'Kata sandi telah berhasil diatur ulang.' };
+        // Hapus cookie reset_email
+        setCookie(event, 'reset_email', '', { httpOnly: true, maxAge: 0 });
 
+        // Set response header untuk JSON
+        event.res.setHeader('Content-Type', 'application/json');
+
+        // Mengembalikan respons sukses
+        return { code: 200, message: 'Kata sandi berhasil diperbarui.' };
     } catch (error: any) {
+        console.error(error);
         return sendError(
             event,
             createError({ statusCode: 500, statusMessage: 'Internal Server Error' })

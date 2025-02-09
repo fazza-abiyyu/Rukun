@@ -29,19 +29,22 @@ export class KK {
 
     static getKKByNumber = async (kkNumber: string) => {
         return prisma.kK.findUnique({
-            where: { kk: kkNumber },
+            where: {
+                kk: kkNumber  // Pastikan `kkNumber` diteruskan dengan benar
+            },
             select: {
                 id: true,
                 head_of_family: true,
                 kk: true,
                 create_by: true,
                 create_at: true,
-                update_at: true,
+                update_at: true
             },
         });
     };
 
-    static updateKK = async (id: number, data: any) => {
+
+            static updateKK = async (id: number, data: any) => {
         return prisma.kK.update({
             where: { id },
             data: {

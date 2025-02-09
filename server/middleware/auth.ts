@@ -4,8 +4,8 @@ import { User } from "~/server/model/User";
 
 // Definisikan peran dan izin
 const roles = {
-    USER: 'user',
-    ADMIN: 'admin'
+    USER: 'User',
+    ADMIN: 'Admin'
 };
 
 const permissions = {
@@ -37,7 +37,11 @@ const unprotectedEndpoints = [
     '/api/auth/register',
     '/api/auth/login',
     '/api/auth/forget-password',
-    // Tambahkan endpoint unprotected lainnya di sini
+    '/api/auth/reset-password',
+    '/api/auth/refresh',
+    '/api/auth/appliction-letter',
+    '/api/auth/graph',
+    '/api/auth/stats',
 ];
 
 export default defineEventHandler(async (event) => {
@@ -45,6 +49,7 @@ export default defineEventHandler(async (event) => {
 
     // Periksa apakah URL berada di folder api/auth
     if (!url.startsWith('/api/auth')) {
+        console.log(`URL ${url} tidak berada di folder api/auth.`);
         return;
     }
 
@@ -55,6 +60,7 @@ export default defineEventHandler(async (event) => {
     });
 
     if (isUnprotected) {
+        console.log(`Endpoint ${url} adalah unprotected.`);
         return;
     }
 
@@ -63,6 +69,7 @@ export default defineEventHandler(async (event) => {
 
         // Periksa apakah token ada di daftar hitam
         if (await isBlacklisted(token)) {
+            console.log(`Token ${token} ada di daftar hitam.`);
             return sendError(event, createError({
                 statusCode: 401,
                 statusMessage: 'Unauthorized'
@@ -72,6 +79,7 @@ export default defineEventHandler(async (event) => {
         const decoded = decodeAccessToken(token as string);
 
         if (!decoded) {
+            console.log(`Token tidak dapat didecode.`);
             return sendError(event, createError({
                 statusCode: 401,
                 statusMessage: 'Unauthorized'
@@ -83,9 +91,6 @@ export default defineEventHandler(async (event) => {
             const user = await User.getUserById(userId);
             event.context.auth = { user: user, role: user.role };
 
-            console.log('Peran Pengguna:', user.role);
-            console.log('URL yang Diminta:', url);
-
             // Periksa apakah endpoint yang diminta ditangani oleh middleware ini
             const isHandledByThisMiddleware = Object.values(permissions).flat().some(endpoint => {
                 const pattern = new UrlPattern(endpoint);
@@ -93,6 +98,7 @@ export default defineEventHandler(async (event) => {
             });
 
             if (!isHandledByThisMiddleware) {
+                console.log(`Endpoint ${url} tidak ditangani oleh middleware ini.`);
                 return;
             }
 

@@ -1,4 +1,4 @@
-import { Citizen } from '~/server/model/Citizen';
+import { CashFlow } from '~/server/model/CashFlow';
 import {LogRequest} from "~/types/AuthType";
 import {ActionLog} from "~/types/TypesModel";
 
@@ -16,20 +16,27 @@ export default defineEventHandler(async (event) => {
         // Read the request body
         const data = await readBody(event);
 
-        const citizen = await Citizen.updateCitizen(id, data);
+        // Assign user ID from the token for create_by field
+        const newData = {
+            ...data,
+            create_by: user.id
+        };
+
+
+        const cashflow = await CashFlow.updateCashFlow(id, newData);
 
         const payload : LogRequest = {
             user_id : user.id,
             action : ActionLog.UPDATE,
-            description : `Data warga dengan ID ${id}, berhasil diperbarui`,
+            description : `Data arus kas dengan ID ${id}, berhasil diperbarui`,
         }
 
         await createLog(payload)
 
         return {
             code: 200,
-            message: 'Data warga berhasil diperbarui!',
-            data: citizen,
+            message: 'Data arus kas berhasil diperbarui!',
+            data: cashflow,
         };
     } catch (error: any) {
         return sendError(event, createError({ statusCode: 500, statusMessage: 'Internal Server Error' }));

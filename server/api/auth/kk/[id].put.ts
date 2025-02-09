@@ -1,6 +1,7 @@
+// server/api/auth/kk/[id].put.ts
 import { KK } from '~/server/model/KK';
-import { LogRequest } from '~/types/AuthType';
-import { ActionLog } from '~/types/TypesModel';
+import { LogRequest } from "~/types/AuthType";
+import { ActionLog } from "~/types/TypesModel";
 
 export default defineEventHandler(async (event) => {
     // Check if user exists
@@ -13,6 +14,8 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
+        const id = parseInt(event.context.params?.id as string, 10);
+
         // Read the request body
         const data = await readBody(event);
 
@@ -20,25 +23,24 @@ export default defineEventHandler(async (event) => {
         const newData = {
             ...data,
             create_by: user.id
-        }
+        };
 
-        const kk = await KK.createKK(newData);
+        const kk = await KK.updateKK(id, newData);
 
         const payload: LogRequest = {
             user_id: user.id,
-            action: ActionLog.CREATE,
-            description: `Data KK dengan ID ${kk.id}, berhasil ditambahkan`,
+            action: ActionLog.UPDATE,
+            description: `Data KK dengan ID ${id}, berhasil diperbarui`,
         };
 
         await createLog(payload);
 
         return {
-            code: 201,
-            message: 'Data KK berhasil ditambahkan!',
+            code: 200,
+            message: 'Data KK berhasil diperbarui!',
             data: kk,
         };
     } catch (error: any) {
-        console.error('Kesalahan terjadi:', error);
         return sendError(event, createError({ statusCode: 500, statusMessage: 'Internal Server Error' }));
     }
 });
