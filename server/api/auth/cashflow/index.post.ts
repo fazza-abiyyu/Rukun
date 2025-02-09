@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
         // Assign user ID from the token
         const newData = {
             ...data,
-            user_id: user.id
+            create_by: user.id
         };
 
         const cashflow = await CashFlow.createCashFlow(newData);

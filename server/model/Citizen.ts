@@ -5,20 +5,13 @@ const prisma = new PrismaClient();
 
 export class Citizen {
     static createCitizen = async (data: any) => {
-        // Ambil kk_id berdasarkan nomor KK yang diinputkan
-        const kk = await KK.getKKByNumber(data.kk_number);
-        if (!kk) {
-            throw new Error('Nomor KK tidak ditemukan');
-        }
-        const kk_id = kk.id;
-
         return prisma.citizen.create({
             data: {
                 full_name: data.full_name,
-                dob: data.dob,
-                gender: data.Gender,
+                dob: new Date(data.dob),
+                gender: data.gender,
                 address: data.address,
-                kk_id: kk_id,
+                kk_id: data.kk_id,
                 nik: data.nik,
                 create_by: data.create_by,
             },

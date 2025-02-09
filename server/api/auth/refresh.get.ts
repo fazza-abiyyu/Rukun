@@ -1,6 +1,7 @@
 import { RefreshToken } from '~/server/model/RefreshToken';
 import { decodeRefreshToken, generateAccessToken } from '~/server/utils/jwt';
-import {User} from "~/server/model/User";
+import { User } from "~/server/model/User";
+import { setCookie, getCookie } from 'h3';
 
 export default defineEventHandler(async (event) => {
     try {
@@ -36,6 +37,9 @@ export default defineEventHandler(async (event) => {
             email: user.email,
             role: user.role
         });
+
+        // Set access token dalam cookie
+        setCookie(event, 'access_token', accessToken, { httpOnly: true, maxAge: 15 * 60 }); // 15 menit
 
         return {
             code: 200,
