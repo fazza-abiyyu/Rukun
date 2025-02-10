@@ -42,13 +42,15 @@ const unprotectedEndpoints = [
     '/api/auth/appliction-letter',
     '/api/auth/graph',
     '/api/auth/stats',
+    '/'
+
 ];
 
 export default defineEventHandler(async (event) => {
     const url = event.req.url as string;
 
     // Periksa apakah URL berada di folder api/auth
-    if (!url.startsWith('/api/auth')) {
+    if (!url.startsWith('server/api/auth')) {
         console.log(`URL ${url} tidak berada di folder api/auth.`);
         return;
     }

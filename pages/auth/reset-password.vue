@@ -225,12 +225,16 @@ const isConfirmPassword = computed(() => {
 const handleSubmit = async () => {
   try {
     isLoading.value = true; // Menandakan proses loading saat pengiriman form
+    const {deviceType, os, browser} = getDeviceAndBrowserInfo()
     // Melakukan request POST ke endpoint API login dengan data form
     await $fetch(`/api/auth/reset-password?token=${token}`, {
       method: 'POST',
       body: {
         newPassword: password.value,
         confirmNewPassword: confirmPassword.value,
+        ip_address: useState('ip_address').value,
+        device: `${deviceType}, ${os} on ${browser}`,
+        location: "Unknown"
       }
     });
 

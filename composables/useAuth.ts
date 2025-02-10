@@ -7,6 +7,8 @@ export default () => {
     const isLoggedIn = () => useCookie('isLoggedIn')
 
 
+    const ipAddress = () => useState('ip_address')
+
     const setToken = (newToken: string | null) => {
         const authToken = useAuthToken()
         authToken.value = newToken
@@ -19,14 +21,30 @@ export default () => {
         authUser.value = newUser
     }
 
+    const getIpAddressUser = () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response: any = await $fetch("https://api.ipify.org?format=json");
+                ipAddress().value = response.ip;
+                resolve(true)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
+
     const login = ({email, password}: { email: string, password: string }) => {
         return new Promise(async (resolve, reject) => {
             try {
+                const {deviceType, os, browser} = getDeviceAndBrowserInfo()
                 const response: any = await useFetchApi('/api/auth/login', {
                     method: 'POST',
                     body: {
                         email: email,
                         password: password,
+                        ip_address: ipAddress().value,
+                        device: `${deviceType}, ${os} on ${browser}`,
+                        location: "Unknown"
                     }
                 })
 
@@ -88,6 +106,7 @@ export default () => {
     const initAuth = () => {
         return new Promise(async (resolve, reject) => {
             try {
+                await getIpAddressUser()
                 if (!isLoggedIn().value) return
                 await refreshToken()
                 await getUser()
@@ -128,6 +147,7 @@ export default () => {
         useAuthTokenCookie,
         initAuth,
         logout,
-        isLoggedIn
+        isLoggedIn,
+        ipAddress
     }
 }
