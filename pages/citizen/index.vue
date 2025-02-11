@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Puskesmas
+          Data Warga
         </li>
       </ol>
       <!-- End Breadcrumb -->
