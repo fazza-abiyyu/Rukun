@@ -23,3 +23,13 @@ export enum Gender {
     MALE = 'Laki-laki',
     FEMALE = 'Perempuan',
 }
+
+export type KKType = {
+    id: number;
+    head_of_family: string;
+    kk: string;
+    create_by:number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+

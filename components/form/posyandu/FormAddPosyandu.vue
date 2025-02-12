@@ -41,7 +41,7 @@
           <!-- Puskesmas Dropdown -->
           <div class="grid sm:grid-cols-3">
             <label for="puskesmas_id" class="block text-sm font-medium mb-2 w-full">Puskesmas</label>
-            <ComboBoxHealthCenter class="col-span-2" @selectedPuskesmas="handleSelectPuskesmas" />
+            <ComboBoxKk class="col-span-2" @selectedPuskesmas="handleSelectPuskesmas" />
           </div>
 
           <!-- Submit Button -->
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import ComboBoxHealthCenter from "~/components/form/advanced/ComboBoxHealthCenter.vue";
+import ComboBoxKk from "~/components/form/advanced/ComboBoxKK.vue";
 
 const {$toast} = useNuxtApp();
 

@@ -6,6 +6,7 @@ export default defineEventHandler( async (event) => {
     try {
         const endpoints = [
             '/api/auth/user',
+            '/api/auth/refresh',
             '/api/auth/logs',
             '/api/auth/logout',
             '/api/auth/verification',
