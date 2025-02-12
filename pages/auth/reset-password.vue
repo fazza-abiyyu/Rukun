@@ -7,6 +7,39 @@
           <h1 class="block text-2xl font-bold text-gray-800 mt-4">Reset Kata Sandi</h1>
         </div>
 
+        <!-- Form Group -->
+        <div>
+          <label for="otp" class="block text-sm mb-2">Masukan OTP</label>
+          <div class="relative">
+            <input v-model="otp" id="otp" type="text"
+                   class="py-3 ps-4 pe-10 block w-full border rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none"
+                   :class="isOtpValid ? 'border-gray-200 focus:border-blue-500 focus:ring-blue-500' : 'border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500 focus:outline-red-500'"
+                   placeholder="Masukan Kode OTP">
+            <button type="button" @click="toggleOtpVisibility"
+                    class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600">
+              <svg v-if="otpVisible" class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                <path class="hs-password-active:hidden"
+                      d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                <path class="hs-password-active:hidden"
+                      d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                <line class="hs-password-active:hidden" x1="2" x2="22" y1="2" y2="22"></line>
+                <path class="hidden hs-password-active:block"
+                      d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle class="hidden hs-password-active:block" cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg v-else class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <small class="text-red-500 italic px-2">{{ otpError }}</small>
+        </div>
+        <!-- End Form Group -->
+
         <div class="mt-5">
           <form @submit.prevent="handleSubmit">
             <div class="grid gap-y-4">
@@ -203,50 +236,65 @@ definePageMeta({
 const {$toast} = useNuxtApp();
 
 // Mendeklarasikan state dengan tipe data yang sesuai untuk form reset
-const password = ref<string | null>(null)
-const confirmPassword = ref<string | null>(null)
+const otp = ref<string | null>(null);
+const otpError = ref<string | null>(null);
+const password = ref<string | null>(null);
+const confirmPassword = ref<string | null>(null);
 const isLoading = ref<boolean>(false); // flag untuk menandakan proses loading
-const confirmPasswordError = ref<string | null>(null)
+const confirmPasswordError = ref<string | null>(null);
 
-const {token} = useRoute().query
+const {token} = useRoute().query;
 
 const isConfirmPassword = computed(() => {
-  const isSame = password.value === confirmPassword.value
+  const isSame = password.value === confirmPassword.value;
   if (!isSame) {
-    confirmPasswordError.value = "Konfirmasi password tidak sesuai dengan password yang dimasukkan."
+    confirmPasswordError.value = "Konfirmasi password tidak sesuai dengan password yang dimasukkan.";
   } else {
-    confirmPasswordError.value = null
+    confirmPasswordError.value = null;
   }
 
-  return isSame
-})
+  return isSame;
+});
 
-// Fungsi untuk menangani submit form forget password
+const isOtpValid = computed(() => {
+  const isValid = otp.value && otp.value.length === 6; // Assuming OTP length is 6
+  if (!isValid) {
+    otpError.value = "OTP harus terdiri dari 6 digit.";
+  } else {
+    otpError.value = null;
+  }
+
+  return isValid;
+});
+
+// Fungsi untuk menangani submit form reset password
 const handleSubmit = async () => {
+  if (!isOtpValid.value || !isConfirmPassword.value) {
+    return;
+  }
+
   try {
     isLoading.value = true; // Menandakan proses loading saat pengiriman form
-    const {deviceType, os, browser} = getDeviceAndBrowserInfo()
-    // Melakukan request POST ke endpoint API login dengan data form
+    // Melakukan request POST ke endpoint API reset-password dengan data form
     await $fetch(`/api/auth/reset-password?token=${token}`, {
       method: 'POST',
       body: {
+        otp: otp.value,
         newPassword: password.value,
         confirmNewPassword: confirmPassword.value,
-        ip_address: useState('ip_address').value,
-        device: `${deviceType}, ${os} on ${browser}`,
-        location: "Unknown"
       }
     });
 
     $toast('Berhasil memperbaharui kata sandi.', 'success');
-    return navigateTo('/auth/login')
+    return navigateTo('/auth/login');
   } catch (error: any) {
-    return $toast('Gagal memperbaharui kata sandi.', 'error');
+    $toast('Gagal memperbaharui kata sandi.', 'error');
   } finally {
     isLoading.value = false; // Menandakan proses loading selesai, baik berhasil maupun gagal
   }
 }
 </script>
+
 
 <style scoped>
 
