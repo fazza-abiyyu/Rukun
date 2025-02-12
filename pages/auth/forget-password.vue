@@ -68,7 +68,7 @@ const isDisabled = ref<boolean>(false);
 // Fungsi untuk menangani submit form forget password
 const handleSubmit = async () => {
   try {
-    const origin = useRequestURL().origin
+    const origin = useRequestURL().origin;
     isLoading.value = true; // Menandakan proses loading saat pengiriman form
     // Melakukan request POST ke endpoint API login dengan data form
     await $fetch('/api/auth/forget-password', {
@@ -79,15 +79,17 @@ const handleSubmit = async () => {
       }
     });
 
-    return $toast('Silahkan periksa email anda.', 'success');
+    $toast('Silahkan periksa email anda.', 'success');
+    return navigateTo('/auth/reset-password');
   } catch (error: any) {
-    return $toast('Silahkan periksa email anda.', 'success');
+    return $toast('Gagal mengirimkan permintaan.', 'error');
   } finally {
-    isLoading.value = false; // Menandakan proses loading selesai, baik berhasil maupun gagal
+    isLoading.value = false;
     isDisabled.value = true;
   }
 }
 </script>
+
 
 <style scoped>
 
