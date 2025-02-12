@@ -49,14 +49,14 @@
       <div v-else>
         <label for="hs-combobox-basic-usage" class="block text-sm font-medium mb-2 w-full">Cari
           Puskesmas</label>
-        <ComboBoxHealthCenter @selectedPuskesmas="(e: any) => handleSelectedPuskesmas(e)"/>
+        <ComboBoxKk @selectedPuskesmas="(e: any) => handleSelectedPuskesmas(e)"/>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ComboBoxHealthCenter from "~/components/form/advanced/ComboBoxHealthCenter.vue";
+import ComboBoxKk from "~/components/form/advanced/ComboBoxKK.vue";
 import type {Puskesmas} from "~/types/TypesModel";
 
 const {$toast} = useNuxtApp();
