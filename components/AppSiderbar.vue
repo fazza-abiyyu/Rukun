@@ -34,10 +34,10 @@
               </NuxtLink>
             </li>
 
-            <li class="hs-accordion" id="puskesmas-accordion">
+            <li class="hs-accordion" id="citizen-accordion">
               <button type="button"
                 class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                aria-expanded="true" aria-controls="puskesmas-accordion-child">
+                aria-expanded="true" aria-controls="citizen-accordion-child">
                 <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_68_5131)">
                     <path
@@ -68,14 +68,14 @@
                 </svg>
               </button>
 
-              <div id="puskesmas-accordion-child"
+              <div id="citizen-accordion-child"
                 class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden"
-                role="region" aria-labelledby="puskesmas-accordion">
+                role="region" aria-labelledby="citizen-accordion">
                 <ul class="ps-4 pt-1 mt-2 space-y-1 border-l-2 ml-4">
                   <li>
                     <NuxtLink
                       class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                      to="/health-centers" active-class="bg-gray-100">
+                      to="/citizen" active-class="bg-gray-100">
                       <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="lucide lucide-list">
@@ -92,7 +92,7 @@
                   <li>
                     <NuxtLink
                       class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                      to="/health-centers/add" active-class="bg-gray-100">
+                      to="/citizen/add" active-class="bg-gray-100">
                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M6.25525 9.99963C6.25525 9.85045 6.31451 9.70737 6.42 9.60189C6.52549 9.4964 6.66856 9.43713 6.81775 9.43713H9.4375V6.81738C9.4375 6.6682 9.49676 6.52512 9.60225 6.41964C9.70774 6.31415 9.85081 6.25488 10 6.25488C10.1492 6.25488 10.2923 6.31415 10.3977 6.41964C10.5032 6.52512 10.5625 6.6682 10.5625 6.81738V9.43713H13.1822C13.3314 9.43713 13.4745 9.4964 13.58 9.60189C13.6855 9.70737 13.7447 9.85045 13.7447 9.99963C13.7447 10.1488 13.6855 10.2919 13.58 10.3974C13.4745 10.5029 13.3314 10.5621 13.1822 10.5621H10.5625V13.1819C10.5625 13.3311 10.5032 13.4741 10.3977 13.5796C10.2923 13.6851 10.1492 13.7444 10 13.7444C9.85081 13.7444 9.70774 13.6851 9.60225 13.5796C9.49676 13.4741 9.4375 13.3311 9.4375 13.1819V10.5621H6.81775C6.66856 10.5621 6.52549 10.5029 6.42 10.3974C6.31451 10.2919 6.25525 10.1488 6.25525 9.99963Z"

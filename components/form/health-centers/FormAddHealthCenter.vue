@@ -2,7 +2,7 @@
   <div class="p-4 md:p-5 h-fit max-h-full flex flex-col bg-white border shadow-sm rounded-xl space-y-4">
     <!-- Header -->
     <div>
-      <h2 class="text-xl font-medium text-gray-800 w-full">Tambah Puskesmas</h2>
+      <h2 class="text-xl font-medium text-gray-800 w-full">Tambah Warga</h2>
     </div>
     <!-- End Header -->
 
@@ -12,7 +12,7 @@
       <form @submit.prevent="handleSubmit">
         <div class="space-y-4 flex flex-col">
           <div class="grid sm:grid-cols-3">
-            <label for="name" class="block text-sm font-medium mb-2 w-full">Nama Puskesmas</label>
+            <label for="name" class="block text-sm font-medium mb-2 w-full">Nama Lengkap</label>
             <input type="text" id="name"
                    v-model="name"
                    class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
