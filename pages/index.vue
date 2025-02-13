@@ -46,108 +46,6 @@
           <div class="p-4 md:p-5">
             <div class="flex items-center gap-x-2">
               <p class="text-xs uppercase tracking-wide text-gray-500">
-                Total Puskesmas
-              </p>
-              <div class="hs-tooltip">
-                <div class="hs-tooltip-toggle">
-                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"
-                       width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                    <path d="M12 17h.01"/>
-                  </svg>
-                  <span
-                      class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                      role="tooltip">
-                      Total Puskesmas Aktif
-                    </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-1 flex items-center gap-x-2">
-              <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.puskesmas }}
-              </h3>
-            </div>
-          </div>
-        </div>
-        <!-- End Card -->
-
-        <!-- Card -->
-        <div class="flex flex-col bg-white border shadow-sm rounded-xl">
-          <div class="p-4 md:p-5">
-            <div class="flex items-center gap-x-2">
-              <p class="text-xs uppercase tracking-wide text-gray-500">
-                Total Posyandu
-              </p>
-              <div class="hs-tooltip">
-                <div class="hs-tooltip-toggle">
-                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"
-                       width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                    <path d="M12 17h.01"/>
-                  </svg>
-                  <span
-                      class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                      role="tooltip">
-                      Total Posyandu Aktif
-                    </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-1 flex items-center gap-x-2">
-              <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.posyandu }}
-              </h3>
-            </div>
-          </div>
-        </div>
-        <!-- End Card -->
-
-        <!-- Card -->
-        <div class="flex flex-col bg-white border shadow-sm rounded-xl">
-          <div class="p-4 md:p-5">
-            <div class="flex items-center gap-x-2">
-              <p class="text-xs uppercase tracking-wide text-gray-500">
-                Total Anak
-              </p>
-              <div class="hs-tooltip">
-                <div class="hs-tooltip-toggle">
-                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"
-                       width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                    <path d="M12 17h.01"/>
-                  </svg>
-                  <span
-                      class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
-                      role="tooltip">
-                      Total Anak Aktif
-                    </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-1 flex items-center gap-x-2">
-              <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.anak }}
-              </h3>
-            </div>
-          </div>
-        </div>
-        <!-- End Card -->
-
-        <!-- Card -->
-        <div class="flex flex-col bg-white border shadow-sm rounded-xl">
-          <div class="p-4 md:p-5">
-            <div class="flex items-center gap-x-2">
-              <p class="text-xs uppercase tracking-wide text-gray-500">
                 Total Pengguna
               </p>
               <div class="hs-tooltip">
@@ -162,7 +60,7 @@
                   <span
                       class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
                       role="tooltip">
-                      Total Pengguna Aktif
+                      Total Pengguna
                     </span>
                 </div>
               </div>
@@ -170,7 +68,109 @@
 
             <div class="mt-1 flex items-center gap-x-2">
               <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.pengguna }}
+                {{ stats?.user }}
+              </h3>
+            </div>
+          </div>
+        </div>
+        <!-- End Card -->
+
+        <!-- Card -->
+        <div class="flex flex-col bg-white border shadow-sm rounded-xl">
+          <div class="p-4 md:p-5">
+            <div class="flex items-center gap-x-2">
+              <p class="text-xs uppercase tracking-wide text-gray-500">
+                Total Warga
+              </p>
+              <div class="hs-tooltip">
+                <div class="hs-tooltip-toggle">
+                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                       width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <path d="M12 17h.01"/>
+                  </svg>
+                  <span
+                      class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
+                      role="tooltip">
+                      Total Warga
+                    </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-1 flex items-center gap-x-2">
+              <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
+                {{ stats?.citizen }}
+              </h3>
+            </div>
+          </div>
+        </div>
+        <!-- End Card -->
+
+        <!-- Card -->
+        <div class="flex flex-col bg-white border shadow-sm rounded-xl">
+          <div class="p-4 md:p-5">
+            <div class="flex items-center gap-x-2">
+              <p class="text-xs uppercase tracking-wide text-gray-500">
+                Total Warga Laki-laki
+              </p>
+              <div class="hs-tooltip">
+                <div class="hs-tooltip-toggle">
+                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                       width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <path d="M12 17h.01"/>
+                  </svg>
+                  <span
+                      class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
+                      role="tooltip">
+                      Total Warga Laki-laki
+                    </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-1 flex items-center gap-x-2">
+              <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
+                {{ stats?.citizenMale }}
+              </h3>
+            </div>
+          </div>
+        </div>
+        <!-- End Card -->
+
+        <!-- Card -->
+        <div class="flex flex-col bg-white border shadow-sm rounded-xl">
+          <div class="p-4 md:p-5">
+            <div class="flex items-center gap-x-2">
+              <p class="text-xs uppercase tracking-wide text-gray-500">
+                Total Warga Perempuan
+              </p>
+              <div class="hs-tooltip">
+                <div class="hs-tooltip-toggle">
+                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg"
+                       width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <path d="M12 17h.01"/>
+                  </svg>
+                  <span
+                      class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
+                      role="tooltip">
+                      Total Warga Perempuan
+                    </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-1 flex items-center gap-x-2">
+              <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
+                {{ stats?.citizenFemale }}
               </h3>
             </div>
           </div>
@@ -187,10 +187,10 @@
           <div class="flex justify-between items-center">
             <div>
               <h2 class="text-sm text-gray-500">
-                Stunting
+                Arus Kas
               </h2>
               <p class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stuntingGraph?.totals }}
+                {{ CashflowGraph?.totals }}
               </p>
             </div>
 
@@ -226,8 +226,8 @@
           <div id="hs-single-area-chart" class="h-full w-full">
             <client-only>
               <ChartAreaChart
-                  :series="stuntingGraph?.stunting??[]"
-                  :categories="stuntingGraph?.categories??[]"
+                  :series="CashflowGraph?.Cashflow??[]"
+                  :categories="CashflowGraph?.categories??[]"
                   :color="chartColors"
               />
             </client-only>
@@ -279,86 +279,6 @@
         <!-- End Card -->
       </div>
 
-      <!-- Card -->
-      <div
-          class="p-4 md:col-span-2 md:p-5 min-h-[410px] flex flex-col bg-white border shadow-sm rounded-xl">
-        <!-- Header -->
-        <div class="flex justify-between items-center">
-          <div>
-            <h2 class="text-sm text-gray-500">
-              Prediksi Stunting (akurasi: {{ stuntingPredictionDataGraph?.model_evaluation?.accuracy ?? "0%" }})
-            </h2>
-            <p class="text-xl sm:text-2xl font-medium text-gray-800">
-              <span class="text-sm">Tahun </span> {{ yearPrediction }}
-            </p>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <div class="relative">
-              <client-only>
-                <select v-model="startYear" data-hs-select='{
-        "placeholder": "Select option...",
-        "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
-        "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
-        "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto",
-        "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100",
-        "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-blue-600 \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>"
-      }'>
-                  <option v-for="(year,i) in [2025, 2024,2023, 2022, 2021]" :value="year" :key="i"
-                          :selected="year === new Date().getFullYear()">{{ year }}
-                  </option>
-                </select>
-              </client-only>
-              <div class="absolute top-1/2 end-2.5 -translate-y-1/2">
-                <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round">
-                  <path d="m7 15 5 5 5-5"></path>
-                  <path d="m7 9 5-5 5 5"></path>
-                </svg>
-              </div>
-            </div>
-            <span>-</span>
-            <div class="relative">
-              <client-only>
-                <select v-model="endYear" data-hs-select='{
-        "placeholder": "Select option...",
-        "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
-        "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-none focus:ring-2 focus:ring-blue-500",
-        "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto",
-        "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100",
-        "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-blue-600 \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>"
-      }'>
-                  <option v-for="(year,i) in [2025, 2024,2023, 2022, 2021]" :value="year" :key="i"
-                          :selected="year === new Date().getFullYear()">{{ year }}
-                  </option>
-                </select>
-              </client-only>
-              <div class="absolute top-1/2 end-2.5 -translate-y-1/2">
-                <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round">
-                  <path d="m7 15 5 5 5-5"></path>
-                  <path d="m7 9 5-5 5 5"></path>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Header -->
-
-        <div id="hs-single-area-chart" class="h-full w-full">
-          <client-only>
-            <ChartAreaChart
-                :series="stuntingPredictionGraph?.prediksi??[]"
-                :categories="stuntingPredictionGraph?.categories??[]"
-                :color="chartColors"
-            />
-          </client-only>
-        </div>
-      </div>
-      <!-- End Card -->
-
       <div
           class="p-4 md:p-5 h-fit max-h-[410px] flex flex-col bg-white border shadow-sm rounded-xl">
         <!-- Header -->
@@ -378,91 +298,52 @@
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
+import { ref, computed, onMounted, watch } from "vue";
+
 // Data untuk grafik area
 import DataTablesRecentlyActivities from "~/components/datatables/DataTablesRecentlyActivities.vue";
 
-const childDataGraph = ref([])
-const stuntingDataGraph = ref([])
-const stuntingPredictionDataGraph = ref([])
-const year = ref(new Date().getFullYear())
-const startYear = ref(new Date().getFullYear() - 1)
-const endYear = ref(new Date().getFullYear())
-const recentlyActivitiesData = ref([])
-const statsData = ref([])
-const yearPrediction = ref(endYear.value + 1)
+const statsData = ref({
+  totalUser: 0,
+  totalCitizen: 0,
+  totalMaleCitizen: 0,
+  totalFemaleCitizen: 0,
+  childGenderRatio: {},
+  flowCashStats: {}
+});
+const year = ref(new Date().getFullYear());
+const yearPrediction = ref(year.value + 1);
+const recentlyActivitiesData = ref([]);
 
-// Warna untuk setiap garis pada grafik
-const chartColors = ref(['#2563EB', '#22d3ee']); // Warna garis yang berbeda
+const stats = computed(() => statsData.value);
+const recentlyActivities = computed(() => recentlyActivitiesData.value);
 
-const stats: any = computed(() => statsData.value)
-const childGraph: any = computed(() => childDataGraph.value)
-const stuntingGraph: any = computed(() => stuntingDataGraph.value)
-const stuntingPredictionGraph: any = computed(() => stuntingPredictionDataGraph.value)
-const recentlyActivities: any = computed(() => recentlyActivitiesData.value)
-
+// Fetch data functions
 const fetchStatsData = async () => {
   try {
-    const response: any = await useFetchApi('/api/auth/stats')
-    statsData.value = response?.data
+    const response: any = await useFetchApi('/api/auth/stats');
+    statsData.value = response?.data;
   } catch (e) {
-
+    console.error("Failed to fetch stats data", e);
   }
-}
-
-const fetchChildDataGraph = async () => {
-  try {
-    const response: any = await useFetchApi('/api/auth/graph/child')
-    childDataGraph.value = response?.data
-  } catch (e) {
-
-  }
-}
-
-const fetchStuntingDataGraph = async () => {
-  try {
-    const response: any = await useFetchApi(`/api/auth/graph/stunting?year=${year.value}`)
-    stuntingDataGraph.value = response?.data
-  } catch (e) {
-
-  }
-}
-
-const fetchStuntingPredictionDataGraph = async () => {
-  try {
-    const response: any = await $fetch(`https://extra-reba-fazza-abiyyu-a1cfd750.koyeb.app/predict?start_year=${startYear.value}&end_year=${endYear.value}`)
-    stuntingPredictionDataGraph.value = response?.data
-    yearPrediction.value = response?.tahun_prediksi
-  } catch (e) {
-
-  }
-}
+};
 
 const fetchRecentlyActivitiesData = async () => {
   try {
-    const response: any = await useFetchApi(`/api/auth/logs`)
-    recentlyActivitiesData.value = response?.data?.logs
+    const response: any = await useFetchApi(`/api/auth/logs`);
+    recentlyActivitiesData.value = response?.data?.logs;
   } catch (e) {
-
+    console.error("Failed to fetch recently activities data", e);
   }
-}
-
-watch(year, fetchStuntingDataGraph)
-watch([startYear, endYear], ([newStartYear, newEndYear]) => {
-  if (newStartYear && newEndYear) {
-    fetchStuntingPredictionDataGraph();
-  }
-});
+};
 
 onMounted(() => {
-  fetchStatsData()
-  fetchChildDataGraph()
-  fetchStuntingDataGraph()
-  fetchRecentlyActivitiesData()
-  fetchStuntingPredictionDataGraph()
-})
+  fetchStatsData();
+  fetchRecentlyActivitiesData();
+});
 </script>
+
 
 <style scoped>
 

@@ -15,18 +15,6 @@
               <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Deskripsi</th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
-            <!-- Loop untuk menampilkan setiap data -->
-            <tr v-for="(item, index) in data" :key="item.id">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ item.id }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ item.action }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ item.created_at }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ item.device }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ item.ip_address }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ item.location }}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ item.description }}</td>
-            </tr>
-            </tbody>
           </table>
         </div>
       </div>

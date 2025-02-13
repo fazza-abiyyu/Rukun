@@ -1,77 +1,113 @@
-import {prisma} from '~/server/config/db';
+import { PrismaClient, Category } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+interface FlowCashStats {
+  total_cashFlowperMonth: number[];
+  categories: string[];
+}
 
 export class Stats {
-    static getUserQuizResults = (userId: number) => {
-        return prisma.userQuizResult.findMany({
-            where: {user_id: userId},
-            orderBy: {completed_at: 'desc'},
-        });
+  // Get total users
+  static async totalUser() {
+    const totalUser = await prisma.user.count();
+    return totalUser;
+  }
+
+  // Get total citizens
+  static async totalCitizen() {
+    const totalCitizen = await prisma.citizen.count();
+    return totalCitizen;
+  }
+
+  // Get total male citizens
+  static async totalCitizenMale() {
+    const totalMaleCitizen = await prisma.citizen.count({
+      where: {
+        gender: 'Male',
+      },
+    });
+    return totalMaleCitizen;
+  }
+
+  // Get total female citizens
+  static async totalCitizenFemale() {
+    const totalFemaleCitizen = await prisma.citizen.count({
+      where: {
+        gender: 'Female',
+      },
+    });
+    return totalFemaleCitizen;
+  }
+
+  // Get ratio of children by gender (citizens under 17 years old)
+  static async getRatioChildByGender() {
+    const today = new Date();
+    const cutoffDate = new Date(today.getFullYear() - 17, today.getMonth(), today.getDate());
+
+    // Count children by gender
+    const childMale = await prisma.citizen.count({
+      where: {
+        gender: 'Male',
+        dob: {
+          gte: cutoffDate,
+        },
+      },
+    });
+
+    const childFemale = await prisma.citizen.count({
+      where: {
+        gender: 'Female',
+        dob: {
+          gte: cutoffDate,
+        },
+      },
+    });
+
+    const totalChildren = childMale + childFemale;
+    const ratioMale = childMale / totalChildren;
+    const ratioFemale = childFemale / totalChildren;
+
+    return {
+      male: ratioMale,
+      female: ratioFemale,
     };
-
-    static getTotalScore = async (userId: number) => {
-        const quizResults = await this.getUserQuizResults(userId);
-        return quizResults.reduce((total, result) => total + result.score, 0);
+  }
+  static async getFlowCash(): Promise<FlowCashStats> {
+    // Get cash flow per month
+    const cashFlows = await prisma.cashFlow.groupBy({
+      by: ['category', 'date'],
+      _sum: {
+        amount: true,
+      },
+      where: {
+        date: {
+          gte: new Date(new Date().getFullYear(), 0, 1), // Start from January 1st this year
+        },
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    });
+  
+    const totalCashFlowPerMonth: number[] = new Array(12).fill(0); // Array to hold monthly totals
+    const categories = Object.values(Category);
+  
+    cashFlows.forEach((flow) => {
+      const month = flow.date.getMonth();
+      if (flow._sum.amount) {
+        // Convert BigInt to number, ensuring the values are within the valid range
+        const amount = Number(flow._sum.amount); // Explicit conversion to `number`
+        totalCashFlowPerMonth[month] += amount;
+      }
+    });
+  
+    return {
+      total_cashFlowperMonth: totalCashFlowPerMonth,
+      categories: [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December',
+      ],
     };
-
-    static getLastTestStatus = async (userId: number) => {
-        const quizResults = await this.getUserQuizResults(userId);
-        return quizResults.length > 0 ? quizResults[0].category : 'No test taken';
-    };
-
-    static getRatioAllResult = async (userId: number) => {
-        const quizResults = await this.getUserQuizResults(userId);
-        if (quizResults.length === 0) {
-            return {
-                "Sedang": 0,
-                "Buruk": 0,
-                "Baik": 1
-            }
-        }
-        const categoryCounts: { [key: string]: number } = {};
-
-        quizResults.forEach(result => {
-            if (result.category in categoryCounts) {
-                categoryCounts[result.category]++;
-            } else {
-                categoryCounts[result.category] = 1;
-            }
-        });
-
-        return categoryCounts;
-    };
-
-    static getMonthlyAverageScores = async (user_id: number, year: number) => {
-        const scores = new Array(12).fill(0);
-        const counts = new Array(12).fill(0);
-
-        const results = await prisma.userQuizResult.findMany({
-            where: {
-                AND: [
-                    {user_id},
-                    {
-                        completed_at: {
-                            gte: new Date(year, 0, 1),
-                            lt: new Date(year + 1, 0, 1),
-                        }
-                    }
-                ]
-            }
-        });
-
-        results.forEach(result => {
-            const month = new Date(result.completed_at).getMonth();
-            scores[month] += result.score;
-            counts[month]++;
-        });
-
-        const averageScores = scores.map((score, index) => counts[index] ? score / counts[index] : 0);
-
-        return {
-            averageScores,
-            categories: [
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-            ],
-        };
-    };
-}
+  }
+}  

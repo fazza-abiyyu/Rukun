@@ -26,6 +26,7 @@
     "lodash": "^4.17.21",
     "mobile-detect": "^1.4.5",
     "nodemailer": "^6.9.16",
+    "npm": "^11.1.0",
     "nuxt": "^3.14.1592",
     "preline": "^2.6.0",
     "prisma": "^6.0.1",
