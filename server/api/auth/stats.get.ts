@@ -3,37 +3,45 @@ import { defineEventHandler, setResponseStatus, createError, sendError } from 'h
 
 export default defineEventHandler(async (event) => {
     try {
-        // Ambil data user dari context
+        // Ambil data user dari context (jika diperlukan)
         const user = event.context.auth?.user;
 
-        if (!user.id || isNaN(user.id)) {
+        // Check for user authentication (optional, remove if not needed)
+        if (!user || !user.id || isNaN(user.id)) {
             setResponseStatus(event, 400);
             return { code: 400, message: 'Pengguna tidak valid' };
         }
 
-        // Panggil method untuk mendapatkan statistik kuis
-        const totalScore = await Stats.getTotalScore(user.id);
-        const quizResults = await Stats.getUserQuizResults(user.id);
+        // Get total number of users
+        const totalUser = await Stats.totalUser();
 
-        // Hitung jumlah kuis yang telah diselesaikan
-        const quizCompleted = quizResults.length;
+        // Get total number of citizens
+        const totalCitizen = await Stats.totalCitizen();
 
-        // Ambil status kategori terakhir
-        const lastCategoryStatus = quizResults.length > 0 ? quizResults[0].category : 'No category';
+        // Get total male citizens
+        const totalMaleCitizen = await Stats.totalCitizenMale();
 
-        // Panggil method untuk mendapatkan rasio semua kategori hasil kuis
-        const categoryRatios = await Stats.getRatioAllResult(user.id);
+        // Get total female citizens
+        const totalFemaleCitizen = await Stats.totalCitizenFemale();
 
-        // Set response status dan kembalikan data statistik
+        // Get ratio of children by gender
+        const childGenderRatio = await Stats.getRatioChildByGender();
+
+        // Get cash flow statistics for the year
+        const flowCashStats = await Stats.getFlowCash();
+
+        // Set response status and return data
         setResponseStatus(event, 200);
         return {
             code: 200,
             message: 'Berhasil mengembalikan data stats',
             data: {
-                quizCompleted: quizCompleted,
-                totalScore: totalScore,
-                lastTestStatus: lastCategoryStatus,
-                categoryRatios: categoryRatios,
+                totalUser,
+                totalCitizen,
+                totalMaleCitizen,
+                totalFemaleCitizen,
+                childGenderRatio,
+                flowCashStats,
             },
         };
     } catch (error: any) {

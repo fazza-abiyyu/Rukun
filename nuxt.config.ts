@@ -20,12 +20,12 @@ export default defineNuxtConfig({
     plugins: ["~/plugins/preline.client.ts"],
     app: {
         head: {
-            title: "PUSON | Posyandu Untuk Stunting Online",
+            title: "RUKUN | Management Data Warga RT",
             htmlAttrs: {
                 lang: 'id'
             },
             meta: [
-                {name: 'description', content: 'PUSON (Posyandu Untuk Stunting Online) adalah platform digital yang memudahkan pemantauan dan penanganan stunting melalui layanan posyandu online. Dapatkan informasi, layanan kesehatan, dan dukungan untuk mencegah dan menangani stunting secara efisien dan terjangkau.'}
+                {name: 'description', content: 'Rukun adalah platfrom untuk management data warga lingkup RT'}
             ],
         },
     },
