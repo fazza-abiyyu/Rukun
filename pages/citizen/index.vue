@@ -41,14 +41,15 @@
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <client-only>
         <DatatablesDataTable
-            :title="'Puskesmas'"
+            :title="'Data Warga'"
             :fields="[
-      { label: 'Nama', key: 'name' },
-      { label: 'Alamat', key: 'address' },
-      { label: 'Nomor telpon', key: 'phone' },
-      { label: 'Tanggal ditambahkan', key: 'created_at' },
+      { label: 'NAMA WARGA', key: 'full_name' },
+      { label: 'NIK', key: 'nik' },
+      { label: 'JENIS KELAMIN', key: 'gender' },
+      { label: 'TANGGAL LAHIR', key: 'dob' },
+      { label: 'ALAMAT', key: 'address' },
     ]"
-            :data="puskesmas"
+            :data="citizen"
             :perPage="pageSize"
             :totalPages="totalPages"
             :currentPage="currentPage"
@@ -56,6 +57,7 @@
             :nextPage="nextPage"
             :isLoading="isLoading"
             :deleteAction="true"
+            :editAction="true"
             @fetchData="(e) => handleChangeFetchData(e)"
             @searchData="(e) => handleSearchData(e)"
             @deleteData="(e) => handleDeleteData(e)"
@@ -65,108 +67,137 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { ref, onMounted } from 'vue';
 
-// Ambil fungsi untuk penanganan error
-import type {Puskesmas} from "~/types/TypesModel";
+const citizen = ref([]);
+const pageSize = ref(4);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const prevPage = ref(null);
+const nextPage = ref(null);
+const isLoading = ref(false);
 
-const {handleError} = useErrorHandling();
-const {$toast} = useNuxtApp();
-
-// State untuk pagination dan data Puskesmas
-const page = ref(1)
-const pageSize = ref(10)
-const totalPages = ref(1)
-const currentPage = ref(1)
-const nextPage = ref()
-const prevPage = ref()
-
-// State untuk data Puskesmas dan status loading
-const puskesmasData = ref([])
-const isLoading = ref<boolean>(false)
-
-// Computed property untuk mengambil data Puskesmas
-const puskesmas = computed(() => puskesmasData.value)
-
-// Fungsi untuk mengambil data Puskesmas
-const fetchPuskesmas = async () => {
+const fetchData = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/puskesmas?page=${page.value}&pagesize=${pageSize.value}`);
-    puskesmasData.value = response?.data?.puskesmas;
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
-  } catch (e) {
-    handleError(e)
-  } finally {
-    isLoading.value = false
-  }
-}
+    const token = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("access_token="))
+      ?.split("=")[1];
 
-// Fungsi untuk menangani perubahan halaman atau pengambilan data berdasarkan URL
-const handleChangeFetchData = async (payload: any) => {
-  try {
-    isLoading.value = true
-    const response: any = await useFetchApi(payload.url);
-    puskesmasData.value = response?.data?.puskesmas;
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
-    currentPage.value = payload?.currentPage;
-  } catch (e) {
-    handleError(e)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-// Fungsi untuk menangani pencarian data Puskesmas
-const handleSearchData = async (query: string) => {
-  try {
-    // Jika query kosong, ambil data Puskesmas dari awal
-    if (query.length === 0) {
-      await fetchPuskesmas()
-      return
+    if (!token) {
+      console.error("Token tidak ditemukan!");
+      return;
     }
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/puskesmas/search?q=${query}`);
-    puskesmasData.value = response?.data?.puskesmas;
-    totalPages.value = 1;  // Karena pencarian biasanya hanya menghasilkan satu halaman
-    nextPage.value = null;
-    prevPage.value = null;
-  } catch (e) {
-    handleError(e)
+
+    const response = await fetch(`/api/auth/citizen?page=${currentPage.value}&pagesize=${pageSize.value}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    });
+
+    if (response.status === 401) {
+      console.error("Unauthorized! Coba login ulang.");
+      return;
+    }
+
+    const data = await response.json();
+    if (data.code === 200) {
+      citizen.value = data.data;
+      totalPages.value = data.totalPages;
+      prevPage.value = data.prev;
+      nextPage.value = data.next;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data warga:", error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
-const handleDeleteData = async (id: number) => {
+const handleSearchData = async (query) => {
   try {
-    if (!confirm("Anda yakin ingin menghapus ini?")) return
-    const {deviceType, os, browser} = getDeviceAndBrowserInfo()
-    await useFetchApi(`/api/auth/puskesmas/${id}`, {
-      method: 'DELETE',
-      body: {
-        ip_address: useState('ip_address').value,
-        device: `${deviceType}, ${os} on ${browser}`,
-        location: "Unknown"
-      }
-    })
-    puskesmasData.value = puskesmasData.value.filter((item: Puskesmas) => item.id !== id)
-    $toast('Berhasil mengubah data.', 'success');
-  } catch (e) {
-    $toast('Gagal mengubah data.', 'error');
+    if (!query) {
+      await fetchData(); // Jika query kosong, ambil semua data
+      return;
+    }
+
+    isLoading.value = true;
+    const response = await useFetchApi(`/api/auth/citizen/search?q=${query}`);
+
+    if (response?.data?.citizen) {
+      citizen.value = response.data.citizen;
+      totalPages.value = 1;
+      nextPage.value = null;
+      prevPage.value = null;
+    } else {
+      citizen.value = [];
+    }
+  } catch (error) {
+    console.error("Kesalahan saat mencari data warga:", error);
+  } finally {
+    isLoading.value = false;
   }
-}
+};
 
-// Ambil data Puskesmas saat komponen dimuat pertama kali
-onMounted(async () => {
-  await fetchPuskesmas()
-})
+const handleDeleteData = async (id) => {
+  if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+    return;
+  }
+
+  isLoading.value = true;
+  try {
+    // Ambil access token dari cookie
+    const token = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("access_token="))
+      ?.split("=")[1];
+
+    if (!token) {
+      alert("Sesi Anda telah berakhir. Silakan login kembali.");
+      window.location.href = "/login"; // Redirect ke halaman login
+      return;
+    }
+
+    // Kirim permintaan DELETE
+    const response = await fetch(`/api/auth/citizen/${id}`, {
+      method: 'DELETE',
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // Pastikan token dikirim
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.status === 401) {
+      alert("Sesi telah habis atau tidak valid. Silakan login ulang.");
+      window.location.href = "/login"; // Redirect ke login
+      return;
+    }
+
+    if (response.ok && data.code === 200) {
+      alert("Data berhasil dihapus!");
+      fetchData();
+    } else {
+      console.error("Gagal menghapus data:", data.message);
+      alert("Gagal menghapus data: " + data.message);
+    }
+  } catch (error) {
+    console.error("Kesalahan saat menghapus data:", error);
+    alert("Terjadi kesalahan saat menghapus data.");
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(fetchData);
 </script>
-
 <style scoped>
 
 </style>
