@@ -106,7 +106,7 @@ const handleSubmit = async () => {
       throw new Error(response.error.message || 'Terjadi kesalahan saat mengirim surat.');
     }
 
-    $toast('Surat Pengajuan Berhasil di Kirim!', 'success');i
+    $toast('Surat Pengajuan Berhasil di Kirim!', 'success');
     clearForm();
   } catch (error: any) {
     $toast('Terjadi kesalahan: ' + (error.message || 'Unknown error'), 'error');
