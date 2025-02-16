@@ -39,13 +39,13 @@
 
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <FormAddChild />
+      <FormAddKk />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FormAddChild from "~/components/form/child/FormAddChild.vue";
+import FormAddKk from "~/components/form/child/FormAddKk.vue";
 
 </script>
 

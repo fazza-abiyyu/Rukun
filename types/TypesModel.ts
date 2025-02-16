@@ -33,3 +33,8 @@ export type KKType = {
     updatedAt: Date;
 }
 
+
+export enum Category {
+    KREDIT = 'Kredit',
+    DEBIT = 'Debit',
+}

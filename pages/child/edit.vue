@@ -40,14 +40,14 @@
   <div class="w-full min-h-screen lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <client-only>
-        <FormEditPosyandu />
+        <FormEditCashFlow />
       </client-only>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FormEditPosyandu from "~/components/form/posyandu/FormEditPosyandu.vue";
+import FormEditCashFlow from "~/components/form/posyandu/FormEditCashFlow.vue";
 </script>
 
 <style scoped>
