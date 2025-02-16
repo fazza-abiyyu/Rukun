@@ -107,7 +107,7 @@ model CashFlow {
   description String
   date        DateTime @default(now())
   category    Category
-  amount      BigInt
+  amount      Int
   create_by   Int
   create_at   DateTime @default(now())
   update_at   DateTime @updatedAt
@@ -127,6 +127,7 @@ model KK {
 
 model ApplicationLetter {
   id              Int            @id @unique @default(autoincrement())
+  toEmail         String
   category_letter CategoryLetter
   data_nik        String
   create_by       Int

@@ -6,13 +6,11 @@ export class ApplicationLetter {
     static createApplicationLetter = async (data: any) => {
         return prisma.applicationLetter.create({
             data: {
+                toEmail: data.toEmail,
                 category_letter: data.category_letter,
                 data_nik: data.data_nik,
                 create_by: data.create_by,
                 create_at: data.create_at || new Date(),
-                user: {
-                    connect: {id: data.create_by},
-                }
             },
         });
     };

@@ -9,7 +9,7 @@ export class Notification {
             data: {
                 title: data.title,
                 description: data.description,
-                date: data.date || new Date(),
+                date: new Date(data.date),
                 create_by: data.create_by,
             },
         });

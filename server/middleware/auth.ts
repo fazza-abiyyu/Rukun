@@ -28,15 +28,17 @@ export default defineEventHandler( async (event) => {
             '/api/auth/cashflow/:id',
             '/api/auth/cashflow/search?q=:q',
             '/api/auth/cashflow?page=:page&pagesize=:pagesize',
-            '/api/auth/notification',
-            '/api/auth/notification/:id',
-            '/api/auth/notification/search?q=:q',
-            '/api/auth/notification?page=:page&pagesize=:pagesize',
+            '/api/auth/notifications',
+            '/api/auth/notifications/:id',
+            '/api/auth/notifications/search?q=:q',
+            '/api/auth/notifications?page=:page&pagesize=:pagesize',
             '/api/auth/forget-password',
             '/api/auth/reset-password',
             '/api/auth/refresh',
-            '/api/auth/appliction-letter',
-
+            '/api/auth/application-letter',
+            '/api/auth/application-letter/:id',
+            '/api/auth/application-letter/search?q=:q',
+            '/api/auth/application-letter?page=:page&pagesize=:pagesize',
         ]
 
         const isHandledByThisMiddleware = endpoints.some(endopoint => {

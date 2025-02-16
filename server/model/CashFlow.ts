@@ -1,5 +1,5 @@
 import {$Enums, PrismaClient} from '@prisma/client';
-import Category = $Enums.Category;
+
 
 const prisma = new PrismaClient();
 
@@ -10,8 +10,8 @@ export class CashFlow {
             data: {
                 title: data.title,
                 description: data.description,
-                date: data.date || new Date(),
-                category: data.Category,
+                date: new Date(data.date),
+                category: data.category,
                 amount: data.amount,
                 create_by: data.create_by,
             },

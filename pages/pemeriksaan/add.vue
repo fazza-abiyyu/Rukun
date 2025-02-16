@@ -39,13 +39,13 @@
 
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <FormAddPemeriksaan />
+      <FormApplicationLetter />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FormAddPemeriksaan from "~/components/form/pemeriksaan/FormAddPemeriksaan.vue";
+import FormApplicationLetter from "~/components/form/pemeriksaan/FormApplicationLetter.vue";
 
 </script>
 
