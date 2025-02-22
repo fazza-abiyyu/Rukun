@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Posyandu
+          Arus Kas
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -40,13 +40,15 @@
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <DatatablesDataTable
-          :title="'Posyandu'"
+          :title="'Arus Kas'"
           :fields="[
-            { label: 'Nama Posyandu', key: 'name' },
-            { label: 'Alamat', key: 'address' },
-            { label: 'Telepon', key: 'phone' },
+            { label: 'SUMBER DANA', key: 'title' },
+            { label: 'DESKRIPSI', key: 'description' },
+            { label: 'TANGGAL', key: 'date' },
+            { label: 'KATEGORI', key: 'category' },
+            { label: 'JUMLAH', key: 'amount' },
           ]"
-          :data="posyandu"
+          :data="cashflow"
           :perPage="pageSize"
           :totalPages="totalPages"
           :currentPage="currentPage"
@@ -54,6 +56,7 @@
           :nextPage="nextPage"
           :isLoading="isLoading"
           :deleteAction="true"
+          :edit-action="true"
           @fetchData="(e) => handleChangeFetchData(e)"
           @searchData="(e) => handleSearchData(e)"
           @deleteData="(e) => handleDeleteData(e)"
@@ -63,94 +66,72 @@
 </template>
 
 <script setup lang="ts">
-import type {Puskesmas} from "~/types/TypesModel";
+import { ref, computed, onMounted } from "vue";
+import { useFetchApi } from "~/composables/useFetchApi";
+import { useErrorHandling } from "~/composables/useErrorHandling";
+import { useNuxtApp } from "#app";
 
 const { handleError } = useErrorHandling();
-const {$toast} = useNuxtApp();
+const { $toast } = useNuxtApp();
 
-const page = ref(1)
-const pageSize = ref(10)
-const totalPages = ref(1)
-const currentPage = ref(1)
-const nextPage = ref()
-const prevPage = ref()
-const posyanduData = ref([])  // Changed to posyanduData
-const isLoading = ref<boolean>(false)
+const page = ref(1);
+const pageSize = ref(10);
+const totalPages = ref(1);
+const currentPage = ref(1);
+const nextPage = ref(null);
+const prevPage = ref(null);
+const cashflowData = ref([]);
+const isLoading = ref<boolean>(false);
 
-const posyandu = computed(() => posyanduData.value)
+const cashflows = computed(() => cashflowData.value);
 
-const fetchPosyandu = async () => {
+const fetchCashflow = async () => {
   try {
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/posyandu?page=${page.value}&pagesize=${pageSize.value}`);
-    posyanduData.value = response?.data?.posyandu; // Adjusted for posyandu data format
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
+    isLoading.value = true;
+    const response: any = await useFetchApi(`/api/auth/cashflow?page=${page.value}&pagesize=${pageSize.value}`);
+    cashflowData.value = response?.data;
+    totalPages.value = response?.totalPages;
+    nextPage.value = response?.next;
+    prevPage.value = response?.prev;
   } catch (e) {
-    handleError(e)
+    handleError(e);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const handleChangeFetchData = async (payload: any) => {
   try {
-    isLoading.value = true
+    isLoading.value = true;
     const response: any = await useFetchApi(payload.url);
-    posyanduData.value = response?.data?.posyandu;
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
+    cashflowData.value = response?.data;
+    totalPages.value = response?.totalPages;
+    nextPage.value = response?.next;
+    prevPage.value = response?.prev;
     currentPage.value = payload?.currentPage;
   } catch (e) {
-    handleError(e)
+    handleError(e);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
-
-const handleSearchData = async (query: string) => {
-  try {
-    if (query.length === 0) {
-      await fetchPosyandu()  // Adjusted to fetch posyandu data
-      return
-    }
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/posyandu/search?q=${query}`);
-    posyanduData.value = response?.data?.posyandu; // Adjusted for posyandu data format
-    totalPages.value = 1;
-    nextPage.value = null;
-    prevPage.value = null;
-  } catch (e) {
-    handleError(e)
-  } finally {
-    isLoading.value = false
-  }
-}
+};
 
 const handleDeleteData = async (id: number) => {
   try {
-    if (!confirm("Anda yakin ingin menghapus ini?")) return
-    const {deviceType, os, browser} = getDeviceAndBrowserInfo()
-    await useFetchApi(`/api/auth/posyandu/${id}`, {
-      method: 'DELETE',
-      body: {
-        ip_address: useState('ip_address').value,
-        device: `${deviceType}, ${os} on ${browser}`,
-        location: "Unknown"
-      }
-    })
-    posyanduData.value = posyanduData.value.filter((item: Puskesmas) => item.id !== id)
-    $toast('Berhasil mengubah data.', 'success');
+    if (!confirm("Anda yakin ingin menghapus ini?")) return;
+    await useFetchApi(`/api/auth/cashflow/${id}`, {
+      method: "DELETE",
+    });
+    cashflowData.value = cashflowData.value.filter((item: any) => item.id !== id);
+    $toast("Berhasil menghapus data.", "success");
   } catch (e) {
-    $toast('Gagal mengubah data.', 'error');
+    $toast("Gagal menghapus data.", "error");
   }
-}
+};
 
 onMounted(async () => {
-  await fetchPosyandu()
-})
+  await fetchCashflow();
+});
 </script>
 
 <style scoped></style>

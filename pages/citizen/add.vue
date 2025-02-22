@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import FormAddCitizen from "~/components/form/health-centers/FormAddCitizen.vue";
+import FormAddCitizen from "~/components/form/citizen/FormAddCitizen.vue";
 
 </script>
 
