@@ -39,13 +39,13 @@
 
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <FormAddPosyandu />
+      <FormAddCashFlow />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FormAddPosyandu from "~/components/form/posyandu/FormAddPosyandu.vue";
+import FormAddCashFlow from "~/components/form/posyandu/FormAddCashFlow.vue";
 
 </script>
 

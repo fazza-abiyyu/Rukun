@@ -37,11 +37,12 @@
           </div>
           <!-- Tanggal Lahir -->
           <div class="grid sm:grid-cols-3">
-            <label for="bod" class="block text-sm font-medium mb-2 w-full">Tanggal Lahir</label>
+            <label for="bod" class="block text-sm font-medium mb-2 w-full">TANGGAL LAHIR</label>
             <input type="date" id="dob"
                    v-model="dob"
                    class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
           </div>
+          <!-- Alamat -->
           <div class="grid sm:grid-cols-3">
             <label for="address" class="block text-sm font-medium mb-2 w-full">ALAMAT</label>
             <textarea id="address"
@@ -69,7 +70,7 @@
 </template>
 <script setup lang="ts">
 import ComboBoxKk from "~/components/form/advanced/ComboBoxKK.vue";
-import {useNuxtApp} from "#imports";
+
 
 const {$toast} = useNuxtApp();
 

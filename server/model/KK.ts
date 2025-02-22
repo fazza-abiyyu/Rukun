@@ -6,8 +6,8 @@ export class KK {
     static createKK = async (data: any) => {
         return prisma.kK.create({
             data: {
-                head_of_family: data.head_of_family,
                 kk: data.kk,
+                head_of_family: data.head_of_family,
                 create_by: data.create_by,
             },
         });
