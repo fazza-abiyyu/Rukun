@@ -38,3 +38,13 @@ export enum Category {
     KREDIT = 'Kredit',
     DEBIT = 'Debit',
 }
+
+export type Citizen = {
+    id: number;
+    full_name: string;
+    dob: Date;
+    gender: Gender;
+    address: string;
+    kk_id: number;
+    nik: string;
+}

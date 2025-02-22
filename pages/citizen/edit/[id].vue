@@ -40,7 +40,7 @@
     <div class="w-full min-h-screen lg:ps-64">
         <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
             <client-only>
-                <FormEditHealthCenter />
+                <FormEditCitizen />
             </client-only>
         </div>
     </div>
@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import FormEditHealthCenter from '~/components/form/citizen/FormEditCitizen.vue';
+import FormEditCitizen from "~/components/form/citizen/FormEditCitizen.vue";
 
 const route = useRoute();
 const citizenId = ref(route.params.id);

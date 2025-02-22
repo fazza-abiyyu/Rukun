@@ -106,15 +106,11 @@ const handleSubmit = async () => {
 
   try {
     isLoading.value = true;
-    const { deviceType, os, browser } = getDeviceAndBrowserInfo();
 
     await useFetchApi(`/api/auth/posyandu/${selectedPosyandu.value?.id}`, {
       method: 'PUT',
       body: {
-        ...selectedPosyandu.value,
-        ip_address: useState('ip_address').value,
-        device: `${deviceType}, ${os} on ${browser}`,
-        location: "Unknown"
+        ...selectedPosyandu.value
       }
     });
 
