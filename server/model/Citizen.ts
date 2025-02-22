@@ -1,5 +1,4 @@
 import {PrismaClient} from '@prisma/client';
-import {KK} from "~/server/model/KK";
 
 const prisma = new PrismaClient();
 
@@ -38,19 +37,11 @@ export class Citizen {
     };
 
     static updateCitizen = async (id: number, data: any) => {
-
-        // Ambil kk_id berdasarkan nomor KK yang diinputkan
-        const kk = await KK.getKKByNumber(data.kk_number);
-        if (!kk) {
-            throw new Error('Nomor KK tidak ditemukan');
-        }
-        const kk_id = kk.id;
-
         return prisma.citizen.update({
             where: {id},
             data: {
                 full_name: data.full_name,
-                dob: data.dob,
+                dob: new Date(data.dob),
                 gender: data.Gender,
                 address: data.address,
                 kk_id: data.kk_id,
