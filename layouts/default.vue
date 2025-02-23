@@ -1,17 +1,18 @@
 <template>
   <div>
-    <AppHeader />
-    <AppSiderbar />
-    <ChatModal />
+    <AppHeader v-if="!isAuthPage" />
+    <AppSiderbar v-if="!isAuthPage" />
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-import ChatModal from "~/components/modal/ChatModal.vue";
+const route = useRoute();
+
+const isAuthPage = computed(() => route.path.includes('/auth'));
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
