@@ -30,7 +30,7 @@ export class KK {
     static getKKByNumber = async (kkNumber: string) => {
         return prisma.kK.findUnique({
             where: {
-                kk: kkNumber  // Pastikan `kkNumber` diteruskan dengan benar
+                kk: kkNumber
             },
             select: {
                 id: true,

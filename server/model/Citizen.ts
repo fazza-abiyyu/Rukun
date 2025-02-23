@@ -1,4 +1,5 @@
 import {PrismaClient} from '@prisma/client';
+import { format } from 'date-fns';
 
 const prisma = new PrismaClient();
 
@@ -52,29 +53,39 @@ export class Citizen {
 
     };
 
+
     static getAllCitizens = async (page: number, pageSize: number) => {
-        const skip = (page - 1) * pageSize;
-        const take = pageSize;
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
 
-        return prisma.citizen.findMany({
-            skip: skip,
-            take: take,
-            select: {
-                id: true,
-                full_name: true,
-                dob: true,
-                gender: true,
-                address: true,
-                kk_id: false,
-                nik: true,
-                create_by: false,
-                create_at: false,
-                update_at: false,
-            },
-        });
-    };
+    const citizens = await prisma.citizen.findMany({
+        skip: skip,
+        take: take,
+        select: {
+            id: true,
+            full_name: true,
+            dob: true,
+            gender: true,
+            address: true,
+            kk_id: false,
+            nik: true,
+            create_by: false,
+            create_at: false,
+            update_at: false,
+        },
+    });
 
-    static countAllCitizens = () => {
+    // Format tanggal lahir (dob) ke dd/mm/yy
+    const formattedCitizens = citizens.map(citizen => ({
+        ...citizen,
+        dob: format(new Date(citizen.dob), 'dd/MM/yy')
+    }));
+
+    return formattedCitizens;
+};
+
+
+static countAllCitizens = () => {
         return prisma.citizen.count();
     };
 

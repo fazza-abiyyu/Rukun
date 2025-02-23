@@ -1,5 +1,5 @@
 import {$Enums, PrismaClient} from '@prisma/client';
-
+import {format} from 'date-fns';
 
 const prisma = new PrismaClient();
 
@@ -50,11 +50,12 @@ export class CashFlow {
         });
     };
 
+
     static getAllCashFlows = async (page: number, pageSize: number) => {
         const skip = (page - 1) * pageSize;
         const take = pageSize;
 
-        return prisma.cashFlow.findMany({
+        const cashFlows = await prisma.cashFlow.findMany({
             skip: skip,
             take: take,
             select: {
@@ -70,7 +71,16 @@ export class CashFlow {
                 user: true,
             },
         });
+
+        // Format tanggal (date) ke dd/MM/yy
+        const formattedCashFlows = cashFlows.map(cashFlow => ({
+            ...cashFlow,
+            date: format(new Date(cashFlow.date), 'dd/MM/yy')
+        }));
+
+        return formattedCashFlows;
     };
+
 
     static countAllCashFlows = () => {
         return prisma.cashFlow.count();
