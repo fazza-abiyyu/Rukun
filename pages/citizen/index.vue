@@ -46,7 +46,7 @@
       { label: 'NAMA WARGA', key: 'full_name' },
       { label: 'NIK', key: 'nik' },
       { label: 'JENIS KELAMIN', key: 'gender' },
-      { label: 'TANGGAL LAHIR', key: 'dob' },
+      { label: 'TANGGAL LAHIR', key: 'dob', formatter: (v) => v.split('T')[0] },
       { label: 'ALAMAT', key: 'address' },
     ]"
             :data="citizen"

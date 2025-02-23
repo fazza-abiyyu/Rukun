@@ -66,35 +66,57 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useFetchApi } from "~/composables/useFetchApi";
-import { useErrorHandling } from "~/composables/useErrorHandling";
-import { useNuxtApp } from "#app";
-
+import { ref, onMounted } from "vue";
 const { handleError } = useErrorHandling();
-const { $toast } = useNuxtApp();
 
-const page = ref(1);
+const cashflow = ref([]);
 const pageSize = ref(10);
-const totalPages = ref(1);
 const currentPage = ref(1);
-const nextPage = ref(null);
-const prevPage = ref(null);
-const cashflowData = ref([]);
-const isLoading = ref<boolean>(false);
+const totalPages = ref(1);
+const prevPage = ref<string | undefined>(undefined);
+const nextPage = ref<string | undefined>(undefined);
 
-const cashflows = computed(() => cashflowData.value);
+const isLoading = ref(false);
 
-const fetchCashflow = async () => {
+const fetchData = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true;
-    const response: any = await useFetchApi(`/api/auth/cashflow?page=${page.value}&pagesize=${pageSize.value}`);
-    cashflowData.value = response?.data;
-    totalPages.value = response?.totalPages;
-    nextPage.value = response?.next;
-    prevPage.value = response?.prev;
-  } catch (e) {
-    handleError(e);
+    const token = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("access_token="))
+      ?.split("=")[1];
+
+    if (!token) {
+      console.error("Token tidak ditemukan!");
+      return;
+    }
+
+    const response = await fetch(
+      `/api/auth/cashflow?page=${currentPage.value}&pagesize=${pageSize.value}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 401) {
+      console.error("Unauthorized! Coba login ulang.");
+      return;
+    }
+
+    const data = await response.json();
+    if (data.code === 200) {
+      cashflow.value = data.data;
+      totalPages.value = data.totalPages;
+      prevPage.value = data.prev;
+      nextPage.value = data.next;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data cashflow:", error);
   } finally {
     isLoading.value = false;
   }
@@ -104,7 +126,7 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true;
     const response: any = await useFetchApi(payload.url);
-    cashflowData.value = response?.data;
+    cashflow.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
@@ -116,22 +138,80 @@ const handleChangeFetchData = async (payload: any) => {
   }
 };
 
-const handleDeleteData = async (id: number) => {
+
+const handleSearchData = async (query: string) => {
   try {
-    if (!confirm("Anda yakin ingin menghapus ini?")) return;
-    await useFetchApi(`/api/auth/cashflow/${id}`, {
-      method: "DELETE",
-    });
-    cashflowData.value = cashflowData.value.filter((item: any) => item.id !== id);
-    $toast("Berhasil menghapus data.", "success");
+    if (query.length === 0) {
+      await fetchData(); // Ambil semua data cashflow
+      return;
+    }
+
+    isLoading.value = true;
+    const response: any = await useFetchApi(`/api/auth/cashflow/search?q=${query}`);
+    
+    cashflow.value = response?.data?.cashflow || [];
+    totalPages.value = 1; 
+    nextPage.value = undefined;
+    prevPage.value = undefined;
   } catch (e) {
-    $toast("Gagal menghapus data.", "error");
+    console.error("Gagal mencari data arus kas:", e);
+  } finally {
+    isLoading.value = false;
   }
 };
 
-onMounted(async () => {
-  await fetchCashflow();
-});
+
+const handleDeleteData = async (id: string) => {
+  if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+    return;
+  }
+
+  isLoading.value = true;
+  try {
+    const token = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("access_token="))
+      ?.split("=")[1];
+
+    if (!token) {
+      alert("Sesi Anda telah berakhir. Silakan login kembali.");
+      window.location.href = "/login";
+      return;
+    }
+
+    const response = await fetch(`/api/auth/cashflow/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.status === 401) {
+      alert("Sesi telah habis atau tidak valid. Silakan login ulang.");
+      window.location.href = "/login";
+      return;
+    }
+
+    if (response.ok && data.code === 200) {
+      alert("Data berhasil dihapus!");
+      fetchData();
+    } else {
+      console.error("Gagal menghapus data:", data.message);
+      alert("Gagal menghapus data: " + data.message);
+    }
+  } catch (error) {
+    console.error("Kesalahan saat menghapus data:", error);
+    alert("Terjadi kesalahan saat menghapus data.");
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(fetchData);
 </script>
 
 <style scoped></style>

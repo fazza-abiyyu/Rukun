@@ -143,16 +143,17 @@ onMounted(async () => {
   fetchCitizenData();
 });
 
+
 async function fetchCitizenData() {
   isLoading.value = true;
   try {
     const { data } = await useFetchApi(`/api/auth/citizen/${citizenId}`, {
       method: "GET",
-    });
+    }) as { data: Citizen };
     selectedCitizen.value = {
       id: data.id,
       full_name: data.full_name,
-      dob: data.dob.split("T")[0],
+      dob: new Date(data.dob),
       gender: data.gender,
       address: data.address,
       kk_id: data.kk_id,
