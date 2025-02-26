@@ -133,7 +133,7 @@ const handleSubmit = async () => {
       body: payload,
     });
 
-    $toast('Data warga berhasil ditambahkan!', 'success');
+    $toast('Data arus kas berhasil ditambahkan!', 'success');
     clearForm();
   } catch (error) {
     $toast('Terjadi kesalahan pada server. Silakan coba lagi.', 'error');
