@@ -47,12 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { ref, onMounted } from 'vue';
 import FormEditCitizen from "~/components/form/citizen/FormEditCitizen.vue";
-
-const route = useRoute();
-const citizenId = ref(route.params.id);
 </script>
 
 <style scoped></style>

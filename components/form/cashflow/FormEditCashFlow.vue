@@ -2,124 +2,134 @@
   <div class="p-4 md:p-5 h-fit max-h-full flex flex-col bg-white border shadow-sm rounded-xl space-y-4">
     <!-- Header -->
     <div>
-      <h2 class="text-xl font-medium text-gray-800 w-full">Ubah Posyandu</h2>
+      <h2 class="text-xl font-medium text-gray-800 w-full">Aktivitas Arus Kas</h2>
     </div>
     <!-- End Header -->
 
     <hr>
 
     <div class="h-full w-full mt-2 ">
-      <form v-if="selectedPosyandu" @submit.prevent="handleSubmit">
+      <form v-if="selectedCashflow" @submit.prevent="handleSubmit">
         <div class="space-y-4 flex flex-col">
-          <!-- Nama Posyandu -->
+          <!-- SUMBER DANA -->
           <div class="grid sm:grid-cols-3">
-            <label for="name" class="block text-sm font-medium mb-2 w-full">Nama Posyandu</label>
-            <input type="text" id="name"
-                   v-model="selectedPosyandu.name"
-                   class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                   placeholder="Posyandu Jingga">
+            <label for="name" class="block text-sm font-medium mb-2 w-full">SUMBER DANA</label>
+            <input type="text" id="name" v-model="selectedCashflow.title"
+              class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="Masukan sumber dana">
           </div>
 
-          <!-- Nomor Telepon -->
+          <!-- DESKRIPSI -->
           <div class="grid sm:grid-cols-3">
-            <label for="phone" class="block text-sm font-medium mb-2 w-full">Nomor Telepon</label>
-            <input type="text" id="phone"
-                   v-model="selectedPosyandu.phone"
-                   class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                   placeholder="08xx xxxx xxxx">
+            <label for="phone" class="block text-sm font-medium mb-2 w-full">DESKRIPSI</label>
+            <input type="text" id="phone" v-model="selectedCashflow.description"
+              class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="Masukan keterangan singkat alokasi dana">
           </div>
 
-          <!-- Alamat Posyandu -->
-          <div class="grid sm:grid-cols-3">
-            <label for="address" class="block text-sm font-medium mb-2 w-full">Alamat</label>
-            <textarea id="address"
-                      v-model="selectedPosyandu.address"
-                      class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                      placeholder="Jl. MIqona"/>
+          <!-- TANGGAL -->
+          <div class="grid grid-cols-3">
+            <label for="dob" class="block text-sm font-medium mb-2 w-full">TANGGAL</label>
+            <input type="date" id="dob" v-model="selectedCashflow.date"
+              class="col-span-2 py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
+              required />
           </div>
 
-          <!-- Puskesmas Dropdown -->
+          <!-- KATEGORI -->
           <div class="grid sm:grid-cols-3">
-            <label for="puskesmas_id" class="block text-sm font-medium mb-2 w-full">Puskesmas</label>
-            <ComboBoxKk
-                class="col-span-2"
-                @selectedPuskesmas="handleSelectPuskesmas"
-                :selectedPuskesmas="selectedPosyandu.puskesmas"
-            />
+            <label for="gender" class="block text-sm font-medium mb-2 w-full">KATEGORI</label>
+            <select id="gender" v-model="selectedCashflow.category"
+              class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+              <option value="Debit">Masuk</option>
+              <option value="Kredit">Keluar</option>
+            </select>
           </div>
+
+          <!-- JUMLAH -->
+          <div class="grid sm:grid-cols-3">
+            <label for="address" class="block text-sm font-medium mb-2 w-full">JUMLAH</label>
+            <textarea id="address" v-model="selectedCashflow.amount"
+              class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+              placeholder="Masukan besaran dana"/>
+          </div>
+
 
           <!-- Submit Button -->
           <div class="space-x-3 self-end">
-            <button type="button"
-                    @click="selectedPosyandu = null"
-                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-600 bg-transparent text-red-600 hover:bg-red-200 focus:outline-none focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+            <button type="button" @click="selectedCashflow = null"
+              class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-600 bg-transparent text-red-600 hover:bg-red-200 focus:outline-none focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
               Batal
             </button>
             <button type="submit"
-                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                    :disabled="isLoading">
+              class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+              :disabled="isLoading">
               Simpan
             </button>
           </div>
         </div>
       </form>
-      <div v-else>
-        <label for="hs-combobox-basic-usage" class="block text-sm font-medium mb-2 w-full">Cari Posyandu</label>
-        <ComboBoxPosyandu @selectedPosyandu="handleSelectedPosyandu" />
-      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ComboBoxKk from "~/components/form/advanced/ComboBoxKK.vue";
-import ComboBoxPosyandu from "~/components/form/advanced/ComboBoxPosyandu.vue";
-import type { Posyandu, Puskesmas } from "~/types/TypesModel";
+import type { Cashflow } from "~/types/TypesModel";
+import useFetchApi from '~/composables/useFetchApi';
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const { $toast } = useNuxtApp();
 
-const selectedPosyandu = ref<Posyandu | null>(null);
-const isLoading = ref<boolean>(false);
+const route = useRoute();
+const cashflowId = parseInt(route.params.id as string, 10);
 
-const handleSelectedPosyandu = (posyandu: any) => {
-  selectedPosyandu.value = {
-    id: posyandu.id,
-    name: posyandu.name,
-    phone: posyandu.phone,
-    address: posyandu.address,
-    puskesmas_id: posyandu.puskesmas_id,
-  };
-};
+const selectedCashflow = ref< Cashflow | null>(null);
+const isLoading = ref(false);
 
-const handleSelectPuskesmas = (puskesmas: Puskesmas) => {
-  if (selectedPosyandu.value) {
-    selectedPosyandu.value.puskesmas = puskesmas;
-    selectedPosyandu.value.puskesmas_id = puskesmas.id;
+onMounted(async () => {
+  fetchCashflowData();
+});
+
+
+async function fetchCashflowData() {
+  isLoading.value = true;
+  try {
+    const { data } = await useFetchApi(`/api/auth/cashflow/${cashflowId}`, {
+      method: "GET",
+    }) as { data: Cashflow };
+    selectedCashflow.value = {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      date: new Date(data.date),
+      category: data.category,
+      amount: data.amount,
+    };
+  } catch (error) {
+    console.error("Error fetching cashflow data:", error);
+    $toast("Gagal mengambil data Warga.", "error");
+  } finally {
+    isLoading.value = false;
   }
-};
+}
 
 const handleSubmit = async () => {
-  if (!selectedPosyandu.value?.puskesmas_id) {
-    $toast('Puskesmas harus dipilih.', 'error');
-    return;
-  }
+  if (!selectedCashflow.value) return;
 
+  isLoading.value = true;
   try {
-    isLoading.value = true;
-
-    await useFetchApi(`/api/auth/posyandu/${selectedPosyandu.value?.id}`, {
-      method: 'PUT',
-      body: {
-        ...selectedPosyandu.value
-      }
+    await useFetchApi(`/api/auth/cashflow/${selectedCashflow.value.id}`, {
+      method: "PUT",
+      body: selectedCashflow.value,
     });
-
-    $toast('Berhasil mengubah data Posyandu.', 'success');
-    selectedPosyandu.value = null;
+    $toast("Berhasil mengubah data Warga.", "success");
+    router.push("/citizen");
   } catch (error) {
-    $toast('Gagal mengubah data Posyandu.', 'error');
+    $toast("Gagal mengubah data Warga.", "error");
   } finally {
     isLoading.value = false;
   }
 };
 </script>
+
+<style scoped></style>
