@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Pengguna
+          Identitas
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -40,29 +40,31 @@
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <DatatablesDataTable
-          :title="'Pengguna'"
+          :title="'Kartu Keluarga'"
           :fields="[
-      { label: 'Nama', key: 'full_name' },
-      { label: 'Email', key: 'email' },
-      { label: 'Status', key: 'status' },
-      { label: 'Peran', key: 'role' },
-    ]"
-          :data="users"
+            { label: 'NOMOR KARTU KELUARGA', key: 'kk' },
+            { label: 'NAMA KEPALA KELUARGA', key: 'head_of_family' }
+          ]"
+          :data="KK"
           :perPage="pageSize"
           :totalPages="totalPages"
           :currentPage="currentPage"
           :prevPage="prevPage"
           :nextPage="nextPage"
           :isLoading="isLoading"
+          :deleteAction="true"
           @fetchData="(e) => handleChangeFetchData(e)"
           @searchData="(e) => handleSearchData(e)"
+          @deleteData="(e) => handleDeleteData(e)"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const {handleError} = useErrorHandling();
+import type { KKType } from "~/types/TypesModel";
+const {$toast} = useNuxtApp();
+const { handleError } = useErrorHandling();
 
 const page = ref(1)
 const pageSize = ref(10)
@@ -70,19 +72,19 @@ const totalPages = ref(1)
 const currentPage = ref(1)
 const nextPage = ref()
 const prevPage = ref()
-const usersData = ref([])
+const KKData = ref([]) 
 const isLoading = ref<boolean>(false)
 
-const users = computed(() => usersData.value)
+const KK = computed(() => KKData.value)
 
-const fetchUsers = async () => {
+const fetchKK = async () => {
   try {
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/users?page=${page.value}&pagesize=${pageSize.value}`);
-    usersData.value = response?.data?.users;
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
+    const response: any = await useFetchApi(`/api/auth/kk?page=${page.value}&pagesize=${pageSize.value}`);
+    KKData.value = response?.data; 
+    totalPages.value = response?.totalPages;
+    nextPage.value = response?.next;
+    prevPage.value = response?.prev;
   } catch (e) {
     handleError(e)
   } finally {
@@ -94,10 +96,10 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(payload.url);
-    usersData.value = response?.data?.users;
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
+    KKData.value = response?.data; 
+    totalPages.value = response?.totalPages;
+    nextPage.value = response?.next;
+    prevPage.value = response?.prev;
     currentPage.value = payload?.currentPage;
   } catch (e) {
     handleError(e)
@@ -109,12 +111,12 @@ const handleChangeFetchData = async (payload: any) => {
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchUsers()
+      await fetchKK()  
       return
     }
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/users/search?q=${query}`);
-    usersData.value = response?.data?.users;
+    const response: any = await useFetchApi(`/api/auth/kk/search?q=${query}`);
+    KKData.value = response?.data; 
     totalPages.value = 1;
     nextPage.value = null;
     prevPage.value = null;
@@ -125,11 +127,26 @@ const handleSearchData = async (query: string) => {
   }
 }
 
+const handleDeleteData = async (id: number) => {
+  try {
+    if (!confirm("Anda yakin ingin menghapus ini?")) return
+    const {deviceType, os, browser} = getDeviceAndBrowserInfo()
+    await useFetchApi(`/api/auth/kk/${id}`, {
+      method: 'DELETE',
+      body: {
+        ip_address: useState('ip_address').value,
+        device: `${deviceType}, ${os} on ${browser}`,
+        location: "Unknown"
+      }
+    })
+    KKData.value = KKData.value.filter((item: KKType) => item.id !== id)
+    $toast('Berhasil mengubah data.', 'success');
+  } catch (e) {
+    $toast('Gagal mengubah data.', 'error');
+  }
+}
+
 onMounted(async () => {
-  await fetchUsers()
+  await fetchKK() 
 })
 </script>
-
-<style scoped>
-
-</style>

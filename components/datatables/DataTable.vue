@@ -52,7 +52,7 @@
                       </td>
                     </tr>
                   </template>
-                  <template v-else-if="!isLoading && data.length > 0">
+                  <template v-else-if="!isLoading && (data?.length ?? 0) > 0">
                     <tr v-for="(row, index) in data" :key="index">
                       <td v-for="field in fields" :key="field.key"
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">

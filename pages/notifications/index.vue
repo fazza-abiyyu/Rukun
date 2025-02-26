@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Anak
+          Pengguna
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -40,32 +40,30 @@
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <DatatablesDataTable
-          :title="'Anak'"
+          :title="'Daftar Pemberitahuan'"
           :fields="[
-            { label: 'Nama Anak', key: 'name' },
-            { label: 'Tanggal Lahir', key: 'bod' },
-            { label: 'Jenis Kelamin', key: 'gender' }
-          ]"
-          :data="children"
+          { label: 'JUDUL', key: 'title' },
+          { label: 'TANGGAL', key: 'date' },
+          { label: 'DESKRIPSI', key: 'description' },
+          { label: 'PEMBUAT', key: 'create_by' },
+          { label: 'DIBUAT', key: 'create_at' }
+    ]"
+          :data="notifications"
           :perPage="pageSize"
           :totalPages="totalPages"
           :currentPage="currentPage"
           :prevPage="prevPage"
           :nextPage="nextPage"
           :isLoading="isLoading"
-          :deleteAction="true"
           @fetchData="(e) => handleChangeFetchData(e)"
           @searchData="(e) => handleSearchData(e)"
-          @deleteData="(e) => handleDeleteData(e)"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type {Puskesmas} from "~/types/TypesModel";
-const {$toast} = useNuxtApp();
-const { handleError } = useErrorHandling();
+const {handleError} = useErrorHandling();
 
 const page = ref(1)
 const pageSize = ref(10)
@@ -73,19 +71,19 @@ const totalPages = ref(1)
 const currentPage = ref(1)
 const nextPage = ref()
 const prevPage = ref()
-const childrenData = ref([])  // Renamed to childrenData
+const notificationsData = ref([])
 const isLoading = ref<boolean>(false)
 
-const children = computed(() => childrenData.value)
+const notifications = computed(() => notificationsData.value)
 
-const fetchChildren = async () => {
+const fetchNotifications = async () => {
   try {
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/child?page=${page.value}&pagesize=${pageSize.value}`);
-    childrenData.value = response?.data; // Changed to handle child data
-    totalPages.value = response?.totalPages;
-    nextPage.value = response?.next;
-    prevPage.value = response?.prev;
+    const response: any = await useFetchApi(`/api/auth/notifications?page=${page.value}&pagesize=${pageSize.value}`);
+    notificationsData.value = response?.data?.users;
+    totalPages.value = response?.meta?.totalPages;
+    nextPage.value = response?.meta?.next;
+    prevPage.value = response?.meta?.prev;
   } catch (e) {
     handleError(e)
   } finally {
@@ -97,10 +95,10 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(payload.url);
-    childrenData.value = response?.data; // Adjusted for children data format
-    totalPages.value = response?.totalPages;
-    nextPage.value = response?.next;
-    prevPage.value = response?.prev;
+    notificationsData.value = response?.data?.users;
+    totalPages.value = response?.meta?.totalPages;
+    nextPage.value = response?.meta?.next;
+    prevPage.value = response?.meta?.prev;
     currentPage.value = payload?.currentPage;
   } catch (e) {
     handleError(e)
@@ -112,12 +110,12 @@ const handleChangeFetchData = async (payload: any) => {
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchChildren()  // Adjusted to fetch children data
+      await fetchNotifications()
       return
     }
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/child/search?q=${query}`);
-    childrenData.value = response?.data; // Adjusted for children data format
+    const response: any = await useFetchApi(`/api/auth/notifications/search?q=${query}`);
+    notificationsData.value = response?.data?.users;
     totalPages.value = 1;
     nextPage.value = null;
     prevPage.value = null;
@@ -128,26 +126,11 @@ const handleSearchData = async (query: string) => {
   }
 }
 
-const handleDeleteData = async (id: number) => {
-  try {
-    if (!confirm("Anda yakin ingin menghapus ini?")) return
-    const {deviceType, os, browser} = getDeviceAndBrowserInfo()
-    await useFetchApi(`/api/auth/child/${id}`, {
-      method: 'DELETE',
-      body: {
-        ip_address: useState('ip_address').value,
-        device: `${deviceType}, ${os} on ${browser}`,
-        location: "Unknown"
-      }
-    })
-    childrenData.value = childrenData.value.filter((item: Puskesmas) => item.id !== id)
-    $toast('Berhasil mengubah data.', 'success');
-  } catch (e) {
-    $toast('Gagal mengubah data.', 'error');
-  }
-}
-
 onMounted(async () => {
-  await fetchChildren() // Fetch children data on mount
+  await fetchNotifications()
 })
 </script>
+
+<style scoped>
+
+</style>

@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Pemeriksaan
+          Pengajuan Surat
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -40,17 +40,13 @@
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <DatatablesDataTable
-          :title="'Pemeriksaan'"
+          :title="'Pengajuan Surat'"
       :fields="[
-      { label: 'Nama Anak', key: 'child.name' },
-      { label: 'Tanggal Lahir', key: 'child.bod' },
-      { label: 'Jenis Kelamin', key: 'child.gender' },
-      { label: 'Tinggi Badan', key: 'height' },
-      { label: 'Berat Badan', key: 'weight' },
-      { label: 'Umur', key: 'age' },
-      { label: 'Lingkar Kepala', key: 'circumference' }
+       { label: 'NAMA', key: 'toEmail' },
+      { label: 'NOMOR INDUK KELUARGA', key: 'data_nik' },
+      { label: 'JENIS SURAT', key: 'category_letter' }
       ]"
-      :data="medicalCheckups"
+      :data="applicationletters"
       :perPage="pageSize"
       :totalPages="totalPages"
       :currentPage="currentPage"
@@ -73,21 +69,22 @@ const totalPages = ref(1)
 const currentPage = ref(1)
 const nextPage = ref()
 const prevPage = ref()
-const medicalCheckupsData = ref([])  // Ubah childrenData menjadi medicalCheckupsData
+const applicationlettersData = ref([])  
 const isLoading = ref<boolean>(false)
 
-const medicalCheckups = computed(() => medicalCheckupsData.value)  // Ganti children menjadi medicalCheckups
+const applicationletters = computed(() => applicationlettersData.value)  
 
-const fetchMedicalCheckups = async () => {
+const fetchapplicationletters = async () => {
   try {
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/med-check-up?page=${page.value}&pagesize=${pageSize.value}`);
-    medicalCheckupsData.value = response?.data; // Ubah menjadi medicalCheckupsData
+    const response: any = await useFetchApi(`/api/auth/application-letters?page=${page.value}&pagesize=${pageSize.value}`);
+    applicationlettersData.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
   } catch (e) {
     handleError(e)
+    applicationlettersData.value = [];
   } finally {
     isLoading.value = false
   }
@@ -97,7 +94,7 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(payload.url);
-    medicalCheckupsData.value = response?.data; // Sesuaikan data pemeriksaan
+    applicationlettersData.value = response?.data; 
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
@@ -112,12 +109,12 @@ const handleChangeFetchData = async (payload: any) => {
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchMedicalCheckups()  // Ambil data pemeriksaan
+      await fetchapplicationletters()  
       return
     }
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/med-check-up/search?q=${query}`);
-    medicalCheckupsData.value = response?.data; // Sesuaikan pencarian data pemeriksaan
+    const response: any = await useFetchApi(`/api/auth/application-letters/search?q=${query}`);
+    applicationlettersData.value = response?.data; 
     totalPages.value = 1;
     nextPage.value = null;
     prevPage.value = null;
@@ -129,6 +126,6 @@ const handleSearchData = async (query: string) => {
 }
 
 onMounted(async () => {
-  await fetchMedicalCheckups()  // Ambil data pemeriksaan saat komponen dimuat
+  await fetchapplicationletters()  
 })
 </script>
