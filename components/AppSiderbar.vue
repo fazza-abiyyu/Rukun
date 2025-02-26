@@ -413,7 +413,7 @@
             <li>
               <NuxtLink
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                to="/report" active-class="bg-gray-100">
+                to="/users" active-class="bg-gray-100">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M12.6667 16V14.6667C12.6667 13.9594 12.3858 13.2811 11.8857 12.781C11.3856 12.281 10.7073 12 10 12H6.00004C5.2928 12 4.61452 12.281 4.11442 12.781C3.61433 13.2811 3.33337 13.9594 3.33337 14.6667V16"

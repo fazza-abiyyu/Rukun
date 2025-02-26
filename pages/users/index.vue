@@ -42,16 +42,12 @@
       <DatatablesDataTable
           :title="'Hasil Pemeriksaan Medis'"
           :fields="[
-            { label: 'ID Pemeriksaan', key: 'id' },
-            { label: 'Status', key: 'status' },
-            { label: 'IMT', key: 'imt' },
-            { label: 'IPB', key: 'ipb' },
-            { label: 'Tinggi Badan', key: 'med_check_up.height' },
-            { label: 'Berat Badan', key: 'med_check_up.weight' },
-            { label: 'Usia', key: 'med_check_up.age' },
-            { label: 'Lingkar Kepala', key: 'med_check_up.circumference' }
+            { label: 'PENGGUNA', key: 'username' },
+            { label: 'EMAIL', key: 'email' },
+            { label: 'ROLE', key: 'role' },
+            { label: 'STATUS', key: 'userstatus' }
           ]"
-          :data="resultMedCheckUp"
+          :data="user"
           :perPage="pageSize"
           :totalPages="totalPages"
           :currentPage="currentPage"
@@ -77,16 +73,16 @@ const totalPages = ref(1)
 const currentPage = ref(1)
 const nextPage = ref()
 const prevPage = ref()
-const resultMedCheckUpData = ref([])  // Changed to resultMedCheckUpData
+const userData = ref([])  
 const isLoading = ref<boolean>(false)
 
-const resultMedCheckUp = computed(() => resultMedCheckUpData.value)
+const user = computed(() => userData.value)
 
-const fetchResultMedCheckUp = async () => {
+const fetchUser = async () => {
   try {
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/result-med-check-up?page=${page.value}&pagesize=${pageSize.value}`);
-    resultMedCheckUpData.value = response?.data;
+    const response: any = await useFetchApi(`/api/auth/users?page=${page.value}&pagesize=${pageSize.value}`);
+    userData.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
@@ -101,7 +97,7 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(payload.url);
-    resultMedCheckUpData.value = response?.data;
+    userData.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
@@ -116,12 +112,12 @@ const handleChangeFetchData = async (payload: any) => {
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchResultMedCheckUp()  // Adjusted to fetch resultMedCheckUp data
+      await fetchUser()  
       return
     }
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/result-med-check-up/search?q=${query}`);
-    resultMedCheckUpData.value = response?.data;
+    const response: any = await useFetchApi(`/api/auth/users/search?q=${query}`);
+    userData.value = response?.data;
     totalPages.value = 1;
     nextPage.value = null;
     prevPage.value = null;
@@ -135,10 +131,10 @@ const handleSearchData = async (query: string) => {
 const handleDeleteData = async (id: number) => {
   try {
     if (!confirm("Anda yakin ingin menghapus ini?")) return
-    await useFetchApi(`/api/auth/result-med-check-up/${id}`, {
+    await useFetchApi(`/api/auth/users/${id}`, {
       method: 'DELETE'
     })
-    resultMedCheckUpData.value = resultMedCheckUpData.value.filter((item: any) => item.id !== id)
+    userData.value = userData.value.filter((item: any) => item.id !== id)
     $toast('Berhasil menghapus data.', 'success');
   } catch (e) {
     $toast('Gagal menghapus data.', 'error');
@@ -146,7 +142,7 @@ const handleDeleteData = async (id: number) => {
 }
 
 onMounted(async () => {
-  await fetchResultMedCheckUp()
+  await fetchUser()
 })
 </script>
 

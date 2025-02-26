@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import FormApplicationLetter from "~/components/form/pemeriksaan/FormApplicationLetter.vue";
+import FormApplicationLetter from "~/components/form/applicationletter/FormApplicationLetter.vue";
 
 </script>
 
