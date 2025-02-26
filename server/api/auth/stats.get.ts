@@ -3,13 +3,11 @@ import { defineEventHandler, setResponseStatus, createError, sendError } from 'h
 
 export default defineEventHandler(async (event) => {
     try {
-        // Ambil data user dari context (jika diperlukan)
-        const user = event.context.auth?.user;
-
-        // Check for user authentication (optional, remove if not needed)
-        if (!user || !user.id || isNaN(user.id)) {
-            setResponseStatus(event, 400);
-            return { code: 400, message: 'Pengguna tidak valid' };
+        // Periksa apakah pengguna ada
+        const user = event.context?.auth?.user;
+        if (!user) {
+            setResponseStatus(event, 403);
+            return {code: 403, message: 'Pengguna tidak valid'};
         }
 
         // Get total number of users
