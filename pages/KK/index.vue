@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Anak
+          Identitas
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -40,13 +40,12 @@
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <DatatablesDataTable
-          :title="'Anak'"
+          :title="'Kartu Keluarga'"
           :fields="[
-            { label: 'Nama Anak', key: 'name' },
-            { label: 'Tanggal Lahir', key: 'bod' },
-            { label: 'Jenis Kelamin', key: 'gender' }
+            { label: 'NOMOR KARTU KELUARGA', key: 'kk' },
+            { label: 'NAMA KEPALA KELUARGA', key: 'head_of_family' }
           ]"
-          :data="children"
+          :data="KK"
           :perPage="pageSize"
           :totalPages="totalPages"
           :currentPage="currentPage"
@@ -63,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import type {Puskesmas} from "~/types/TypesModel";
+import type { KKType } from "~/types/TypesModel";
 const {$toast} = useNuxtApp();
 const { handleError } = useErrorHandling();
 
@@ -73,16 +72,16 @@ const totalPages = ref(1)
 const currentPage = ref(1)
 const nextPage = ref()
 const prevPage = ref()
-const childrenData = ref([])  // Renamed to childrenData
+const KKData = ref([]) 
 const isLoading = ref<boolean>(false)
 
-const children = computed(() => childrenData.value)
+const KK = computed(() => KKData.value)
 
-const fetchChildren = async () => {
+const fetchKK = async () => {
   try {
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/child?page=${page.value}&pagesize=${pageSize.value}`);
-    childrenData.value = response?.data; // Changed to handle child data
+    const response: any = await useFetchApi(`/api/auth/kk?page=${page.value}&pagesize=${pageSize.value}`);
+    KKData.value = response?.data; 
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
@@ -97,7 +96,7 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(payload.url);
-    childrenData.value = response?.data; // Adjusted for children data format
+    KKData.value = response?.data; 
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
@@ -112,12 +111,12 @@ const handleChangeFetchData = async (payload: any) => {
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchChildren()  // Adjusted to fetch children data
+      await fetchKK()  
       return
     }
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/child/search?q=${query}`);
-    childrenData.value = response?.data; // Adjusted for children data format
+    const response: any = await useFetchApi(`/api/auth/kk/search?q=${query}`);
+    KKData.value = response?.data; 
     totalPages.value = 1;
     nextPage.value = null;
     prevPage.value = null;
@@ -132,7 +131,7 @@ const handleDeleteData = async (id: number) => {
   try {
     if (!confirm("Anda yakin ingin menghapus ini?")) return
     const {deviceType, os, browser} = getDeviceAndBrowserInfo()
-    await useFetchApi(`/api/auth/child/${id}`, {
+    await useFetchApi(`/api/auth/kk/${id}`, {
       method: 'DELETE',
       body: {
         ip_address: useState('ip_address').value,
@@ -140,7 +139,7 @@ const handleDeleteData = async (id: number) => {
         location: "Unknown"
       }
     })
-    childrenData.value = childrenData.value.filter((item: Puskesmas) => item.id !== id)
+    KKData.value = KKData.value.filter((item: KKType) => item.id !== id)
     $toast('Berhasil mengubah data.', 'success');
   } catch (e) {
     $toast('Gagal mengubah data.', 'error');
@@ -148,6 +147,6 @@ const handleDeleteData = async (id: number) => {
 }
 
 onMounted(async () => {
-  await fetchChildren() // Fetch children data on mount
+  await fetchKK() 
 })
 </script>

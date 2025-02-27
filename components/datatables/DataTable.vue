@@ -52,7 +52,7 @@
                       </td>
                     </tr>
                   </template>
-                  <template v-else-if="!isLoading && data.length > 0">
+                  <template v-else-if="!isLoading && (data?.length ?? 0) > 0">
                     <tr v-for="(row, index) in data" :key="index">
                       <td v-for="field in fields" :key="field.key"
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
@@ -65,7 +65,7 @@
                         class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 flex items-center gap-2">
 
                         <!-- Tombol Edit di Kiri -->
-                        <router-link v-if="editAction" :to="`/citizen/edit/${row.id}`">
+                        <router-link v-if="editAction" :to="getEditRoute(row)">
                           <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <rect width="32" height="32" rx="3" fill="#FFC420" />
@@ -143,6 +143,16 @@
 
 <script setup lang="ts">
 import debounce from 'lodash/debounce';
+
+const getEditRoute = (row: Record<string, any>) => {
+  if ("nik" in row) {
+    return `/citizen/edit/${row.id}`;
+  } else if ("category" in row) {
+    return `/cashflow/edit/${row.id}`;
+  } else {
+    return "/";
+  }
+};
 
 // Define the props
 const props = defineProps({

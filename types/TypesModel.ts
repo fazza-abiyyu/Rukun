@@ -24,6 +24,7 @@ export enum Gender {
     FEMALE = 'Perempuan',
 }
 
+
 export type KKType = {
     id: number;
     head_of_family: string;
@@ -35,8 +36,8 @@ export type KKType = {
 
 
 export enum Category {
-    KREDIT = 'Kredit',
-    DEBIT = 'Debit',
+    KREDIT = 'Keluar',
+    DEBIT = 'Masuk',
 }
 
 export type Citizen = {
@@ -47,4 +48,13 @@ export type Citizen = {
     address: string;
     kk_id: number;
     nik: string;
+}
+
+export type Cashflow = {
+    id: number;
+    title: String;
+    description: String;
+    date: Date;
+    category: Category;
+    amount: number;
 }

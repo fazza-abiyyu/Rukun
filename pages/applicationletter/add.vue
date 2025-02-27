@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Posyandu
+          Pemeriksaan
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -37,17 +37,16 @@
   </div>
   <!-- End Breadcrumb -->
 
-  <div class="w-full min-h-screen lg:ps-64">
+  <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <client-only>
-        <FormEditCashFlow />
-      </client-only>
+      <FormApplicationLetter />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FormEditCashFlow from "~/components/form/posyandu/FormEditCashFlow.vue";
+import FormApplicationLetter from "~/components/form/applicationletter/FormApplicationLetter.vue";
+
 </script>
 
 <style scoped>

@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Hasil Pemeriksaan Medis
+          Pengguna
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -40,36 +40,30 @@
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <DatatablesDataTable
-          :title="'Hasil Pemeriksaan Medis'"
+          :title="'Daftar Pemberitahuan'"
           :fields="[
-            { label: 'ID Pemeriksaan', key: 'id' },
-            { label: 'Status', key: 'status' },
-            { label: 'IMT', key: 'imt' },
-            { label: 'IPB', key: 'ipb' },
-            { label: 'Tinggi Badan', key: 'med_check_up.height' },
-            { label: 'Berat Badan', key: 'med_check_up.weight' },
-            { label: 'Usia', key: 'med_check_up.age' },
-            { label: 'Lingkar Kepala', key: 'med_check_up.circumference' }
-          ]"
-          :data="resultMedCheckUp"
+          { label: 'JUDUL', key: 'title' },
+          { label: 'TANGGAL', key: 'date' },
+          { label: 'DESKRIPSI', key: 'description' },
+          { label: 'PEMBUAT', key: 'create_by' },
+          { label: 'DIBUAT', key: 'create_at' }
+    ]"
+          :data="notifications"
           :perPage="pageSize"
           :totalPages="totalPages"
           :currentPage="currentPage"
           :prevPage="prevPage"
           :nextPage="nextPage"
           :isLoading="isLoading"
-          :deleteAction="true"
           @fetchData="(e) => handleChangeFetchData(e)"
           @searchData="(e) => handleSearchData(e)"
-          @deleteData="(e) => handleDeleteData(e)"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { handleError } = useErrorHandling();
-const {$toast} = useNuxtApp();
+const {handleError} = useErrorHandling();
 
 const page = ref(1)
 const pageSize = ref(10)
@@ -77,19 +71,19 @@ const totalPages = ref(1)
 const currentPage = ref(1)
 const nextPage = ref()
 const prevPage = ref()
-const resultMedCheckUpData = ref([])  // Changed to resultMedCheckUpData
+const notificationsData = ref([])
 const isLoading = ref<boolean>(false)
 
-const resultMedCheckUp = computed(() => resultMedCheckUpData.value)
+const notifications = computed(() => notificationsData.value)
 
-const fetchResultMedCheckUp = async () => {
+const fetchNotifications = async () => {
   try {
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/result-med-check-up?page=${page.value}&pagesize=${pageSize.value}`);
-    resultMedCheckUpData.value = response?.data;
-    totalPages.value = response?.totalPages;
-    nextPage.value = response?.next;
-    prevPage.value = response?.prev;
+    const response: any = await useFetchApi(`/api/auth/notifications?page=${page.value}&pagesize=${pageSize.value}`);
+    notificationsData.value = response?.data?.users;
+    totalPages.value = response?.meta?.totalPages;
+    nextPage.value = response?.meta?.next;
+    prevPage.value = response?.meta?.prev;
   } catch (e) {
     handleError(e)
   } finally {
@@ -101,10 +95,10 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(payload.url);
-    resultMedCheckUpData.value = response?.data;
-    totalPages.value = response?.totalPages;
-    nextPage.value = response?.next;
-    prevPage.value = response?.prev;
+    notificationsData.value = response?.data?.users;
+    totalPages.value = response?.meta?.totalPages;
+    nextPage.value = response?.meta?.next;
+    prevPage.value = response?.meta?.prev;
     currentPage.value = payload?.currentPage;
   } catch (e) {
     handleError(e)
@@ -116,12 +110,12 @@ const handleChangeFetchData = async (payload: any) => {
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchResultMedCheckUp()  // Adjusted to fetch resultMedCheckUp data
+      await fetchNotifications()
       return
     }
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/result-med-check-up/search?q=${query}`);
-    resultMedCheckUpData.value = response?.data;
+    const response: any = await useFetchApi(`/api/auth/notifications/search?q=${query}`);
+    notificationsData.value = response?.data?.users;
     totalPages.value = 1;
     nextPage.value = null;
     prevPage.value = null;
@@ -132,22 +126,11 @@ const handleSearchData = async (query: string) => {
   }
 }
 
-const handleDeleteData = async (id: number) => {
-  try {
-    if (!confirm("Anda yakin ingin menghapus ini?")) return
-    await useFetchApi(`/api/auth/result-med-check-up/${id}`, {
-      method: 'DELETE'
-    })
-    resultMedCheckUpData.value = resultMedCheckUpData.value.filter((item: any) => item.id !== id)
-    $toast('Berhasil menghapus data.', 'success');
-  } catch (e) {
-    $toast('Gagal menghapus data.', 'error');
-  }
-}
-
 onMounted(async () => {
-  await fetchResultMedCheckUp()
+  await fetchNotifications()
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

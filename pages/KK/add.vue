@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import FormAddKk from "~/components/form/child/FormAddKk.vue";
+import FormAddKk from "~/components/form/KK/FormAddKk.vue";
 
 </script>
 
