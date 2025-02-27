@@ -60,7 +60,7 @@
                   <span
                       class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
                       role="tooltip">
-                      Total Pengguna
+                      Total Pengguna Aktif
                     </span>
                 </div>
               </div>
@@ -68,7 +68,7 @@
 
             <div class="mt-1 flex items-center gap-x-2">
               <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.user }}
+                {{ stats?.totalUser }}
               </h3>
             </div>
           </div>
@@ -80,7 +80,7 @@
           <div class="p-4 md:p-5">
             <div class="flex items-center gap-x-2">
               <p class="text-xs uppercase tracking-wide text-gray-500">
-                Total Warga
+                Total Wagra
               </p>
               <div class="hs-tooltip">
                 <div class="hs-tooltip-toggle">
@@ -94,7 +94,7 @@
                   <span
                       class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
                       role="tooltip">
-                      Total Warga
+                      Total Warga Aktif
                     </span>
                 </div>
               </div>
@@ -102,7 +102,7 @@
 
             <div class="mt-1 flex items-center gap-x-2">
               <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.citizen }}
+                {{ stats?.totalCitizen }}
               </h3>
             </div>
           </div>
@@ -114,7 +114,7 @@
           <div class="p-4 md:p-5">
             <div class="flex items-center gap-x-2">
               <p class="text-xs uppercase tracking-wide text-gray-500">
-                Total Warga Laki-laki
+                Total Warga Lokal
               </p>
               <div class="hs-tooltip">
                 <div class="hs-tooltip-toggle">
@@ -128,7 +128,7 @@
                   <span
                       class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
                       role="tooltip">
-                      Total Warga Laki-laki
+                      Total Warga Laki-laki Aktif
                     </span>
                 </div>
               </div>
@@ -136,7 +136,7 @@
 
             <div class="mt-1 flex items-center gap-x-2">
               <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.citizenMale }}
+                {{ stats?.totalMaleCitizen }}
               </h3>
             </div>
           </div>
@@ -162,7 +162,7 @@
                   <span
                       class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm"
                       role="tooltip">
-                      Total Warga Perempuan
+                      Total Warga Perempuan Aktif
                     </span>
                 </div>
               </div>
@@ -170,7 +170,7 @@
 
             <div class="mt-1 flex items-center gap-x-2">
               <h3 class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ stats?.citizenFemale }}
+                {{ stats?.totalFemaleCitizen }}
               </h3>
             </div>
           </div>
@@ -190,7 +190,7 @@
                 Arus Kas
               </h2>
               <p class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ CashflowGraph?.totals }}
+                {{ cashflowGraph?.totals }}
               </p>
             </div>
 
@@ -210,14 +210,6 @@
                     </option>
                   </select>
                 </client-only>
-                <div class="absolute top-1/2 end-2.5 -translate-y-1/2">
-                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                       stroke-linejoin="round">
-                    <path d="m7 15 5 5 5-5"></path>
-                    <path d="m7 9 5-5 5 5"></path>
-                  </svg>
-                </div>
               </div>
             </div>
           </div>
@@ -226,8 +218,8 @@
           <div id="hs-single-area-chart" class="h-full w-full">
             <client-only>
               <ChartAreaChart
-                  :series="CashflowGraph?.Cashflow??[]"
-                  :categories="CashflowGraph?.categories??[]"
+                  :series="cashflowGraph?.CashFlow??[]"
+                  :categories="cashflowGraph?.categories??[]"
                   :color="chartColors"
               />
             </client-only>
@@ -278,13 +270,12 @@
         </div>
         <!-- End Card -->
       </div>
-
       <div
           class="p-4 md:p-5 h-fit max-h-[410px] flex flex-col bg-white border shadow-sm rounded-xl">
         <!-- Header -->
         <div class="flex justify-between items-center p-2">
           <h2 class="text-xl font-medium text-gray-800">
-            Aktivitas Terbaru
+            Aktivitas Penambahan Arus Kas Terbaru
           </h2>
         </div>
         <!-- End Header -->
@@ -298,52 +289,136 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-
 // Data untuk grafik area
-import DataTablesRecentlyActivities from "~/components/datatables/DataTablesRecentlyActivities.vue";
+import DataTablesRecentlyActivities from "~/components/datatables/DataTablesRecentlyAddCashflowActivities.vue";
 
-const statsData = ref({
-  totalUser: 0,
-  totalCitizen: 0,
-  totalMaleCitizen: 0,
-  totalFemaleCitizen: 0,
-  childGenderRatio: {},
-  flowCashStats: {}
-});
-const year = ref(new Date().getFullYear());
-const yearPrediction = ref(year.value + 1);
-const recentlyActivitiesData = ref([]);
+const childDataGraph = ref([])
+const cashflow = ref([])
+const stuntingPredictionDataGraph = ref([])
+const year = ref(new Date().getFullYear())
+const startYear = ref(new Date().getFullYear() - 1)
+const endYear = ref(new Date().getFullYear())
+const recentlyActivitiesData = ref([])
+const statsData = ref([])
+const yearPrediction = ref(endYear.value + 1)
 
-const stats = computed(() => statsData.value);
-const recentlyActivities = computed(() => recentlyActivitiesData.value);
+// Warna untuk setiap garis pada grafik
+const chartColors = ref(['#2563EB', '#22d3ee']); // Warna garis yang berbeda
+  
+const stats: any = computed(() => statsData.value)
+const childGraph: any = computed(() => childDataGraph.value)
+const cashflowGraph: any = computed(() => cashflow.value)
+const recentlyActivities: any = computed(() => recentlyActivitiesData.value)
 
-// Fetch data functions
 const fetchStatsData = async () => {
   try {
-    const response: any = await useFetchApi('/api/auth/stats');
-    statsData.value = response?.data;
+    const response: any = await useFetchApi('/api/auth/stats')
+    statsData.value = response?.data
   } catch (e) {
-    console.error("Failed to fetch stats data", e);
+
   }
-};
+}
+
+const fetchChildDataGraph = async () => {
+  try {
+    const response: any = await useFetchApi('/api/auth/graph/child')
+    childDataGraph.value = response?.data
+  } catch (e) {
+
+  }
+}
+
+const fetchcashflow = async () => {
+  try {
+    const response: any = await useFetchApi(`/api/auth/graph?year=${year.value}`)
+    cashflow.value = response?.data
+  } catch (e) {
+
+  }
+}
+
+const fetchStuntingPredictionDataGraph = async () => {
+  try {
+    const response: any = await $fetch(`https://extra-reba-fazza-abiyyu-a1cfd750.koyeb.app/predict?start_year=${startYear.value}&end_year=${endYear.value}`)
+    stuntingPredictionDataGraph.value = response?.data
+    yearPrediction.value = response?.tahun_prediksi
+  } catch (e) {
+
+  }
+}
+
+
+const pageSize = ref(10);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const prevPage = ref<string | undefined>(undefined);
+const nextPage = ref<string | undefined>(undefined);
+
+const isLoading = ref(false);
 
 const fetchRecentlyActivitiesData = async () => {
+  isLoading.value = true;
   try {
-    const response: any = await useFetchApi(`/api/auth/logs`);
-    recentlyActivitiesData.value = response?.data?.logs;
-  } catch (e) {
-    console.error("Failed to fetch recently activities data", e);
+    const token = document.cookie
+      .split("; ")
+      .find(row => row.startsWith("access_token="))
+      ?.split("=")[1];
+
+    if (!token) {
+      console.error("Token tidak ditemukan!");
+      return;
+    }
+
+    const response = await fetch(
+      `/api/auth/cashflow?page=${currentPage.value}&pagesize=${pageSize.value}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 401) {
+      console.error("Unauthorized! Coba login ulang.");
+      return;
+    }
+
+    const data = await response.json();
+    if (data.code === 200) {
+      recentlyActivitiesData.value = data.data;
+      console.log(recentlyActivitiesData.value)
+      totalPages.value = data.totalPages;
+      prevPage.value = data.prev;
+      nextPage.value = data.next;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data cashflow:", error);
+  } finally {
+    isLoading.value = false;
   }
-};
+};2
+
+
+watch(year, fetchcashflow)
+watch([startYear, endYear], ([newStartYear, newEndYear]) => {
+  if (newStartYear && newEndYear) {
+    fetchStuntingPredictionDataGraph();
+  }
+});
 
 onMounted(() => {
-  fetchStatsData();
-  fetchRecentlyActivitiesData();
-});
+  fetchStatsData()
+  fetchChildDataGraph()
+  fetchcashflow()
+  fetchRecentlyActivitiesData()
+  fetchStuntingPredictionDataGraph()
+})
 </script>
-
 
 <style scoped>
 
