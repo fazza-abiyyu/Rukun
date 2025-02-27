@@ -1,4 +1,5 @@
 import { PrismaClient, Category } from '@prisma/client';
+import { CashFlow } from './CashFlow';
 
 const prisma = new PrismaClient();
 
@@ -40,74 +41,131 @@ export class Stats {
     return totalFemaleCitizen;
   }
 
-  // Get ratio of children by gender (citizens under 17 years old)
-  static async getRatioChildByGender() {
-    const today = new Date();
-    const cutoffDate = new Date(today.getFullYear() - 17, today.getMonth(), today.getDate());
+  // // Get ratio of children by gender (citizens under 17 years old)
+  // static async getRatioChildByGender() {
+  //   const today = new Date();
+  //   const cutoffDate = new Date(today.getFullYear() - 17, today.getMonth(), today.getDate());
 
-    // Count children by gender
-    const childMale = await prisma.citizen.count({
-      where: {
-        gender: 'Male',
-        dob: {
-          gte: cutoffDate,
+  //   // Count children by gender
+  //   const childMale = await prisma.citizen.count({
+  //     where: {
+  //       gender: 'Male',
+  //       dob: {
+  //         gte: cutoffDate,
+  //       },
+  //     },
+  //   });
+
+  //   const childFemale = await prisma.citizen.count({
+  //     where: {
+  //       gender: 'Female',
+  //       dob: {
+  //         gte: cutoffDate,
+  //       },
+  //     },
+  //   });
+
+  //   const totalChildren = childMale + childFemale;
+  //   const ratioMale = childMale / totalChildren;
+  //   const ratioFemale = childFemale / totalChildren;
+
+  //   return {
+  //     male: ratioMale,
+  //     female: ratioFemale,
+  //   };
+  // }
+static getCashFlowDashboard = async (year: number) => {
+    const startDate = new Date(year, 0, 1);
+    const endDate = new Date(year + 1, 0, 1);
+
+    const results: { category: string; amount: number; create_at: Date }[] = await prisma.cashFlow.findMany({
+        where: {
+            create_at: {
+                gte: startDate,
+                lt: endDate
+            }
         },
-      },
+        select: {
+            category: true,
+            amount: true,
+            create_at: true
+        }
     });
 
-    const childFemale = await prisma.citizen.count({
-      where: {
-        gender: 'Female',
-        dob: {
-          gte: cutoffDate,
-        },
-      },
+    const CashFlow = {
+        Debit: new Array(12).fill(0),
+        Kredit: new Array(12).fill(0),
+    };
+
+    results.forEach(result => {
+        const month = new Date(result.create_at).getMonth();
+        if (result.category === 'Debit') {
+            CashFlow.Debit[month]++;
+        } else if (result.category === 'Kredit') {
+            CashFlow.Kredit[month]++;
+        }
     });
 
-    const totalChildren = childMale + childFemale;
-    const ratioMale = childMale / totalChildren;
-    const ratioFemale = childFemale / totalChildren;
+    let totals = 0;
+    CashFlow.Kredit.forEach((item: number) => {
+        totals += item;
+    });
+
+    CashFlow.Debit.forEach((item: number) => {
+        totals += item;
+    });
 
     return {
-      male: ratioMale,
-      female: ratioFemale,
+        CashFlow: [
+            {
+                name: 'Masuk',
+                data: CashFlow.Debit,
+            },
+            {
+                name: 'Keluar',
+                data: CashFlow.Kredit,
+            }
+        ],
+        totals: totals,
+        categories: [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ],
     };
-  }
-  static async getFlowCash(): Promise<FlowCashStats> {
-    // Get cash flow per month
-    const cashFlows = await prisma.cashFlow.groupBy({
-      by: ['category', 'date'],
-      _sum: {
-        amount: true,
-      },
+};
+// Get ratio of children by gender (citizens under 17 years old)
+static async getRatioChildByGender() {
+  const today = new Date();
+  const cutoffDate = new Date(today.getFullYear() - 17, today.getMonth(), today.getDate());
+
+  // Count children by gender
+  const childMale = await prisma.citizen.count({
       where: {
-        date: {
-          gte: new Date(new Date().getFullYear(), 0, 1), // Start from January 1st this year
-        },
+          gender: 'Male',
+          dob: {
+              gte: cutoffDate,
+          },
       },
-      orderBy: {
-        date: 'asc',
+  });
+
+  const childFemale = await prisma.citizen.count({
+      where: {
+          gender: 'Female',
+          dob: {
+              gte: cutoffDate,
+          },
       },
-    });
-  
-    const totalCashFlowPerMonth: number[] = new Array(12).fill(0); // Array to hold monthly totals
-    const categories = Object.values(Category);
-  
-    cashFlows.forEach((flow) => {
-      const month = flow.date.getMonth();
-      if (flow._sum.amount) {
-        // Convert BigInt to number, ensuring the values are within the valid range
-        const amount = Number(flow._sum.amount); // Explicit conversion to `number`
-        totalCashFlowPerMonth[month] += amount;
-      }
-    });
-  
-    return {
-      total_cashFlowperMonth: totalCashFlowPerMonth,
-      categories: [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December',
-      ],
-    };
-  }
-}  
+  });
+
+  const totalChildren = childMale + childFemale;
+
+  return {
+          anak: [childMale, childFemale],
+          label: ["Laki - Laki", "Perempuan"],
+          totals: totalChildren
+      
+  };
+}
+
+
+}

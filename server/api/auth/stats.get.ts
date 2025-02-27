@@ -3,13 +3,6 @@ import { defineEventHandler, setResponseStatus, createError, sendError } from 'h
 
 export default defineEventHandler(async (event) => {
     try {
-        // Periksa apakah pengguna ada
-        const user = event.context?.auth?.user;
-        if (!user) {
-            setResponseStatus(event, 403);
-            return {code: 403, message: 'Pengguna tidak valid'};
-        }
-
         // Get total number of users
         const totalUser = await Stats.totalUser();
 
@@ -25,9 +18,6 @@ export default defineEventHandler(async (event) => {
         // Get ratio of children by gender
         const childGenderRatio = await Stats.getRatioChildByGender();
 
-        // Get cash flow statistics for the year
-        const flowCashStats = await Stats.getFlowCash();
-
         // Set response status and return data
         setResponseStatus(event, 200);
         return {
@@ -38,8 +28,7 @@ export default defineEventHandler(async (event) => {
                 totalCitizen,
                 totalMaleCitizen,
                 totalFemaleCitizen,
-                childGenderRatio,
-                flowCashStats,
+                childGenderRatio
             },
         };
     } catch (error: any) {

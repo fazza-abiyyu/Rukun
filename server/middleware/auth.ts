@@ -6,10 +6,8 @@ export default defineEventHandler( async (event) => {
     try {
         const endpoints = [
             '/api/auth/user',
-            '/api/auth/refresh',
             '/api/auth/logs',
             '/api/auth/logout',
-            '/api/auth/verification',
             '/api/auth/users',
             '/api/auth/users/:id',
             '/api/auth/users/search?q=:q',
@@ -32,9 +30,6 @@ export default defineEventHandler( async (event) => {
             '/api/auth/notifications/:id',
             '/api/auth/notifications/search?q=:q',
             '/api/auth/notifications?page=:page&pagesize=:pagesize',
-            '/api/auth/forget-password',
-            '/api/auth/reset-password',
-            '/api/auth/refresh',
             '/api/auth/application-letter',
             '/api/auth/application-letter/:id',
             '/api/auth/application-letter/search?q=:q',
