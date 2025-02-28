@@ -3,7 +3,7 @@ import { Stats } from '~/server/model/Stats';
 export default defineEventHandler(async (event) => {
     try {
         // Gunakan model untuk mendapatkan data dashboard anak
-        const data = await Stats. getRatioChildByGender();
+        const data = await Stats. getRatioCashFlow();
 
         // Set response status dan kembalikan data
         setResponseStatus(event, 200);

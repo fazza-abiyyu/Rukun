@@ -15,9 +15,6 @@ export default defineEventHandler(async (event) => {
         // Get total female citizens
         const totalFemaleCitizen = await Stats.totalCitizenFemale();
 
-        // Get ratio of children by gender
-        const childGenderRatio = await Stats.getRatioChildByGender();
-
         // Set response status and return data
         setResponseStatus(event, 200);
         return {
@@ -27,8 +24,7 @@ export default defineEventHandler(async (event) => {
                 totalUser,
                 totalCitizen,
                 totalMaleCitizen,
-                totalFemaleCitizen,
-                childGenderRatio
+                totalFemaleCitizen
             },
         };
     } catch (error: any) {

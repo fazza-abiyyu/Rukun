@@ -13,28 +13,8 @@
           <div class="relative">
             <input v-model="otp" id="otp" type="text"
                    class="py-3 ps-4 pe-10 block w-full border rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none"
-                   :class="isOtpValid ? 'border-gray-200 focus:border-blue-500 focus:ring-blue-500' : 'border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500 focus:outline-red-500'"
+                   :class="isOtpValid ? 'border-gray-200 focus:border-orange-500 focus:ring-orange-500' : 'border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500 focus:outline-red-500'"
                    placeholder="Masukan Kode OTP">
-            <button type="button" @click="toggleOtpVisibility"
-                    class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600">
-              <svg v-if="otpVisible" class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-                <path class="hs-password-active:hidden"
-                      d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-                <path class="hs-password-active:hidden"
-                      d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
-                <line class="hs-password-active:hidden" x1="2" x2="22" y1="2" y2="22"></line>
-                <path class="hidden hs-password-active:block"
-                      d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                <circle class="hidden hs-password-active:block" cx="12" cy="12" r="3"></circle>
-              </svg>
-              <svg v-else class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
           </div>
           <small class="text-red-500 italic px-2">{{ otpError }}</small>
         </div>
@@ -51,12 +31,12 @@
                       Sandi Baru</label>
                     <div class="relative">
                       <input v-model="password" id="password" type="password"
-                             class="py-3 ps-4 pe-10 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                             class="py-3 ps-4 pe-10 block w-full border border-gray-200 rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none"
                              placeholder="Masukan Kata Sandi Baru">
                       <button type="button" data-hs-toggle-password='{
         "target": "#password"
       }'
-                              class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600">
+                              class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-orange-600">
                         <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -74,7 +54,7 @@
                     <div id="hs-strong-password" data-hs-strong-password='{
             "target": "#password",
             "hints": "#hs-strong-password-hints",
-            "stripClasses": "hs-strong-password:opacity-100 hs-strong-password-accepted:bg-teal-500 h-2 flex-auto rounded-full bg-blue-500 opacity-50 mx-1"
+            "stripClasses": "hs-strong-password:opacity-100 hs-strong-password-accepted:bg-teal-500 h-2 flex-auto rounded-full bg-orange-500 opacity-50 mx-1"
           }' class="flex mt-2 -mx-1"></div>
                   </div>
                 </div>
@@ -188,12 +168,12 @@
                 <div class="relative">
                   <input v-model="confirmPassword" id="confirm-password" type="password"
                          class="py-3 ps-4 pe-10 block w-full border rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none"
-                         :class="isConfirmPassword ? 'border-gray-200 focus:border-blue-500 focus:ring-blue-500' : 'border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500 focus:outline-red-500'"
+                         :class="isConfirmPassword ? 'border-gray-200 focus:border-orange-500 focus:ring-orange-500' : 'border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500 focus:outline-red-500'"
                          placeholder="Ulangi Kata Sandi Baru">
                   <button type="button" data-hs-toggle-password='{
         "target": "#confirm-password"
       }'
-                          class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600">
+                          class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-orange-600">
                     <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -214,7 +194,7 @@
 
               <button type="submit"
                       :disabled="isLoading"
-                      class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                      class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-orange-600 text-white hover:bg-orange-700 focus:outline-none focus:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none">
                 {{ isLoading ? "Loading..." : "Kirim" }}
               </button>
             </div>

@@ -15,7 +15,7 @@
                 <label for="email" class="block text-sm mb-2">Email</label>
                 <div class="relative">
                   <input v-model="email" type="email" id="email" name="email" placeholder="Masukan Email"
-                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none"
                          required aria-describedby="email-error">
                   <div class="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                     <svg class="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
@@ -32,7 +32,7 @@
 
               <button type="submit"
                       :disabled="isLoading || isDisabled"
-                      class="w-full mt-2 py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                      class="w-full mt-2 py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#F38200] text-white hover:bg-[#DA6E00] focus:outline-none focus:bg-[#DA6E00] disabled:opacity-50 disabled:pointer-events-none">
                 {{ isLoading ? "Loading..." : "Kirim" }}
               </button>
             </div>
@@ -41,7 +41,7 @@
           <p class="mt-5 text-sm text-gray-600 text-center">
             Sudah ingat kata sandi?
             <a href="/auth/login"
-               class="text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium">Masuk
+               class="text-orange-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium">Masuk
               disini</a>
           </p>
         </div>

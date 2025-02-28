@@ -18,7 +18,7 @@
                 <div class="relative">
                   <input v-model="username" type="text" id="username" name="username"
                          placeholder="Masukan Username"
-                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-cyan-500 focus:ring-cyan-500 disabled:opacity-50 disabled:pointer-events-none" required>
+                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none" required>
                   <div class="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                     <svg class="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
                          aria-hidden="true">
@@ -35,7 +35,7 @@
                 <label for="email" class="block text-sm mb-2">Email</label>
                 <div class="relative">
                   <input v-model="email" type="email" id="email" name="email" placeholder="Masukan Email"
-                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-cyan-500 focus:ring-cyan-500 disabled:opacity-50 disabled:pointer-events-none"
+                         class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none"
                          required aria-describedby="email-error">
                   <div class="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                     <svg class="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
@@ -59,12 +59,12 @@
                       Sandi</label>
                     <div class="relative">
                       <input v-model="password" id="password" type="password"
-                             class="py-3 ps-4 pe-10 block w-full border border-gray-200 rounded-lg text-sm focus:border-cyan-500 focus:ring-cyan-500 disabled:opacity-50 disabled:pointer-events-none"
+                             class="py-3 ps-4 pe-10 block w-full border border-gray-200 rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none"
                              placeholder="Masukan Kata Sandi">
                       <button type="button" data-hs-toggle-password='{
         "target": "#password"
       }'
-                              class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-cyan-600">
+                              class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-orange-600">
                         <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -82,7 +82,7 @@
                     <div id="hs-strong-password" data-hs-strong-password='{
             "target": "#password",
             "hints": "#hs-strong-password-hints",
-            "stripClasses": "hs-strong-password:opacity-100 hs-strong-password-accepted:bg-teal-500 h-2 flex-auto rounded-full bg-cyan-500 opacity-50 mx-1"
+            "stripClasses": "hs-strong-password:opacity-100 hs-strong-password-accepted:bg-orange-500 h-2 flex-auto rounded-full bg-orange-500 opacity-50 mx-1"
           }' class="flex mt-2 -mx-1"></div>
                   </div>
                 </div>
@@ -101,7 +101,7 @@
 
                   <ul class="space-y-1 text-sm text-gray-500">
                     <li data-hs-strong-password-hints-rule-text="min-length"
-                        class="hs-strong-password-active:text-teal-500 flex items-center gap-x-2">
+                        class="hs-strong-password-active:text-orange-500 flex items-center gap-x-2">
         <span class="hidden" data-check="">
           <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -118,7 +118,7 @@
                       Jumlah karakter minimum adalah 6.
                     </li>
                     <li data-hs-strong-password-hints-rule-text="lowercase"
-                        class="hs-strong-password-active:text-teal-500 flex items-center gap-x-2">
+                        class="hs-strong-password-active:text-orange-500 flex items-center gap-x-2">
         <span class="hidden" data-check="">
           <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -135,7 +135,7 @@
                       Harus mengandung huruf kecil.
                     </li>
                     <li data-hs-strong-password-hints-rule-text="uppercase"
-                        class="hs-strong-password-active:text-teal-500 flex items-center gap-x-2">
+                        class="hs-strong-password-active:text-orange-500 flex items-center gap-x-2">
         <span class="hidden" data-check="">
           <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -152,7 +152,7 @@
                       Harus mengandung huruf besar.
                     </li>
                     <li data-hs-strong-password-hints-rule-text="numbers"
-                        class="hs-strong-password-active:text-teal-500 flex items-center gap-x-2">
+                        class="hs-strong-password-active:text-orange-500 flex items-center gap-x-2">
         <span class="hidden" data-check="">
           <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -169,7 +169,7 @@
                       Harus mengandung angka.
                     </li>
                     <li data-hs-strong-password-hints-rule-text="special-characters"
-                        class="hs-strong-password-active:text-teal-500 flex items-center gap-x-2">
+                        class="hs-strong-password-active:text-orange-500 flex items-center gap-x-2">
         <span class="hidden" data-check="">
           <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -196,12 +196,12 @@
                 <div class="relative">
                   <input v-model="confirmPassword" id="confirm-password" type="password"
                          class="py-3 ps-4 pe-10 block w-full border rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none"
-                         :class="isConfirmPassword ? 'border-gray-200 focus:border-cyan-500 focus:ring-cyan-500' : 'border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500 focus:outline-red-500'"
+                         :class="isConfirmPassword ? 'border-gray-200 focus:border-orange-500 focus:ring-orange-500' : 'border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500 focus:outline-red-500'"
                          placeholder="Ulangi Kata Sandi">
                   <button type="button" data-hs-toggle-password='{
         "target": "#confirm-password"
       }'
-                          class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-cyan-600">
+                          class="absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-orange-600">
                     <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path class="hs-password-active:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -224,11 +224,11 @@
               <div class="flex items-center">
                 <div class="flex">
                   <input v-model="isAgree" id="is-agree" name="is-agree" type="checkbox"
-                         class="shrink-0 mt-0.5 border-gray-200 rounded text-cyan-600 focus:ring-cyan-500">
+                         class="shrink-0 mt-0.5 border-gray-200 rounded text-orange-600 focus:ring-orange-500">
                 </div>
                 <div class="ms-3">
                   <label for="is-agree" class="text-sm">Saya menerima <a
-                      class="text-cyan-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium"
+                      class="text-orange-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium"
                       href="#">syarat dan ketentuan.</a></label>
                 </div>
               </div>
@@ -236,7 +236,7 @@
 
               <button type="submit"
                       :disabled="isLoading || !isAgree || !isConfirmPassword"
-                      class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#F38200] text-white hover:bg-[#DA6E00] focus:outline-none focus:bg-cyan-700 disabled:opacity-50 disabled:pointer-events-none">
+                      class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#F38200] text-white hover:bg-[#DA6E00] focus:outline-none focus:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none">
                 {{ isLoading ? "Loading..." : "Daftar" }}
               </button>
             </div>
@@ -245,7 +245,7 @@
           <p class="mt-5 text-sm text-gray-600 text-center">
             Sudah punya akun?
             <NuxtLink to="/login"
-                      class="text-cyan-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium">Masuk
+                      class="text-orange-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium">Masuk
               disini</NuxtLink>
           </p>
         </div>
