@@ -81,6 +81,34 @@ export class CashFlow {
         return formattedCashFlows;
     };
 
+    static getHeadCashflow = async () => {
+        const cashFlows = await prisma.cashFlow.findMany({
+            orderBy: {
+                create_at: 'desc'
+            },
+            take: 5,
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                date: true,
+                category: true,
+                amount: true,
+                create_by: true,
+                create_at: true,
+                update_at: true,
+                user: true,
+            },
+        });
+
+        // Format tanggal (date) ke dd/MM/yy
+        const formattedCashFlows = cashFlows.map(cashFlow => ({
+            ...cashFlow,
+            date: format(new Date(cashFlow.date), 'dd/MM/yy')
+        }));
+
+        return formattedCashFlows;
+    };
 
     static countAllCashFlows = () => {
         return prisma.cashFlow.count();

@@ -3,9 +3,10 @@
     <div class="-m-1.5 overflow-auto">
       <div class="p-1.5 min-w-full inline-block align-middle">
         <div class="border rounded-lg shadow overflow-hidden">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+          <table>
+            <thead>
             <tr>
+              <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">No</th>
               <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Sumber Dana</th>
               <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Deskripsi</th>
               <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">Tanggal</th>
@@ -15,7 +16,8 @@
             </thead>
             <tbody class="divide-y divide-gray-200">
             <!-- Loop untuk menampilkan setiap data -->
-            <tr v-for="item in data" :key="item?.id">
+            <tr v-for="(item, index) in data" :key="item?.id">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ index + 1 }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">{{ item?.title }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ item?.description }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ item?.date }}</td>

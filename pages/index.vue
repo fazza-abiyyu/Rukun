@@ -114,7 +114,7 @@
           <div class="p-4 md:p-5">
             <div class="flex items-center gap-x-2">
               <p class="text-xs uppercase tracking-wide text-gray-500">
-                Total Warga Lokal
+                Total Warga Laki-laki
               </p>
               <div class="hs-tooltip">
                 <div class="hs-tooltip-toggle">
@@ -234,10 +234,10 @@
           <div class="flex justify-between items-center">
             <div>
               <h2 class="text-sm text-gray-500">
-                Anak
+                Rasio Arus Kas
               </h2>
               <p class="text-xl sm:text-2xl font-medium text-gray-800">
-                {{ childGraph?.totals }}
+                {{ cashFlowRatioGraph?.totals }}
               </p>
             </div>
           </div>
@@ -246,23 +246,23 @@
           <div id="hs-single-area-chart" class="h-full w-full flex flex-col justify-center items-center p-2">
             <client-only>
               <ChartDonutChart
-                  :series="childGraph?.anak??[]"
-                  :labels="childGraph?.label??[]"
+                  :series="cashFlowRatioGraph?.cashFlow??[]"
+                  :labels="cashFlowRatioGraph?.label??[]"
                   :colors="chartColors"
               />
             </client-only>
             <!-- Legend Indicator -->
             <div class="flex justify-center sm:justify-end items-center gap-x-4 mt-3 sm:mt-6">
               <div class="inline-flex items-center">
-                <span class="size-2.5 inline-block bg-blue-600 rounded-sm me-2"></span>
+                <span class="size-2.5 inline-block bg-[#426048] rounded-sm me-2"></span>
                 <span class="text-[13px] text-gray-600">{{
-                    childGraph && childGraph?.label && childGraph.label.length > 0 ? childGraph.label[0] : "Unknown"
+                    cashFlowRatioGraph && cashFlowRatioGraph?.label && cashFlowRatioGraph.label.length > 0 ? cashFlowRatioGraph.label[0] : "Unknown"
                   }}</span>
               </div>
               <div class="inline-flex items-center">
-                <span class="size-2.5 inline-block bg-cyan-500 rounded-sm me-2"></span>
+                <span class="size-2.5 inline-block bg-[#F38200] rounded-sm me-2"></span>
                 <span class="text-[13px] text-gray-600">{{
-                    childGraph && childGraph?.label && childGraph.label.length > 0 ? childGraph.label[1] : "Unknown"
+                    cashFlowRatioGraph && cashFlowRatioGraph?.label && cashFlowRatioGraph.label.length > 0 ? cashFlowRatioGraph.label[1] : "Unknown"
                   }}</span>
               </div>
             </div>
@@ -294,21 +294,17 @@
 // Data untuk grafik area
 import DataTablesRecentlyActivities from "~/components/datatables/DataTablesRecentlyAddCashflowActivities.vue";
 
-const childDataGraph = ref([])
+const cashFlowDataGraph = ref([])
 const cashflow = ref([])
-const stuntingPredictionDataGraph = ref([])
 const year = ref(new Date().getFullYear())
-const startYear = ref(new Date().getFullYear() - 1)
-const endYear = ref(new Date().getFullYear())
 const recentlyActivitiesData = ref([])
 const statsData = ref([])
-const yearPrediction = ref(endYear.value + 1)
 
 // Warna untuk setiap garis pada grafik
-const chartColors = ref(['#2563EB', '#22d3ee']); // Warna garis yang berbeda
+const chartColors = ref(['#426048', '#F38200']); // Warna garis yang berbeda
   
 const stats: any = computed(() => statsData.value)
-const childGraph: any = computed(() => childDataGraph.value)
+const cashFlowRatioGraph: any = computed(() => cashFlowDataGraph.value)
 const cashflowGraph: any = computed(() => cashflow.value)
 const recentlyActivities: any = computed(() => recentlyActivitiesData.value)
 
@@ -321,10 +317,10 @@ const fetchStatsData = async () => {
   }
 }
 
-const fetchChildDataGraph = async () => {
+const fetchCashFlowDataGraph = async () => {
   try {
-    const response: any = await useFetchApi('/api/auth/graph/child')
-    childDataGraph.value = response?.data
+    const response: any = await useFetchApi('/api/auth/graph/cashflow')
+    cashFlowDataGraph.value = response?.data
   } catch (e) {
 
   }
@@ -339,84 +335,20 @@ const fetchcashflow = async () => {
   }
 }
 
-const fetchStuntingPredictionDataGraph = async () => {
+const fetchRecentlyCashFlowActivitiesData = async () => {
   try {
-    const response: any = await $fetch(`https://extra-reba-fazza-abiyyu-a1cfd750.koyeb.app/predict?start_year=${startYear.value}&end_year=${endYear.value}`)
-    stuntingPredictionDataGraph.value = response?.data
-    yearPrediction.value = response?.tahun_prediksi
+    const response: any = await useFetchApi('/api/auth/cashflowrecently')
+    recentlyActivitiesData.value = response?.data?.cashflow
   } catch (e) {
 
   }
 }
 
-
-const pageSize = ref(10);
-const currentPage = ref(1);
-const totalPages = ref(1);
-const prevPage = ref<string | undefined>(undefined);
-const nextPage = ref<string | undefined>(undefined);
-
-const isLoading = ref(false);
-
-const fetchRecentlyActivitiesData = async () => {
-  isLoading.value = true;
-  try {
-    const token = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("access_token="))
-      ?.split("=")[1];
-
-    if (!token) {
-      console.error("Token tidak ditemukan!");
-      return;
-    }
-
-    const response = await fetch(
-      `/api/auth/cashflow?page=${currentPage.value}&pagesize=${pageSize.value}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (response.status === 401) {
-      console.error("Unauthorized! Coba login ulang.");
-      return;
-    }
-
-    const data = await response.json();
-    if (data.code === 200) {
-      recentlyActivitiesData.value = data.data;
-      console.log(recentlyActivitiesData.value)
-      totalPages.value = data.totalPages;
-      prevPage.value = data.prev;
-      nextPage.value = data.next;
-    }
-  } catch (error) {
-    console.error("Gagal mengambil data cashflow:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};2
-
-
-watch(year, fetchcashflow)
-watch([startYear, endYear], ([newStartYear, newEndYear]) => {
-  if (newStartYear && newEndYear) {
-    fetchStuntingPredictionDataGraph();
-  }
-});
-
 onMounted(() => {
   fetchStatsData()
-  fetchChildDataGraph()
+  fetchCashFlowDataGraph()
   fetchcashflow()
-  fetchRecentlyActivitiesData()
-  fetchStuntingPredictionDataGraph()
+  fetchRecentlyCashFlowActivitiesData()
 })
 </script>
 
