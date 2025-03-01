@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import {format} from "date-fns";
 
 const prisma = new PrismaClient();
 
@@ -47,7 +48,8 @@ export class Notification {
         const skip = (page - 1) * pageSize;
         const take = pageSize;
 
-        return prisma.notification.findMany({
+        // Fetch notifications from the database
+        const notifications = await prisma.notification.findMany({
             skip: skip,
             take: take,
             select: {
@@ -61,6 +63,15 @@ export class Notification {
                 user: true,
             },
         });
+
+        // Format date (tanggal) to dd/MM/yy
+        const formattedNotifications = notifications.map(notification => ({
+            ...notification,
+            date: format(new Date(notification.date), 'dd/MM/yy'),
+            create_at: format(new Date(notification.create_at), 'dd/MM/yy')
+        }));
+
+        return formattedNotifications;
     };
 
     static countAllNotifications = () => {

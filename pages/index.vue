@@ -210,6 +210,14 @@
                     </option>
                   </select>
                 </client-only>
+                <div class="absolute top-1/2 end-2.5 -translate-y-1/2">
+                  <svg class="shrink-0 size-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                       stroke-linejoin="round">
+                    <path d="m7 15 5 5 5-5"></path>
+                    <path d="m7 9 5-5 5 5"></path>
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
