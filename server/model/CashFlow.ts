@@ -1,8 +1,19 @@
-import {$Enums, PrismaClient} from '@prisma/client';
+import {PrismaClient} from '@prisma/client';
 import {format} from 'date-fns';
+import {Category} from "~/types/TypesModel";
 
 const prisma = new PrismaClient();
 
+function mapCategory(category: string): Category | undefined {
+    switch(category) {
+        case 'Kredit':
+            return Category.KREDIT;
+        case 'Debit':
+            return Category.DEBIT;
+        default:
+            return undefined;
+    }
+}
 export class CashFlow {
     static createCashFlow = async (data: any) => {
         // Create a new CashFlow record
@@ -50,7 +61,6 @@ export class CashFlow {
         });
     };
 
-
     static getAllCashFlows = async (page: number, pageSize: number) => {
         const skip = (page - 1) * pageSize;
         const take = pageSize;
@@ -72,10 +82,11 @@ export class CashFlow {
             },
         });
 
-        // Format tanggal (date) ke dd/MM/yy
+        // Format tanggal (date) ke dd/MM/yy and map category to enum values
         const formattedCashFlows = cashFlows.map(cashFlow => ({
             ...cashFlow,
-            date: format(new Date(cashFlow.date), 'dd/MM/yy')
+            date: format(new Date(cashFlow.date), 'dd/MM/yy'),
+            category: mapCategory(cashFlow.category)
         }));
 
         return formattedCashFlows;
@@ -97,14 +108,15 @@ export class CashFlow {
                 create_by: true,
                 create_at: true,
                 update_at: true,
-                user: true,
+                user: false,
             },
         });
 
         // Format tanggal (date) ke dd/MM/yy
         const formattedCashFlows = cashFlows.map(cashFlow => ({
             ...cashFlow,
-            date: format(new Date(cashFlow.date), 'dd/MM/yy')
+            date: format(new Date(cashFlow.date), 'dd/MM/yy'),
+            category: mapCategory(cashFlow.category)
         }));
 
         return formattedCashFlows;

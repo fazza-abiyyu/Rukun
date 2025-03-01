@@ -42,9 +42,10 @@
       <DatatablesDataTable
           :title="'Pengajuan Surat'"
       :fields="[
-       { label: 'NAMA', key: 'toEmail' },
+       { label: 'DIBUAT OLEH', key: 'user.username' },
       { label: 'NOMOR INDUK KELUARGA', key: 'data_nik' },
-      { label: 'JENIS SURAT', key: 'category_letter' }
+      { label: 'JENIS SURAT', key: 'category_letter' },
+      { label: 'TANGGAL DIBUAT', key: 'create_at' },
       ]"
       :data="applicationletters"
       :perPage="pageSize"
@@ -77,7 +78,7 @@ const applicationletters = computed(() => applicationlettersData.value)
 const fetchapplicationletters = async () => {
   try {
     isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/application-letters?page=${page.value}&pagesize=${pageSize.value}`);
+    const response: any = await useFetchApi(`/api/auth/application-letter?page=${page.value}&pagesize=${pageSize.value}`);
     applicationlettersData.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
@@ -94,7 +95,7 @@ const handleChangeFetchData = async (payload: any) => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(payload.url);
-    applicationlettersData.value = response?.data; 
+    applicationlettersData.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;

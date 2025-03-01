@@ -45,8 +45,8 @@
           { label: 'JUDUL', key: 'title' },
           { label: 'TANGGAL', key: 'date' },
           { label: 'DESKRIPSI', key: 'description' },
-          { label: 'PEMBUAT', key: 'create_by' },
-          { label: 'DIBUAT', key: 'create_at' }
+          { label: 'DIBUAT OLEH', key: 'user.username' },
+          { label: 'TANGGAL DITERBITKAN', key: 'create_at' }
     ]"
           :data="notifications"
           :perPage="pageSize"
@@ -80,7 +80,7 @@ const fetchNotifications = async () => {
   try {
     isLoading.value = true
     const response: any = await useFetchApi(`/api/auth/notifications?page=${page.value}&pagesize=${pageSize.value}`);
-    notificationsData.value = response?.data?.users;
+    notificationsData.value = response?.data;
     totalPages.value = response?.meta?.totalPages;
     nextPage.value = response?.meta?.next;
     prevPage.value = response?.meta?.prev;
