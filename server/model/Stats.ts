@@ -65,7 +65,6 @@ export class Stats {
 
             const yearFull = transactionDate.getFullYear();
             const month = transactionDate.getMonth();
-            const day = transactionDate.getDate();
 
             if (yearFull === year) {
                 if (result.category === 'Kredit') {
@@ -76,16 +75,16 @@ export class Stats {
             }
         });
 
-        const totals = CashFlow.Kredit.reduce((a, b) => a + b, 0) - CashFlow.Debit.reduce((a, b) => a + b, 0);
+        const totals =  CashFlow.Debit.reduce((a, b) => a + b, 0) - CashFlow.Kredit.reduce((a, b) => a + b, 0) ;
 
         return {
             CashFlow: [
                 {
-                    name: 'Masuk',
+                    name: 'Keluar',
                     data: CashFlow.Kredit,
                 },
                 {
-                    name: 'Keluar',
+                    name: 'Masuk',
                     data: CashFlow.Debit,
                 }
             ],

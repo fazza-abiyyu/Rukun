@@ -24,12 +24,24 @@ export enum Gender {
     FEMALE = 'Perempuan',
 }
 
+export enum Category {
+    Debit = 'Masuk',
+    Kredit = 'Keluar',
+}
+
+export enum CategoryLetter {
+    SuratPengantarKTP = 'Surat Pengantar KTP',
+    SuratKeteranganDomisili = 'Surat Keterangan Domisili',
+    SuratKeteranganUsaha = 'Surat Keterangan Usaha=',
+    SuratPengantarNikah = 'Surat Pengantar Nikah',
+    SuratKeteranganTidakMampu = 'Surat Keterangan Tidak Mampu'
+}
 
 export type KKType = {
     id: number;
     head_of_family: string;
     kk: string;
-    create_by:number;
+    create_by: number;
     createdAt: Date;
     updatedAt: Date;
 }

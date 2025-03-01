@@ -43,8 +43,8 @@
             <select id="category"
                     v-model="category"
                     class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
-              <option value="kredit">Keluar</option>
               <option value="debit">Masuk</option>
+              <option value="kredit">Keluar</option>
             </select>
           </div>
 

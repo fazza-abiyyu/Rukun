@@ -45,7 +45,7 @@
             { label: 'PENGGUNA', key: 'username' },
             { label: 'EMAIL', key: 'email' },
             { label: 'ROLE', key: 'role' },
-            { label: 'STATUS', key: 'userstatus' }
+            { label: 'STATUS', key: 'user_status' }
           ]"
           :data="user"
           :perPage="pageSize"
