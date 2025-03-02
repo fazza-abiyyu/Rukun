@@ -39,7 +39,7 @@
             <label for="role" class="block text-sm font-medium mb-2 w-full">Role</label>
             <select
                 id="role"
-                v-model="selectedUser.Role"
+                v-model="selectedUser.role"
                 class="py-3 px-4 pe-9 block col-span-2 w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 required
             >
@@ -71,39 +71,39 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import type { User } from "~/types/TypesModel";
 import useFetchApi from "~/composables/useFetchApi";
 
 const { $toast } = useNuxtApp();
 const router = useRouter();
+const route = useRoute();
+const userId = parseInt(route.params.id as string, 10);
 
-const selectedUser = ref<User | null>(null);
-const isLoading = ref<boolean>(false);
-const userId = ref<number | null>(null); // Pastikan `userId` didefinisikan
+const selectedUser = ref<Omit<User, "password" | "fullName" | "createdAt" | "updatedAt"> | null>(null);
+const isLoading = ref(false);
 
 onMounted(async () => {
+  if (isNaN(userId)) {
+    console.error("User ID tidak valid.");
+    $toast("User ID tidak valid.", "error");
+    return;
+  }
   await fetchUsersData();
 });
 
 async function fetchUsersData() {
-  if (!userId.value) {
-    console.error("User ID tidak ditemukan.");
-    return;
-  }
-
   isLoading.value = true;
   try {
-    const { data } = (await useFetchApi(`/api/auth/users/${userId.value}`, {
+    const { data } = await useFetchApi(`/api/auth/users/${userId}`, {
       method: "GET",
-    })) as { data: User };
+    }) as { data: User };
 
     selectedUser.value = {
       id: data.id,
       username: data.username,
       email: data.email,
-      Role: Role.role,
+      role: data.role,
     };
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -120,7 +120,11 @@ const handleSubmit = async () => {
   try {
     await useFetchApi(`/api/auth/users/${selectedUser.value.id}`, {
       method: "PUT",
-      body: selectedUser.value, // Typo diperbaiki
+      body: {
+        username: selectedUser.value.username,
+        email: selectedUser.value.email,
+        role: selectedUser.value.role,
+      },
     });
 
     $toast("Berhasil mengubah data Pengguna.", "success");
@@ -133,6 +137,7 @@ const handleSubmit = async () => {
   }
 };
 </script>
+
 
 <style scoped>
 /* Custom styling for form */

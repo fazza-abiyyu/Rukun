@@ -1,12 +1,18 @@
 // Type definitions for Prisma models
 
 // Type for User model
+export enum Role {
+    Admin = 'Admin',
+    User = 'User',
+}
+
 export type User = {
     id: number;
     username: string;
     password: string;
     email: string;
     fullName: string;
+    role: Role;
     createdAt: Date;
     updatedAt: Date;
 }
