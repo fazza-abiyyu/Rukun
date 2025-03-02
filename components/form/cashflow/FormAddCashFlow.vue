@@ -74,7 +74,9 @@
 <script setup lang="ts">
 import {useNuxtApp} from "#imports";
 import useFetchApi from '~/composables/useFetchApi';
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const {$toast} = useNuxtApp();
 
 const sumber_dana = ref<string | null>(null); // Form input mapped to 'title'
@@ -135,6 +137,7 @@ const handleSubmit = async () => {
 
     $toast('Data arus kas berhasil ditambahkan!', 'success');
     clearForm();
+    router.push('/cashflow');
   } catch (error) {
     $toast('Terjadi kesalahan pada server. Silakan coba lagi.', 'error');
   } finally {

@@ -9,12 +9,8 @@ export enum Role {
 export type User = {
     id: number;
     username: string;
-    password: string;
     email: string;
-    fullName: string;
     role: Role;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 export enum ActionLog {

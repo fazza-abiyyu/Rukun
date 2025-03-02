@@ -54,7 +54,7 @@ export class Citizen {
             data: {
                 full_name: data.full_name,
                 dob: new Date(data.dob),
-                gender: data.Gender,
+                gender: data.gender,
                 address: data.address,
                 kk_id: data.kk_id,
                 nik: data.nik,

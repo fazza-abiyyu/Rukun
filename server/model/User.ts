@@ -1,5 +1,6 @@
-import {PrismaClient, Role} from '@prisma/client';
-import {RegisterRequest, UpdateUserRequest} from "~/types/AuthType";
+import {PrismaClient} from '@prisma/client';
+import {RegisterRequest} from "~/types/AuthType";
+import {Role} from "~/types/TypesModel";
 
 const prisma = new PrismaClient();
 
@@ -37,19 +38,19 @@ export class User {
                 id: true,
                 username: true,
                 email: true,
-                password: true,
+                password: false,
                 role: true,
             },
         });
     };
 
-    static updateUser = (id: number, data: UpdateUserRequest) => {
+    static updateUser = (id: number, data: any) => {
         return prisma.user.update({
             where: { id },
             data: {
                 username: data.username,
                 email: data.email,
-                role: Role.role,
+                role: data.role,
             }
         });
     };
