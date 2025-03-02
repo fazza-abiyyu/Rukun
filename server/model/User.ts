@@ -48,7 +48,8 @@ export class User {
             where: { id },
             data: {
                 username: data.username,
-                email: data.email
+                email: data.email,
+                role: Role.role,
             }
         });
     };

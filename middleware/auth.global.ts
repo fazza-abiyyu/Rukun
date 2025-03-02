@@ -13,9 +13,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
         return navigateTo('/auth/login');
     }
 
-    // Jika admin mencoba mengakses halaman khusus user, arahkan ke admin dashboard
-    if (userRole === 'Admin' && to.path.startsWith('/user')) {
-        return navigateTo('/admin/dashboard');
+    // Jika Admin biasa mencoba mengakses halaman user, arahkan ke user dashboard
+    if (userRole === 'Admin' && to.path.startsWith('/admin')) {
+        return navigateTo('/user/dashboard');
     }
 
     // Jika user biasa mencoba mengakses halaman admin, arahkan ke user dashboard
