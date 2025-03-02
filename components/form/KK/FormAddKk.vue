@@ -45,6 +45,9 @@
 
 <script setup lang="ts">
 import useFetchApi from '~/composables/useFetchApi';
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const {$toast} = useNuxtApp();
 
@@ -88,6 +91,7 @@ const handleSubmit = async () => {
 
     $toast('Data KK berhasil ditambahkan!', 'success');
     clearForm();
+    router.push('/kk');
   } catch (error) {
     $toast('Terjadi kesalahan pada server. Silakan coba lagi.', 'error');
   } finally {

@@ -70,7 +70,9 @@
 </template>
 <script setup lang="ts">
 import ComboBoxKk from "~/components/form/advanced/ComboBoxKK.vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 
 const {$toast} = useNuxtApp();
 
@@ -94,7 +96,7 @@ const clearForm = () => {
 };
 
 const handleSelectKKID = (e: any) => {
-  kk_id.value = e.id; // ✅ Update nilai kk_id
+  kk_id.value = e.id;
 };
 
 
@@ -147,6 +149,7 @@ const handleSubmit = async () => {
 
     $toast('Data warga berhasil ditambahkan!', 'success');
     clearForm();
+    router.push('/citizen');
   } catch (error) {
     $toast('Terjadi kesalahan pada server. Silakan coba lagi.', 'error');
   } finally {

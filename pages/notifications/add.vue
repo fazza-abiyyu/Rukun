@@ -39,13 +39,13 @@
 
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <FormAddUsers />
+      <FormAddNotifications />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FormAddUsers from "~/components/form/users/FormAddUsers.vue";
+import FormAddNotifications from "~/components/form/notifications/FormAddNotifications.vue";
 
 </script>
 

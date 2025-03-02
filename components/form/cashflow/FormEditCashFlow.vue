@@ -56,7 +56,7 @@
 
           <!-- Submit Button -->
           <div class="space-x-3 self-end">
-            <button type="button" @click="selectedCashflow = null"
+            <button type="button" @click="cancel"
               class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-600 bg-transparent text-red-600 hover:bg-red-200 focus:outline-none focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
               Batal
             </button>
@@ -101,12 +101,11 @@ async function fetchCashflowData() {
       id: data.id,
       title: data.title,
       description: data.description,
-      date: new Date(data.date),
+      date: data.date,
       category: data.category,
       amount: data.amount,
     };
   } catch (error) {
-    console.error("Error fetching cashflow data:", error);
     $toast("Gagal mengambil data Warga.", "error");
   } finally {
     isLoading.value = false;
@@ -129,6 +128,10 @@ const handleSubmit = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const cancel = () => {
+  router.push('/cashflow');
 };
 </script>
 

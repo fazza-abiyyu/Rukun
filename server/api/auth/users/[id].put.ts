@@ -3,38 +3,43 @@ import { ActionLog } from "~/types/TypesModel";
 import { LogRequest } from "~/types/AuthType";
 
 export default defineEventHandler(async (event) => {
+    // Check if user exists
+    const userLogin = event.context.auth.user;
+
+    if (!userLogin) {
+        setResponseStatus(event, 403);
+        return { code: 403, message: 'Pengguna tidak valid' };
+    }
+
     try {
-        const user = event.context.auth?.user;
-        if (!user) {
-            console.error("Pengguna tidak terautentikasi");
-            throw createError({ statusCode: 401, statusMessage: "User not authenticated." });
-        }
+        const id = parseInt(event.context.params?.id as string, 10);
 
-        const id = Number(event.context.params?.id ?? "0");
-        if (isNaN(id) || id <= 0) {
-            throw createError({ statusCode: 400, statusMessage: "Invalid user ID." });
-        }
-
+        // Read the request body
         const data = await readBody(event);
-        if (!data || Object.keys(data).length === 0) {
-            throw createError({ statusCode: 400, statusMessage: "Invalid request data." });
-        }
 
-        const updatedUser = await User.updateUser(id, data);
-        if (!updatedUser) {
-            throw createError({ statusCode: 500, statusMessage: "Failed to update user." });
-        }
-
-        const payload: LogRequest = {
-            user_id: user.id,
-            action: ActionLog.UPDATE,
-            description: `Akun dengan ID ${id} berhasil diperbarui`,
+        // Assign user ID from the token for create_by field
+        const newData = {
+            ...data,
+            create_by: userLogin.id
         };
-        await createLog(payload);
 
-        return { code: 200, message: "Akun pengguna berhasil diperbarui!" };
+        const user = await User.updateUser(id, newData);
+
+        const payload : LogRequest = {
+            user_id : userLogin.id,
+            action : ActionLog.UPDATE,
+            description : `Data pengguna dengan ID ${id}, berhasil diperbarui`,
+        }
+
+        await createLog(payload)
+
+        return {
+            code: 200,
+            message: 'Data pengguna berhasil diperbarui!',
+            data: user,
+        };
     } catch (error: any) {
-        console.error("Error updating user:", error);
-        return sendError(event, createError({ statusCode: error.statusCode || 500, statusMessage: error.statusMessage || "Internal Server Error" }));
+        console.error(error);
+        return sendError(event, createError({ statusCode: 500, statusMessage: 'Internal Server Error' }));
     }
 });

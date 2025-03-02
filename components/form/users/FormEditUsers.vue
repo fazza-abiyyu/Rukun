@@ -12,7 +12,7 @@
         <div class="space-y-4 flex flex-col">
           <!-- Nama Lengkap -->
           <div class="grid sm:grid-cols-3">
-            <label for="name" class="block text-sm font-medium mb-2 w-full">Nama Lengkap</label>
+            <label for="name" class="block text-sm font-medium mb-2 w-full">NAMA LENGKAP</label>
             <input
                 type="text"
                 id="name"
@@ -24,7 +24,7 @@
           </div>
           <!-- Email -->
           <div class="grid sm:grid-cols-3">
-            <label for="email" class="block text-sm font-medium mb-2 w-full">Email</label>
+            <label for="email" class="block text-sm font-medium mb-2 w-full">ALAMAT EMAIL</label>
             <input
                 type="email"
                 id="email"
@@ -36,16 +36,13 @@
           </div>
           <!-- Role -->
           <div class="grid sm:grid-cols-3">
-            <label for="role" class="block text-sm font-medium mb-2 w-full">Role</label>
+            <label for="role" class="block text-sm font-medium mb-2 w-full">ROLE</label>
             <select
                 id="role"
                 v-model="selectedUser.role"
-                class="py-3 px-4 pe-9 block col-span-2 w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                required
-            >
-              <option value="null" selected>-Pilih-</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
+                class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none">
+              <option value="Admin">Admin</option>
+              <option value="User">User</option>
             </select>
           </div>
 
@@ -53,14 +50,15 @@
           <div class="space-x-3 self-end">
             <button
                 type="button"
-                @click="selectedUser = null"
+                @click="cancel"
                 class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-red-600 bg-transparent text-red-600 hover:bg-red-200 focus:outline-none focus:bg-red-700 disabled:opacity-50 disabled:pointer-events-none"
             >
               Batal
             </button>
             <button
                 type="submit"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                class="py-2 px-3 text-sm font-medium rounded-lg border bg-blue-600 text-white hover:bg-blue-700"
+                :disabled="isLoading"
             >
               Simpan
             </button>
@@ -70,26 +68,22 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { useRouter, useRoute } from "vue-router";
 import type { User } from "~/types/TypesModel";
 import useFetchApi from "~/composables/useFetchApi";
+import { useRouter } from "vue-router";
 
-const { $toast } = useNuxtApp();
 const router = useRouter();
 const route = useRoute();
+const { $toast } = useNuxtApp();
 const userId = parseInt(route.params.id as string, 10);
 
-const selectedUser = ref<Omit<User, "password" | "fullName" | "createdAt" | "updatedAt"> | null>(null);
+const selectedUser = ref<User | null>(null);
 const isLoading = ref(false);
 
 onMounted(async () => {
-  if (isNaN(userId)) {
-    console.error("User ID tidak valid.");
-    $toast("User ID tidak valid.", "error");
-    return;
-  }
-  await fetchUsersData();
+  fetchUsersData();
 });
 
 async function fetchUsersData() {
@@ -106,7 +100,6 @@ async function fetchUsersData() {
       role: data.role,
     };
   } catch (error) {
-    console.error("Error fetching user data:", error);
     $toast("Gagal mengambil data Pengguna.", "error");
   } finally {
     isLoading.value = false;
@@ -120,21 +113,20 @@ const handleSubmit = async () => {
   try {
     await useFetchApi(`/api/auth/users/${selectedUser.value.id}`, {
       method: "PUT",
-      body: {
-        username: selectedUser.value.username,
-        email: selectedUser.value.email,
-        role: selectedUser.value.role,
-      },
+      body: selectedUser.value
     });
 
     $toast("Berhasil mengubah data Pengguna.", "success");
     router.push("/users");
   } catch (error) {
-    console.error("Error updating user data:", error);
     $toast("Gagal mengubah data Pengguna.", "error");
   } finally {
     isLoading.value = false;
   }
+};
+
+const cancel = () => {
+  router.push('/users');
 };
 </script>
 

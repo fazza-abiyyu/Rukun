@@ -5,7 +5,7 @@
       <h2 class="text-xl font-medium text-gray-800 w-full">Ubah Data Warga</h2>
     </div>
     <!-- End Header -->
-    <hr />
+    <hr/>
     <div class="h-full w-full mt-2">
       <form v-if="selectedCitizen" @submit.prevent="handleSubmit">
         <div class="space-y-4 flex flex-col">
@@ -86,27 +86,27 @@
             ></textarea>
           </div>
 
-          <!-- KK ID (Opsional) -->
-          <div class="grid grid-cols-3">
-            <label
-                for="kk_id"
-                class="block text-sm font-medium mb-2 w-full"
-            >KK ID</label
-            >
-            <input
-                type="text"
-                id="kk_id"
-                v-model="selectedCitizen.kk_id"
-                class="col-span-2 py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"
-                placeholder="Nomor KK (opsional)"
-            />
-          </div>
+<!--          &lt;!&ndash; KK ID (Opsional) &ndash;&gt;-->
+<!--          <div class="grid grid-cols-3">-->
+<!--            <label-->
+<!--                for="kk_id"-->
+<!--                class="block text-sm font-medium mb-2 w-full"-->
+<!--            >KK ID</label-->
+<!--            >-->
+<!--            <input-->
+<!--                type="text"-->
+<!--                id="kk_id"-->
+<!--                v-model="selectedCitizen.kk_id"-->
+<!--                class="col-span-2 py-3 px-4 block w-full border border-gray-300 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500"-->
+<!--                placeholder="Nomor KK"-->
+<!--            />-->
+<!--          </div>-->
 
           <!-- Tombol Aksi -->
           <div class="space-x-3 self-end">
             <button
                 type="button"
-                @click="$emit('cancel')"
+                @click="cancel"
                 class="py-2 px-3 text-sm font-medium rounded-lg border border-red-600 text-red-600 hover:bg-red-200"
             >
               Batal
@@ -126,12 +126,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Citizen } from "~/types/TypesModel";
+import type {Citizen} from "~/types/TypesModel";
 import useFetchApi from '~/composables/useFetchApi';
-import { useRouter } from "vue-router";
+import {useRouter} from "vue-router";
 
 const router = useRouter();
-const { $toast } = useNuxtApp();
+const {$toast} = useNuxtApp();
 
 const route = useRoute();
 const citizenId = parseInt(route.params.id as string, 10);
@@ -147,7 +147,7 @@ onMounted(async () => {
 async function fetchCitizenData() {
   isLoading.value = true;
   try {
-    const { data } = await useFetchApi(`/api/auth/citizen/${citizenId}`, {
+    const {data} = await useFetchApi(`/api/auth/citizen/${citizenId}`, {
       method: "GET",
     }) as { data: Citizen };
     selectedCitizen.value = {
@@ -160,7 +160,6 @@ async function fetchCitizenData() {
       nik: data.nik,
     };
   } catch (error) {
-    console.error("Error fetching citizen data:", error);
     $toast("Gagal mengambil data Warga.", "error");
   } finally {
     isLoading.value = false;
@@ -183,6 +182,10 @@ const handleSubmit = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const cancel = () => {
+  router.push('/citizen');
 };
 </script>
 

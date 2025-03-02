@@ -1,7 +1,6 @@
-import {$Enums} from "@prisma/client";
-import Gender = $Enums.Gender;
 import type {User} from "@prisma/client";
 import {ActionLog} from "./TypesModel"
+import {Gender, Role} from "~/types/TypesModel";
 
 export interface RegisterRequest {
     username: string;
@@ -29,12 +28,6 @@ export interface LoginResponse {
     data: {
         user: User,
     },
-}
-
-export interface UpdateUserRequest {
-    username?: string;
-    email?: string;
-    full_name?: string;
 }
 
 export interface LogRequest {

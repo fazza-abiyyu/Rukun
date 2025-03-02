@@ -57,7 +57,9 @@
 
 <script setup lang="ts">
 import useFetchApi from '~/composables/useFetchApi';
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const { $toast } = useNuxtApp();
 const email = ref<string | null>(null);
 const nik = ref<string | null>(null);
@@ -108,6 +110,7 @@ const handleSubmit = async () => {
 
     $toast('Surat Pengajuan Berhasil di Kirim!', 'success');
     clearForm();
+    router.push('/application-letter');
   } catch (error: any) {
     $toast('Terjadi kesalahan: ' + (error.message || 'Unknown error'), 'error');
   } finally {
