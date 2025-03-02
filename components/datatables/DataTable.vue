@@ -149,6 +149,8 @@ const getEditRoute = (row: Record<string, any>) => {
     return `/citizen/edit/${row.id}`;
   } else if ("category" in row) {
     return `/cashflow/edit/${row.id}`;
+  } else if ("users" in row) {
+    return `/users/edit/${row.id}`;
   } else {
     return "/";
   }

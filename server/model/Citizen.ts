@@ -46,14 +46,6 @@ export class Citizen {
                 update_at: true,
             },
         });
-        // Format tanggal lahir (dob) ke dd/mm/yy
-        const formattedCitizens = citizens.map(citizen => ({
-            ...citizen,
-            dob: format(new Date(citizen.dob), 'dd/MM/yy'),
-            gender: mapGender(citizen.gender),
-        }));
-
-        return formattedCitizens;
     };
 
     static updateCitizen = async (id: number, data: any) => {
@@ -137,13 +129,5 @@ static countAllCitizens = () => {
                 ],
             },
         });
-        // Format tanggal lahir (dob) ke dd/mm/yy
-        const formattedCitizens = citizens.map(citizen => ({
-            ...citizen,
-            dob: format(new Date(citizen.dob), 'dd/MM/yy'),
-            gender: mapGender(citizen.gender),
-        }));
-
-        return formattedCitizens;
     };
 }

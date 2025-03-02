@@ -44,8 +44,7 @@
           :fields="[
             { label: 'PENGGUNA', key: 'username' },
             { label: 'EMAIL', key: 'email' },
-            { label: 'ROLE', key: 'role' },
-            { label: 'STATUS', key: 'user_status' }
+            { label: 'ROLE', key: 'role' }
           ]"
           :data="user"
           :perPage="pageSize"
@@ -55,6 +54,7 @@
           :nextPage="nextPage"
           :isLoading="isLoading"
           :deleteAction="true"
+          :editAction="true"
           @fetchData="(e) => handleChangeFetchData(e)"
           @searchData="(e) => handleSearchData(e)"
           @deleteData="(e) => handleDeleteData(e)"

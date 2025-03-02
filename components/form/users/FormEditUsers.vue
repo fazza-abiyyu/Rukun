@@ -16,7 +16,7 @@
             <input
                 type="text"
                 id="name"
-                v-model="selectedUser.full_name"
+                v-model="selectedUser.username"
                 class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 placeholder="Masukan nama"
                 required
@@ -39,30 +39,13 @@
             <label for="role" class="block text-sm font-medium mb-2 w-full">Role</label>
             <select
                 id="role"
-                v-model="selectedUser.role"
+                v-model="selectedUser.Role"
                 class="py-3 px-4 pe-9 block col-span-2 w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 required
             >
               <option value="null" selected>-Pilih-</option>
-              <option value="super_admin">Super Admin</option>
-              <option value="admin_puskesmas">Admin Puskesmas</option>
-              <option value="admin_posyandu">Admin Posyandu</option>
+              <option value="admin">Admin</option>
               <option value="user">User</option>
-            </select>
-          </div>
-          <!-- Status -->
-          <div class="grid sm:grid-cols-3">
-            <label for="status" class="block text-sm font-medium mb-2 w-full">Status</label>
-            <select
-                id="status"
-                v-model="selectedUser.status"
-                class="py-3 px-4 pe-9 block col-span-2 w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                required
-            >
-              <option value="null" selected>-Pilih-</option>
-              <option value="active">Active</option>
-              <option value="suspend">Suspend</option>
-              <option value="pending">Pending</option>
             </select>
           </div>
 
@@ -84,58 +67,71 @@
           </div>
         </div>
       </form>
-
-      <!-- Jika tidak ada pengguna yang dipilih, tampilkan combobox pencarian -->
-      <div v-else>
-        <label for="hs-combobox-basic-usage" class="block text-sm font-medium mb-2 w-full">Cari Pengguna</label>
-        <ComboBoxUser @selectedUser="handleSelectedUser"/>
-      </div>
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
-import {ref} from 'vue';
-import type {User} from "~/types/TypesModel";
-import ComboBoxUser from "~/components/form/advanced/ComboBoxUser.vue";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import type { User } from "~/types/TypesModel";
+import useFetchApi from "~/composables/useFetchApi";
 
-const {$toast} = useNuxtApp();
+const { $toast } = useNuxtApp();
+const router = useRouter();
 
-const selectedUser = ref<any>(null)
-const isLoading = ref<boolean>(false)
+const selectedUser = ref<User | null>(null);
+const isLoading = ref<boolean>(false);
+const userId = ref<number | null>(null); // Pastikan `userId` didefinisikan
 
-const handleSelectedUser = (user: User) => {
-  selectedUser.value = {
-    id: user.id,
-    full_name: user.full_name,
-    email: user.email,
-    role: user.role,
-    status: user.password,
+onMounted(async () => {
+  await fetchUsersData();
+});
+
+async function fetchUsersData() {
+  if (!userId.value) {
+    console.error("User ID tidak ditemukan.");
+    return;
   }
-}
 
-const handleSubmit = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true;
-    const {deviceType, os, browser} = getDeviceAndBrowserInfo()
-    await useFetchApi(`/api/auth/users/${selectedUser.value?.id}`, {
-      method: 'PUT',
-      body: {
-        ...selectedUser.value,
-        ip_address: useState('ip_address').value,
-        device: `${deviceType}, ${os} on ${browser}`,
-        location: "Unknown"
-      }
-    })
+    const { data } = (await useFetchApi(`/api/auth/users/${userId.value}`, {
+      method: "GET",
+    })) as { data: User };
 
-    $toast('Berhasil mengubah data pengguna.', 'success');
-    selectedUser.value = null
+    selectedUser.value = {
+      id: data.id,
+      username: data.username,
+      email: data.email,
+      Role: Role.role,
+    };
   } catch (error) {
-    $toast('Gagal mengubah data pengguna.', 'error');
+    console.error("Error fetching user data:", error);
+    $toast("Gagal mengambil data Pengguna.", "error");
   } finally {
     isLoading.value = false;
   }
 }
+
+const handleSubmit = async () => {
+  if (!selectedUser.value) return;
+
+  isLoading.value = true;
+  try {
+    await useFetchApi(`/api/auth/users/${selectedUser.value.id}`, {
+      method: "PUT",
+      body: selectedUser.value, // Typo diperbaiki
+    });
+
+    $toast("Berhasil mengubah data Pengguna.", "success");
+    router.push("/users");
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    $toast("Gagal mengubah data Pengguna.", "error");
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
 
 <style scoped>
