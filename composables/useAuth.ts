@@ -1,133 +1,121 @@
-import {jwtDecode} from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
 
 export default () => {
-    const useAuthToken = () => useState('auth_token')
-    const useAuthTokenCookie = () => useCookie('access_token')
-    const useAuthUser = () => useState('auth_user')
-    const isLoggedIn = () => useCookie('isLoggedIn')
+    // State untuk token dan user
+    const useAuthToken = () => useState<string | null>('auth_token');
+    const useAuthTokenCookie = () => useCookie<string | null>('access_token');
+    const useAuthUser = () => useState<any>('auth_user');
+    const useUserRole = () => useCookie<string | null>('user_role'); 
+    const isLoggedIn = () => useCookie<boolean>('isLoggedIn');
 
-
+    // Menyimpan token ke state dan cookie
     const setToken = (newToken: string | null) => {
-        const authToken = useAuthToken()
-        authToken.value = newToken
-        const authTokenCookie = useAuthTokenCookie()
-        authTokenCookie.value = newToken
-    }
+        useAuthToken().value = newToken;
+        useAuthTokenCookie().value = newToken;
+    };
 
-    const setUser = (newUser: string | null) => {
-        const authUser = useAuthUser()
-        authUser.value = newUser
-    }
+    // Menyimpan data user
+    const setUser = (newUser: any) => {
+        useAuthUser().value = newUser;
+        useUserRole().value = newUser?.role || null; 
+    };
 
-    const login = ({email, password}: { email: string, password: string }) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response: any = await useFetchApi('/api/auth/login', {
-                    method: 'POST',
-                    body: {
-                        email: email,
-                        password: password,
-                    }
-                })
+    // Fungsi Login
+    const login = async ({ email, password }: { email: string; password: string }) => {
+        try {
+            const response: any = await useFetchApi('/api/auth/login', {
+                method: 'POST',
+                body: { email, password },
+            });
 
-                setToken(response?.access_token)
-                setUser(response?.data?.user)
-                isLoggedIn().value = String(true)
-                resolve(true)
-            } catch (error) {
-                reject(error)
-            }
-        })
-    }
+            if (!response?.access_token) throw new Error("Login gagal");
 
-    const refreshToken = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response: any = await useFetchApi('/api/auth/refresh', {
-                    method: 'GET',
-                })
-                setToken(response?.access_token)
-                resolve(true)
-            } catch (error) {
-                await logout();
-                reject(error)
-            }
-        })
-    }
+            // Set token dan user
+            setToken(response.access_token);
+            setUser(response?.data?.user);
+            isLoggedIn().value = true;
 
-    const getUser = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response: any = await useFetchApi('/api/auth/user')
-
-                setUser(response?.data?.user)
-                resolve(true)
-            } catch (error) {
-                reject(error)
-            }
-        })
-    }
-
-    const reRefreshAccessToken = () => {
-        const authToken = useAuthToken().value
-
-        if (!authToken) {
-            return
+            // Redirect ke halaman sesuai role
+            return navigateTo(response?.data?.user?.role === 'Admin' ? '/admin' : '/dashboard');
+        } catch (error) {
+            console.error(error);
+            throw new Error('Email atau kata sandi salah');
         }
+    };
 
-        const jwt: any = jwtDecode(authToken as string)
+    // Fungsi Refresh Token
+    const refreshToken = async () => {
+        try {
+            const response: any = await useFetchApi('/api/auth/refresh', { method: 'GET' });
+            setToken(response?.access_token);
+            return true;
+        } catch (error) {
+            await logout(); 
+            throw error;
+        }
+    };
 
-        const newRefreshTime = jwt?.exp - 60000
+    // Mengambil Data User
+    const getUser = async () => {
+        try {
+            const response: any = await useFetchApi('/api/auth/user');
+            setUser(response?.data?.user);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    // Memperbarui Token secara Berkala
+    const reRefreshAccessToken = () => {
+        const authToken = useAuthToken().value;
+        if (!authToken) return;
+
+        const jwt: any = jwtDecode(authToken);
+        const newRefreshTime = jwt?.exp - 60000;
 
         setTimeout(async () => {
-            await refreshToken()
-            reRefreshAccessToken()
+            await refreshToken();
+            reRefreshAccessToken();
         }, newRefreshTime);
-    }
+    };
 
-    const initAuth = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (!isLoggedIn().value) return
-                await refreshToken()
-                await getUser()
-                reRefreshAccessToken()
+    // Inisialisasi Autentikasi saat Aplikasi Dimuat
+    const initAuth = async () => {
+        try {
+            if (!isLoggedIn().value) return;
+            await refreshToken();
+            await getUser();
+            reRefreshAccessToken();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-                resolve(true)
-            } catch (error) {
-                console.log(error)
-                reject(error)
-            } finally {
-                // setIsAuthLoading(false)
-            }
-        })
-    }
-
-    const logout = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await useFetchApi('/api/auth/logout', {
-                    method: 'GET'
-                })
-
-                setToken(null)
-                setUser(null)
-                isLoggedIn().value = String(false)
-                resolve(true)
-            } catch (error) {
-                isLoggedIn().value = String(false)
-                reject(error)
-            }
-        })
-    }
+    // Logout
+    const logout = async () => {
+        try {
+            await useFetchApi('/api/auth/logout', { method: 'GET' });
+        } catch (error) {
+            console.error("Logout error:", error);
+        } finally {
+            // Hapus semua data autentikasi
+            setToken(null);
+            setUser(null);
+            useUserRole().value = null;
+            isLoggedIn().value = false;
+            navigateTo('/auth/login'); 
+        }
+    };
 
     return {
         login,
         useAuthUser,
         useAuthToken,
         useAuthTokenCookie,
+        useUserRole, 
         initAuth,
         logout,
         isLoggedIn
-    }
-}
+    };
+};
