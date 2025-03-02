@@ -1,7 +1,18 @@
 import {PrismaClient} from '@prisma/client';
 import { format } from 'date-fns';
+import {Gender} from "~/types/TypesModel";
 
 const prisma = new PrismaClient();
+function mapGender(gender: string): Gender | undefined {
+    switch(gender) {
+        case 'Male':
+            return Gender.Male;
+        case 'Female':
+            return Gender.Female;
+        default:
+            return undefined;
+    }
+}
 
 export class Citizen {
     static createCitizen = async (data: any) => {
@@ -35,6 +46,14 @@ export class Citizen {
                 update_at: true,
             },
         });
+        // Format tanggal lahir (dob) ke dd/mm/yy
+        const formattedCitizens = citizens.map(citizen => ({
+            ...citizen,
+            dob: format(new Date(citizen.dob), 'dd/MM/yy'),
+            gender: mapGender(citizen.gender),
+        }));
+
+        return formattedCitizens;
     };
 
     static updateCitizen = async (id: number, data: any) => {
@@ -78,7 +97,8 @@ export class Citizen {
     // Format tanggal lahir (dob) ke dd/mm/yy
     const formattedCitizens = citizens.map(citizen => ({
         ...citizen,
-        dob: format(new Date(citizen.dob), 'dd/MM/yy')
+        dob: format(new Date(citizen.dob), 'dd/MM/yy'),
+        gender: mapGender(citizen.gender)
     }));
 
     return formattedCitizens;
@@ -117,5 +137,13 @@ static countAllCitizens = () => {
                 ],
             },
         });
+        // Format tanggal lahir (dob) ke dd/mm/yy
+        const formattedCitizens = citizens.map(citizen => ({
+            ...citizen,
+            dob: format(new Date(citizen.dob), 'dd/MM/yy'),
+            gender: mapGender(citizen.gender),
+        }));
+
+        return formattedCitizens;
     };
 }

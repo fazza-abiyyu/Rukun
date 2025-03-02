@@ -20,8 +20,8 @@ export enum ActionLog {
 }
 
 export enum Gender {
-    MALE = 'Laki-laki',
-    FEMALE = 'Perempuan',
+    Male = 'Laki-laki',
+    Female = 'Perempuan',
 }
 
 export enum Category {
