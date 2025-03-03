@@ -32,13 +32,13 @@ export class User {
 
         return prisma.user.findUnique({
             where: {
-                email: email, // Ensure email is properly passed here
+                email: email,
             },
             select: {
                 id: true,
                 username: true,
                 email: true,
-                password: false,
+                password: true,
                 role: true,
             },
         });
@@ -68,7 +68,7 @@ export class User {
                 id: true,
                 username: true,
                 email: true,
-                password: false,
+                password: true,
                 role: true
             }
         });
