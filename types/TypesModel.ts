@@ -11,6 +11,7 @@ export type User = {
     username: string;
     email: string;
     role: Role;
+    password: string;
 }
 
 export enum ActionLog {
