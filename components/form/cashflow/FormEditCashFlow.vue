@@ -87,7 +87,7 @@ const selectedCashflow = ref< Cashflow | null>(null);
 const isLoading = ref(false);
 
 onMounted(async () => {
-  fetchCashflowData();
+  await fetchCashflowData();
 });
 
 
