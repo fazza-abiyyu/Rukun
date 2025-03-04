@@ -21,7 +21,7 @@
           </div>
         <!-- Nomer Induk Keluarga -->
           <div class="grid sm:grid-cols-3">
-            <label for="nik" class="block text-sm font-medium mb-2 w-full">NOMER INDUK KELUARGA (NIK)</label>
+            <label for="nik" class="block text-sm font-medium mb-2 w-full">NOMER INDUK KEPENDUDUKAN (NIK)</label>
             <input type="text" id="nik"
                    v-model="nik"
                    class="col-span-2 py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
@@ -81,7 +81,7 @@ const handleSubmit = async () => {
       return;
     }
     if (!nik.value) {
-      $toast('Nomer Induk Keluarga (NIK) harus diisi.', 'error');
+      $toast('Nomer Induk Kependudukan (NIK) harus diisi.', 'error');
       return;
     }
     if (!letter.value) {
@@ -108,7 +108,7 @@ const handleSubmit = async () => {
     clearForm();
     router.push('/application-letter');
   } catch (error: any) {
-    $toast('Nomer Induk Keluarga (NIK) tidak ditemukan.', 'error');
+    $toast('Nomer Induk Kependudukan (NIK) tidak ditemukan.', 'error');
   } finally {
     isLoading.value = false;
   }

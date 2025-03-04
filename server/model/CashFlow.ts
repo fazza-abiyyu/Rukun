@@ -89,6 +89,7 @@ export class CashFlow {
         const formattedCashFlows = cashFlows.map(cashFlow => ({
             ...cashFlow,
             date: format(new Date(cashFlow.date), 'dd/MM/yy'),
+            create_at: format(new Date(cashFlow.create_at), 'dd/MM/yy'),
             category: mapCategory(cashFlow.category)
         }));
 

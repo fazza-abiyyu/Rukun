@@ -47,6 +47,7 @@
             { label: 'TANGGAL', key: 'date' },
             { label: 'KATEGORI', key: 'category' },
             { label: 'JUMLAH', key: 'amount' },
+            { label: 'DITAMBAHKAN', key: 'create_at' },
           ]"
           :data="cashflow"
           :perPage="pageSize"

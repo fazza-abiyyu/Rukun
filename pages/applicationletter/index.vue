@@ -42,21 +42,21 @@
       <DatatablesDataTable
           :title="'Pengajuan Surat'"
       :fields="[
-       { label: 'DIBUAT OLEH', key: 'user.username' },
-      { label: 'EMAIL PENERIMA', key: 'user.email' },
-      { label: 'JENIS SURAT', key: 'category_letter' },
-      { label: 'TANGGAL DIBUAT', key: 'create_at' },
-      ]"
-      :data="applicationletters"
-      :perPage="pageSize"
-      :totalPages="totalPages"
-      :currentPage="currentPage"
-      :prevPage="prevPage"
-      :nextPage="nextPage"
-      :isLoading="isLoading"
+          { label: 'DIBUAT OLEH', key: 'user.username' },
+          { label: 'EMAIL PENERIMA', key: 'user.email' },
+          { label: 'JENIS SURAT', key: 'category_letter' },
+          { label: 'TANGGAL DIBUAT', key: 'create_at' },
+          ]"
+          :data="applicationletters"
+          :perPage="pageSize"
+          :totalPages="totalPages"
+          :currentPage="currentPage"
+          :prevPage="prevPage"
+          :nextPage="nextPage"
+          :isLoading="isLoading"
           :add-action="true"
-      @fetchData="(e) => handleChangeFetchData(e)"
-      @searchData="(e) => handleSearchData(e)"
+          @fetchData="(e) => handleChangeFetchData(e)"
+          @searchData="(e) => handleSearchData(e)"
       />
     </div>
   </div>
