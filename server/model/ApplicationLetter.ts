@@ -68,6 +68,9 @@ export class ApplicationLetter {
         const take = pageSize;
 
         const applicationLetters = await prisma.applicationLetter.findMany({
+            orderBy: {
+                create_at: 'desc'
+            },
             skip,
             take,
             select: {

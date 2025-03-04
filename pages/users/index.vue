@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Hasil Pemeriksaan Medis
+          Data Pengguna
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -40,7 +40,7 @@
   <div class="w-full lg:ps-64">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <DatatablesDataTable
-          :title="'Hasil Pemeriksaan Medis'"
+          :title="'Daftar Pengguna'"
           :fields="[
             { label: 'PENGGUNA', key: 'username' },
             { label: 'EMAIL', key: 'email' },
@@ -54,27 +54,27 @@
           :nextPage="nextPage"
           :isLoading="isLoading"
           :deleteAction="true"
-          :editAction="true"
           @fetchData="(e) => handleChangeFetchData(e)"
           @searchData="(e) => handleSearchData(e)"
-          @deleteData="(e) => handleDeleteData(e)"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
+
 const { handleError } = useErrorHandling();
 const {$toast} = useNuxtApp();
 
+const userData = ref([]);
 const page = ref(1)
-const pageSize = ref(10)
-const totalPages = ref(1)
-const currentPage = ref(1)
-const nextPage = ref()
-const prevPage = ref()
-const userData = ref([])  
-const isLoading = ref<boolean>(false)
+const pageSize = ref(4);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const prevPage = ref(null);
+const nextPage = ref(null);
+const isLoading = ref(false);
 
 const user = computed(() => userData.value)
 

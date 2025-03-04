@@ -56,6 +56,7 @@
             :prevPage="prevPage"
             :nextPage="nextPage"
             :isLoading="isLoading"
+            :add-action="true"
             :deleteAction="true"
             :editAction="true"
             @fetchData="(e) => handleChangeFetchData(e)"

@@ -104,15 +104,11 @@ const handleSubmit = async () => {
       body: payload,
     });
 
-    if (response.error) {
-      throw new Error(response.error.message || 'Terjadi kesalahan saat mengirim surat.');
-    }
-
     $toast('Surat Pengajuan Berhasil di Kirim!', 'success');
     clearForm();
     router.push('/application-letter');
   } catch (error: any) {
-    $toast('Terjadi kesalahan: ' + (error.message || 'Unknown error'), 'error');
+    $toast('Nomer Induk Keluarga (NIK) tidak ditemukan.', 'error');
   } finally {
     isLoading.value = false;
   }

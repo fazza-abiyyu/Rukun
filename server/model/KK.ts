@@ -66,6 +66,9 @@ export class KK {
         const take = pageSize;
 
         return prisma.kK.findMany({
+            orderBy: {
+                head_of_family: 'asc'
+            },
             skip: skip,
             take: take,
             select: {

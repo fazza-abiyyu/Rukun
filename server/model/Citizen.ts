@@ -70,6 +70,9 @@ export class Citizen {
     const take = pageSize;
 
     const citizens = await prisma.citizen.findMany({
+        orderBy: {
+            full_name: 'asc'
+        },
         skip: skip,
         take: take,
         select: {
