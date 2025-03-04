@@ -50,6 +50,9 @@ export class Notification {
 
         // Fetch notifications from the database
         const notifications = await prisma.notification.findMany({
+            orderBy: {
+                create_at: 'desc'
+            },
             skip: skip,
             take: take,
             select: {

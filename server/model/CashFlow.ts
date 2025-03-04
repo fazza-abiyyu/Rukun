@@ -66,6 +66,9 @@ export class CashFlow {
         const take = pageSize;
 
         const cashFlows = await prisma.cashFlow.findMany({
+            orderBy: {
+                update_at: 'desc'
+            },
             skip: skip,
             take: take,
             select: {

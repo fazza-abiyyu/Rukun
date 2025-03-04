@@ -20,12 +20,12 @@ export default defineNuxtConfig({
     plugins: ["~/plugins/preline.client.ts"],
     app: {
         head: {
-            title: "RUKUN | Management Data Warga RT",
+            title: "RUKUN | Management Warga",
             htmlAttrs: {
                 lang: 'id'
             },
             meta: [
-                {name: 'description', content: 'Rukun adalah platfrom untuk management data warga lingkup RT'}
+                {name: 'description', content: 'Rukun adalah platfrom untuk management data warga'}
             ],
         },
     },

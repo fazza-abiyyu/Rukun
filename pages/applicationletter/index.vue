@@ -43,7 +43,7 @@
           :title="'Pengajuan Surat'"
       :fields="[
        { label: 'DIBUAT OLEH', key: 'user.username' },
-      { label: 'NOMOR INDUK KELUARGA', key: 'data_nik' },
+      { label: 'EMAIL PENERIMA', key: 'user.email' },
       { label: 'JENIS SURAT', key: 'category_letter' },
       { label: 'TANGGAL DIBUAT', key: 'create_at' },
       ]"
@@ -54,6 +54,7 @@
       :prevPage="prevPage"
       :nextPage="nextPage"
       :isLoading="isLoading"
+          :add-action="true"
       @fetchData="(e) => handleChangeFetchData(e)"
       @searchData="(e) => handleSearchData(e)"
       />

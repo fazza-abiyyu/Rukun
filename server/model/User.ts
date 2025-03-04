@@ -79,6 +79,9 @@ export class User {
         const take = pageSize;
 
         return prisma.user.findMany({
+            orderBy: {
+               username: 'asc'
+            },
             skip: skip,
             take: take,
             select: {

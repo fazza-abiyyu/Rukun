@@ -3,6 +3,22 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row gap-2 sm:justify-between sm:items-center">
       <h2 class="text-xl font-medium text-gray-800 w-full">{{ title }}</h2>
+
+      <!-- Tombol add di Kiri search -->
+      <NuxtLink v-if="addAction" :to="getAddRoute()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 48 48">
+          <g id="Layer_2" data-name="Layer 2">
+            <g id="invisible_box" data-name="invisible box">
+              <rect width="48" height="48" fill="none"/>
+            </g>
+            <g id="icons_Q2" data-name="icons Q2">
+              <path fill="green" d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2H42a2,2,0,0,0,2-2V6A2,2,0,0,0,42,4ZM34,26H26v8a2,2,0,0,1-4,0V26H14a2,2,0,0,1,0-4h8V14a2,2,0,0,1,4,0v8h8a2,2,0,0,1,0,4Z"/>
+            </g>
+          </g>
+        </svg>
+      </NuxtLink>
+
+
       <div class="relative w-full max-w-xs">
         <label for="hs-table-search" class="sr-only">Search</label>
         <input type="text" name="hs-table-search" id="hs-table-search"
@@ -143,13 +159,17 @@
 
 <script setup lang="ts">
 import debounce from 'lodash/debounce';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const getAddRoute = () => `${route.path}/add`;
 
 const getEditRoute = (row: Record<string, any>) => {
   if ("nik" in row) {
     return `/citizen/edit/${row.id}`;
   } else if ("category" in row) {
     return `/cashflow/edit/${row.id}`;
-  } else if ("email" in row) {  
+  } else if ("email" in row) {
     return `/users/edit/${row.id}`;
   } else {
     return "/";
@@ -191,6 +211,10 @@ const props = defineProps({
     default: null,
   },
   isLoading: {
+    type: Boolean,
+    default: false,
+  },
+  addAction: {
     type: Boolean,
     default: false,
   },
