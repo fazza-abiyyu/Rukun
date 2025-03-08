@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Data Pengguna
+          Pengguna
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -54,79 +54,112 @@
           :nextPage="nextPage"
           :isLoading="isLoading"
           :deleteAction="true"
+          :edit-action="true"
           @fetchData="(e) => handleChangeFetchData(e)"
           @searchData="(e) => handleSearchData(e)"
+          @deleteData="(e) => handleDeleteData(e)"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-
+import {onMounted, ref} from "vue";
 const { handleError } = useErrorHandling();
+
 const {$toast} = useNuxtApp();
 
-const userData = ref([]);
-const page = ref(1)
-const pageSize = ref(4);
+const user = ref([]);
+
+const pageSize = ref(10);
 const currentPage = ref(1);
 const totalPages = ref(1);
-const prevPage = ref(null);
-const nextPage = ref(null);
+const prevPage = ref<string | undefined>(undefined);
+const nextPage = ref<string | undefined>(undefined);
+
 const isLoading = ref(false);
 
-const user = computed(() => userData.value)
-
-const fetchUser = async () => {
+const fetchData = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/users?page=${page.value}&pagesize=${pageSize.value}`);
-    userData.value = response?.data;
-    totalPages.value = response?.totalPages;
-    nextPage.value = response?.next;
-    prevPage.value = response?.prev;
-  } catch (e) {
-    handleError(e)
+    const token = document.cookie
+        .split("; ")
+        .find(row => row.startsWith("access_token="))
+        ?.split("=")[1];
+
+    if (!token) {
+      console.error("Token tidak ditemukan!");
+      return;
+    }
+
+    const response = await fetch(
+        `/api/auth/users?page=${currentPage.value}&pagesize=${pageSize.value}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+    );
+
+    if (response.status === 401) {
+      console.error("Unauthorized! Coba login ulang.");
+      return;
+    }
+
+    const data = await response.json();
+    if (data.code === 200) {
+      user.value = data.data;
+      totalPages.value = data.totalPages;
+      prevPage.value = data.prev;
+      nextPage.value = data.next;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data pengguna:", error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const handleChangeFetchData = async (payload: any) => {
   try {
-    isLoading.value = true
+    isLoading.value = true;
     const response: any = await useFetchApi(payload.url);
-    userData.value = response?.data;
+    user.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
     currentPage.value = payload?.currentPage;
   } catch (e) {
-    handleError(e)
+    handleError(e);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
+
 
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchUser()  
-      return
+      await fetchData();
+      return;
     }
-    isLoading.value = true
+
+    isLoading.value = true;
     const response: any = await useFetchApi(`/api/auth/users/search?q=${query}`);
-    userData.value = response?.data;
+
+    user.value = response?.data?.users|| [];
     totalPages.value = 1;
-    nextPage.value = null;
-    prevPage.value = null;
+    nextPage.value = undefined;
+    prevPage.value = undefined;
   } catch (e) {
-    handleError(e)
+    console.error("Gagal mencari data arus kas:", e);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const handleDeleteData = async (id: number) => {
   try {
@@ -134,16 +167,14 @@ const handleDeleteData = async (id: number) => {
     await useFetchApi(`/api/auth/users/${id}`, {
       method: 'DELETE'
     })
-    userData.value = userData.value.filter((item: any) => item.id !== id)
+    user.value = user.value.filter((item: any) => item.id !== id)
     $toast('Berhasil menghapus data.', 'success');
   } catch (e) {
     $toast('Gagal menghapus data.', 'error');
   }
 }
 
-onMounted(async () => {
-  await fetchUser()
-})
+onMounted(fetchData);
 </script>
 
 <style scoped></style>

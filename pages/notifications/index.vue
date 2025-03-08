@@ -29,7 +29,7 @@
           </svg>
         </li>
         <li class="text-sm font-semibold text-gray-800 truncate" aria-current="page">
-          Pengguna
+          Notifikasi
         </li>
       </ol>
       <!-- End Breadcrumb -->
@@ -47,7 +47,7 @@
           { label: 'DESKRIPSI', key: 'description' },
           { label: 'DIBUAT OLEH', key: 'user.username' },
           { label: 'TANGGAL DITERBITKAN', key: 'create_at' }
-    ]"
+          ]"
           :data="notifications"
           :perPage="pageSize"
           :totalPages="totalPages"
@@ -64,72 +64,102 @@
 </template>
 
 <script setup lang="ts">
+import {onMounted, ref} from "vue";
+
 const {handleError} = useErrorHandling();
 
-const page = ref(1)
-const pageSize = ref(10)
-const totalPages = ref(1)
-const currentPage = ref(1)
-const nextPage = ref()
-const prevPage = ref()
-const notificationsData = ref([])
-const isLoading = ref<boolean>(false)
+const notifications = ref([])
+const pageSize = ref(10);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const prevPage = ref<string | undefined>(undefined);
+const nextPage = ref<string | undefined>(undefined);
 
-const notifications = computed(() => notificationsData.value)
+const isLoading = ref(false);
 
-const fetchNotifications = async () => {
+const fetchData = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/notifications?page=${page.value}&pagesize=${pageSize.value}`);
-    notificationsData.value = response?.data;
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
-  } catch (e) {
-    handleError(e)
+    const token = document.cookie
+        .split("; ")
+        .find(row => row.startsWith("access_token="))
+        ?.split("=")[1];
+
+    if (!token) {
+      console.error("Token tidak ditemukan!");
+      return;
+    }
+
+    const response = await fetch(
+        `/api/auth/notifications?page=${currentPage.value}&pagesize=${pageSize.value}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+    );
+
+    if (response.status === 401) {
+      console.error("Unauthorized! Coba login ulang.");
+      return;
+    }
+
+    const data = await response.json();
+    if (data.code === 200) {
+      notifications.value = data.data;
+      totalPages.value = data.totalPages;
+      prevPage.value = data.prev;
+      nextPage.value = data.next;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data notifications:", error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const handleChangeFetchData = async (payload: any) => {
   try {
-    isLoading.value = true
+    isLoading.value = true;
     const response: any = await useFetchApi(payload.url);
-    notificationsData.value = response?.data?.users;
-    totalPages.value = response?.meta?.totalPages;
-    nextPage.value = response?.meta?.next;
-    prevPage.value = response?.meta?.prev;
+    notifications.value = response?.data;
+    totalPages.value = response?.totalPages;
+    nextPage.value = response?.next;
+    prevPage.value = response?.prev;
     currentPage.value = payload?.currentPage;
   } catch (e) {
-    handleError(e)
+    handleError(e);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
+
 
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchNotifications()
-      return
+      await fetchData();
+      return;
     }
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/notifications/search?q=${query}`);
-    notificationsData.value = response?.data?.users;
-    totalPages.value = 1;
-    nextPage.value = null;
-    prevPage.value = null;
-  } catch (e) {
-    handleError(e)
-  } finally {
-    isLoading.value = false
-  }
-}
 
-onMounted(async () => {
-  await fetchNotifications()
-})
+    isLoading.value = true;
+    const response: any = await useFetchApi(`/api/auth/notifications/search?q=${query}`);
+
+    notifications.value = response?.data?.cashflow || [];
+    totalPages.value = 1;
+    nextPage.value = undefined;
+    prevPage.value = undefined;
+  } catch (e) {
+    console.error("Gagal mencari data arus kas:", e);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(fetchData);
 </script>
 
 <style scoped>

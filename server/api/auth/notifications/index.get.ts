@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
         // Return hasil data
         return {
             code: 200,
-            message: 'Data warga berhasil dikembalikan!',
+            message: 'Daftar notifikasi berhasil dikembalikan!',
             data: notifications,
             totalPages,
             prev: prevPage,

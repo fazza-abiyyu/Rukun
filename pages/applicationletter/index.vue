@@ -63,71 +63,99 @@
 </template>
 
 <script setup lang="ts">
+import {onMounted} from "vue";
+
 const { handleError } = useErrorHandling();
 
-const page = ref(1)
 const pageSize = ref(10)
 const totalPages = ref(1)
 const currentPage = ref(1)
 const nextPage = ref()
 const prevPage = ref()
-const applicationlettersData = ref([])  
 const isLoading = ref<boolean>(false)
 
-const applicationletters = computed(() => applicationlettersData.value)  
+const applicationletters = ref([])
 
-const fetchapplicationletters = async () => {
+const fetchData = async () => {
+  isLoading.value = true;
   try {
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/application-letter?page=${page.value}&pagesize=${pageSize.value}`);
-    applicationlettersData.value = response?.data;
-    totalPages.value = response?.totalPages;
-    nextPage.value = response?.next;
-    prevPage.value = response?.prev;
-  } catch (e) {
-    handleError(e)
-    applicationlettersData.value = [];
+    const token = document.cookie
+        .split("; ")
+        .find(row => row.startsWith("access_token="))
+        ?.split("=")[1];
+
+    if (!token) {
+      console.error("Token tidak ditemukan!");
+      return;
+    }
+
+    const response = await fetch(
+        `/api/auth/application-letter?page=${currentPage.value}&pagesize=${pageSize.value}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+    );
+
+    if (response.status === 401) {
+      console.error("Unauthorized! Coba login ulang.");
+      return;
+    }
+
+    const data = await response.json();
+    if (data.code === 200) {
+      applicationletters.value = data.data;
+      totalPages.value = data.totalPages;
+      prevPage.value = data.prev;
+      nextPage.value = data.next;
+    }
+  } catch (error) {
+    console.error("Gagal mengambil data pengguna:", error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const handleChangeFetchData = async (payload: any) => {
   try {
-    isLoading.value = true
+    isLoading.value = true;
     const response: any = await useFetchApi(payload.url);
-    applicationlettersData.value = response?.data;
+    applicationletters.value = response?.data;
     totalPages.value = response?.totalPages;
     nextPage.value = response?.next;
     prevPage.value = response?.prev;
     currentPage.value = payload?.currentPage;
   } catch (e) {
-    handleError(e)
+    handleError(e);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const handleSearchData = async (query: string) => {
   try {
     if (query.length === 0) {
-      await fetchapplicationletters()  
-      return
+      await fetchData();
+      return;
     }
-    isLoading.value = true
-    const response: any = await useFetchApi(`/api/auth/application-letters/search?q=${query}`);
-    applicationlettersData.value = response?.data; 
-    totalPages.value = 1;
-    nextPage.value = null;
-    prevPage.value = null;
-  } catch (e) {
-    handleError(e)
-  } finally {
-    isLoading.value = false
-  }
-}
 
-onMounted(async () => {
-  await fetchapplicationletters()  
-})
+    isLoading.value = true;
+    const response: any = await useFetchApi(`/api/auth/application-letter/search?q=${query}`);
+
+    applicationletters.value = response?.data?.users|| [];
+    totalPages.value = 1;
+    nextPage.value = undefined;
+    prevPage.value = undefined;
+  } catch (e) {
+    console.error("Gagal mencari data arus kas:", e);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(fetchData);
 </script>
