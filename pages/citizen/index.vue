@@ -72,11 +72,12 @@
 import { ref, onMounted } from 'vue';
 
 const citizen = ref([]);
-const pageSize = ref(4);
+const pageSize = ref(10);
 const currentPage = ref(1);
 const totalPages = ref(1);
-const prevPage = ref(null);
-const nextPage = ref(null);
+const prevPage = ref<string | undefined>(undefined);
+const nextPage = ref<string | undefined>(undefined);
+
 const isLoading = ref(false);
 
 const fetchData = async () => {

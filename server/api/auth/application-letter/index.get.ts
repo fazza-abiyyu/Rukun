@@ -27,18 +27,18 @@ export default defineEventHandler(async (event) => {
         const application_letters = await ApplicationLetter.getAllApplicationLetters(page, pagesize);
         const totalApplicationLetters = await ApplicationLetter.countAllApplicationLetters();
         const totalPages = Math.ceil(totalApplicationLetters / pagesize);
-        const baseUrl = "/api/auth/application-letters";
+        const baseUrl = "/api/auth/application-letter";
         const prevPage = page > 1 ? `${baseUrl}?page=${page - 1}&pagesize=${pagesize}` : null;
         const nextPage = page < totalPages ? `${baseUrl}?page=${page + 1}&pagesize=${pagesize}` : null;
 
+        // Return hasil data
         return {
-            message: "Data Surat Pengantar berhasil dikembalikan.",
+            code: 200,
+            message: 'Data Surat Pengajuan berhasil dikembalikan!',
             data: application_letters,
-            meta: {
-                totalPages,
-                prev: prevPage,
-                next: nextPage,
-            }
+            totalPages,
+            prev: prevPage,
+            next: nextPage,
         };
     } catch (error: any) {
         console.error(error);

@@ -1,6 +1,6 @@
-import { defineEventHandler, getQuery, sendError, createError, setResponseStatus } from 'h3';
-import { ApplicationLetter } from '~/server/model/ApplicationLetter';
-import { User } from '~/server/model/User';
+import {defineEventHandler, getQuery, sendError, createError, setResponseStatus} from 'h3';
+import {ApplicationLetter} from '~/server/model/ApplicationLetter';
+import {User} from '~/server/model/User';
 
 export default defineEventHandler(async (event) => {
     try {
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
         const user = event.context?.auth?.user;
         if (!user) {
             setResponseStatus(event, 403);
-            return { code: 403, message: 'Pengguna tidak valid' };
+            return {code: 403, message: 'Pengguna tidak valid'};
         }
 
         // Ambil parameter `page` dan `pagesize` dari query string
@@ -23,23 +23,22 @@ export default defineEventHandler(async (event) => {
                 message: "Halaman dan ukuran halaman harus berupa bilangan bulat positif.",
             });
         }
-            const users = await User.getAllUsers(page, pagesize);
-            const totalUsers = await User.countAllUsers();
-            const totalPages = Math.ceil(totalUsers / pagesize);
-            const baseUrl = "/api/auth/users";
-            const prevPage = page > 1 ? `${baseUrl}?page=${page - 1}&pagesize=${pagesize}` : null;
-            const nextPage = page < totalPages ? `${baseUrl}?page=${page + 1}&pagesize=${pagesize}` : null;
+        const users = await User.getAllUsers(page, pagesize);
+        const totalUsers = await User.countAllUsers();
+        const totalPages = Math.ceil(totalUsers / pagesize);
+        const baseUrl = "/api/auth/users";
+        const prevPage = page > 1 ? `${baseUrl}?page=${page - 1}&pagesize=${pagesize}` : null;
+        const nextPage = page < totalPages ? `${baseUrl}?page=${page + 1}&pagesize=${pagesize}` : null;
 
-            return {
-                message: "Akun pengguna berhasil dikembalikan.",
-                data: users,
-                meta: {
-                    totalPages,
-                    prev: prevPage,
-                    next: nextPage,
-                }
-        }
+        return {
+            code: 200,
+            message: 'Daftar pengguna berhasil dikembalikan!',
+            data: users,
+            totalPages,
+            prev: prevPage,
+            next: nextPage,
+        };
     } catch (error: any) {
-        return sendError(event, createError({ statusCode: 500, statusMessage: 'Internal Server Error' }));
+        return sendError(event, createError({statusCode: 500, statusMessage: 'Internal Server Error'}));
     }
 });
