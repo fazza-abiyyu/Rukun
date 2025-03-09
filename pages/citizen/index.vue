@@ -46,7 +46,7 @@
       { label: 'NAMA WARGA', key: 'full_name' },
       { label: 'NIK', key: 'nik' },
       { label: 'JENIS KELAMIN', key: 'gender' },
-      { label: 'TANGGAL LAHIR', key: 'dob', formatter: (v) => v.split('T')[0] },
+      { label: 'TANGGAL LAHIR', key: 'dob'},
       { label: 'ALAMAT', key: 'address' },
     ]"
             :data="citizen"
@@ -68,8 +68,9 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+const { handleError } = useErrorHandling();
 
 const citizen = ref([]);
 const pageSize = ref(10);
@@ -84,23 +85,26 @@ const fetchData = async () => {
   isLoading.value = true;
   try {
     const token = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("access_token="))
-      ?.split("=")[1];
+        .split("; ")
+        .find(row => row.startsWith("access_token="))
+        ?.split("=")[1];
 
     if (!token) {
       console.error("Token tidak ditemukan!");
       return;
     }
 
-    const response = await fetch(`/api/auth/citizen?page=${currentPage.value}&pagesize=${pageSize.value}`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-    });
+    const response = await fetch(
+        `/api/auth/citizen?page=${currentPage.value}&pagesize=${pageSize.value}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+    );
 
     if (response.status === 401) {
       console.error("Unauthorized! Coba login ulang.");
@@ -121,57 +125,69 @@ const fetchData = async () => {
   }
 };
 
-const handleSearchData = async (query) => {
+const handleChangeFetchData = async (payload: any) => {
   try {
-    if (!query) {
-      await fetchData(); // Jika query kosong, ambil semua data
-      return;
-    }
-
     isLoading.value = true;
-    const response = await useFetchApi(`/api/auth/citizen/search?q=${query}`);
-
-    if (response?.data?.citizen) {
-      citizen.value = response.data.citizen;
-      totalPages.value = 1;
-      nextPage.value = null;
-      prevPage.value = null;
-    } else {
-      citizen.value = [];
-    }
-  } catch (error) {
-    console.error("Kesalahan saat mencari data warga:", error);
+    const response: any = await useFetchApi(payload.url);
+    citizen.value = response?.data;
+    totalPages.value = response?.totalPages;
+    nextPage.value = response?.next;
+    prevPage.value = response?.prev;
+    currentPage.value = payload?.currentPage;
+  } catch (e) {
+    handleError(e);
   } finally {
     isLoading.value = false;
   }
 };
 
-const handleDeleteData = async (id) => {
+
+const handleSearchData = async (query: string) => {
+  try {
+    if (query.length === 0) {
+      await fetchData(); // Ambil semua data citizen
+      return;
+    }
+
+    isLoading.value = true;
+    const response: any = await useFetchApi(`/api/auth/citizen/search?q=${query}`);
+
+    citizen.value = response?.data?.citizen || [];
+    totalPages.value = 1;
+    nextPage.value = undefined;
+    prevPage.value = undefined;
+  } catch (e) {
+    console.error("Gagal mencari data warga:", e);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+
+const handleDeleteData = async (id: string) => {
   if (!confirm("Apakah Anda yakin ingin menghapus data ini?")) {
     return;
   }
 
   isLoading.value = true;
   try {
-    // Ambil access token dari cookie
     const token = document.cookie
-      .split("; ")
-      .find(row => row.startsWith("access_token="))
-      ?.split("=")[1];
+        .split("; ")
+        .find(row => row.startsWith("access_token="))
+        ?.split("=")[1];
 
     if (!token) {
       alert("Sesi Anda telah berakhir. Silakan login kembali.");
-      window.location.href = "/login"; // Redirect ke halaman login
+      window.location.href = "/login";
       return;
     }
 
-    // Kirim permintaan DELETE
     const response = await fetch(`/api/auth/citizen/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}` // Pastikan token dikirim
+        "Authorization": `Bearer ${token}`,
       },
     });
 
@@ -179,7 +195,7 @@ const handleDeleteData = async (id) => {
 
     if (response.status === 401) {
       alert("Sesi telah habis atau tidak valid. Silakan login ulang.");
-      window.location.href = "/login"; // Redirect ke login
+      window.location.href = "/login";
       return;
     }
 
@@ -200,6 +216,5 @@ const handleDeleteData = async (id) => {
 
 onMounted(fetchData);
 </script>
-<style scoped>
 
-</style>
+<style scoped></style>
