@@ -41,11 +41,20 @@ export class Stats {
         return totalFemaleCitizen;
     }
     static getCashFlowDashboard = async (year: number) => {
+        const startDate = new Date(year, 0, 1);
+        const endDate = new Date(year + 1, 0, 1);
+
         const results = await prisma.cashFlow.findMany({
+            where: {
+                date: {
+                    gte: startDate,
+                    lt: endDate
+                }
+            },
             select: {
                 category: true,
                 amount: true,
-                date: true // Assuming this returns a Date object
+                date: true
             }
         });
 
@@ -55,10 +64,10 @@ export class Stats {
         };
 
         results.forEach(result => {
-            const transactionDate = result.date;
+            const transactionDate = new Date(result.date);
 
             // Skip if date is missing or invalid
-            if (!transactionDate || !(transactionDate instanceof Date) || isNaN(transactionDate.getTime())) {
+            if (!transactionDate || isNaN(transactionDate.getTime())) {
                 console.error("Invalid or missing date:", result);
                 return;
             }
@@ -75,7 +84,7 @@ export class Stats {
             }
         });
 
-        const totals =  CashFlow.Debit.reduce((a, b) => a + b, 0) - CashFlow.Kredit.reduce((a, b) => a + b, 0) ;
+        const totals = CashFlow.Debit.reduce((a, b) => a + b, 0) - CashFlow.Kredit.reduce((a, b) => a + b, 0);
 
         return {
             CashFlow: [
@@ -94,7 +103,7 @@ export class Stats {
                 'July', 'August', 'September', 'October', 'November', 'December'
             ],
         };
-    }
+    };
 
     static async getRatioCashFlow() {
         // Count cash flow by category

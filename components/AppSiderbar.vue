@@ -129,7 +129,7 @@
                       d="M14 10H15V16H1V5H2V2H3V0H14V10ZM4 1V2H12V10H13V1H4ZM3 3V5H5.71094L10.7109 10H11V3H3ZM14 15V11H10.2891L5.28906 6H2V15H14Z"
                       fill="black"/>
                 </svg>
-               Pengajuan Surat
+                Pengajuan Surat
               </NuxtLink>
             </li>
 
@@ -174,22 +174,21 @@
                 Pengguna
               </NuxtLink>
             </li>
+            <li style="position: absolute; bottom: 80px; width: 90%;">
+              <button
+                  class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                  @click="handleLogout">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                      d="M8 16H5.33333C4.97971 16 4.64057 15.8595 4.39052 15.6095C4.14048 15.3594 4 15.0203 4 14.6667V5.33333C4 4.97971 4.14048 4.64057 4.39052 4.39052C4.64057 4.14048 4.97971 4 5.33333 4H8"
+                      stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12.6666 13.3332L16 9.99984L12.6666 6.6665" stroke="#2B2B2B" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Keluar
+              </button>
+            </li>
 
-            <!--            <li>-->
-            <!--              <button-->
-            <!--                class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"-->
-            <!--                @click="handleLogout">-->
-            <!--                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-            <!--                  <path-->
-            <!--                    d="M8 16H5.33333C4.97971 16 4.64057 15.8595 4.39052 15.6095C4.14048 15.3594 4 15.0203 4 14.6667V5.33333C4 4.97971 4.14048 4.64057 4.39052 4.39052C4.64057 4.14048 4.97971 4 5.33333 4H8"-->
-            <!--                    stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />-->
-            <!--                  <path d="M12.6666 13.3332L16 9.99984L12.6666 6.6665" stroke="#2B2B2B" stroke-width="1.5"-->
-            <!--                    stroke-linecap="round" stroke-linejoin="round" />-->
-            <!--                </svg>-->
-
-            <!--                Keluar-->
-            <!--              </button>-->
-            <!--            </li>-->
           </ul>
         </nav>
       </div>
@@ -200,22 +199,20 @@
 </template>
 <script setup lang="ts">
 const userRole = useCookie('user_role').value;
+
+const { logout } = useAuth()
+const { $toast } = useNuxtApp();
+
+const handleLogout = async () => {
+  try {
+    await logout()
+  } catch (error: any) {
+    return
+  } finally {
+    $toast('Berhasil menghapus sesi masuk.', 'success'); // Menampilkan pesan kesalahan menggunakan toast
+    navigateTo('/auth/login'); // Setelah logout berhasil, arahkan ke halaman login
+  }
+}
 </script>
-
-<!--<script setup lang="ts">-->
-<!--const { logout } = useAuth()-->
-<!--const { $toast } = useNuxtApp();-->
-
-<!--const handleLogout = async () => {-->
-<!--  try {-->
-<!--    await logout()-->
-<!--  } catch (error: any) {-->
-<!--    return-->
-<!--  } finally {-->
-<!--    $toast('Berhasil menghapus sesi masuk.', 'success'); // Menampilkan pesan kesalahan menggunakan toast-->
-<!--    navigateTo('/auth/login'); // Setelah logout berhasil, arahkan ke halaman login-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
 
 <style scoped></style>
