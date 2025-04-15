@@ -1,5 +1,9 @@
+<!-- pages/landing-page.vue -->
 <template>
   <div id="app">
+    <!-- Navbar -->
+    <Navbar />
+
     <!-- Hero Section -->
     <HeroSection />
 
@@ -21,6 +25,7 @@
 </template>
 
 <script>
+import Navbar from '~/components/landing-page/Navbar.vue';
 import HeroSection from '~/components/landing-page/HeroSection.vue';
 import WelcomeSection from '~/components/landing-page/WelcomeSection.vue';
 import AccessSection from '~/components/landing-page/AccessSection.vue';
@@ -31,6 +36,7 @@ import CTASection from '~/components/landing-page/CTASection.vue';
 export default {
   name: 'App',
   components: {
+    Navbar,
     HeroSection,
     WelcomeSection,
     AccessSection,
@@ -39,6 +45,13 @@ export default {
     CTASection
   }
 }
+</script>
+
+<script setup>
+// Terapkan layout khusus untuk halaman landing-page
+definePageMeta({
+  layout: 'landing', // Gunakan layout khusus tanpa header/sidebar
+});
 </script>
 
 <style>
