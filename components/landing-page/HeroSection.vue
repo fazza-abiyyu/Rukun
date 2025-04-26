@@ -11,9 +11,6 @@ const props = defineProps({
 <template>
   <div class="flex flex-col gap-12 mt-10 mb-20 lg:items-center lg:flex-row">
     <div class="flex-1 w-full">
-      <NuxtImg class="rounded-lg" sizes="100vw lg:600px" :src="image" :alt="imageAlt" v-if="image" />
-    </div>
-    <div class="flex-1 w-full">
       <h1 class="text-4xl font-bold text-zinc-800 sm:text-5xl text-balance" v-if="title">{{ title }}</h1>
       <p class="max-w-xl mt-4 text-lg text-zinc-600 sm:text-xl" v-if="description">
         {{ description }}
