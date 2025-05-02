@@ -1,16 +1,17 @@
 <template>
   <section class="cta">
     <div class="container">
-      <h2>Yes! I want to apply to the millionaires program.</h2>
-      <p>Take the first step toward transforming your financial future and join our exclusive community today.</p>
-      <a href="#" class="btn btn-light">Apply Now</a>
+      <h2>Tentang Aplikasi</h2>
+      <p>Rukun adalah platform modern yang membantu pengurus RT/RW dalam mengelola urusan administratif sehari-hari.
+        Dengan fitur-fitur lengkap dan antarmuka yang ramah pengguna, Rukun menghadirkan kemudahan dan transparansi
+        dalam komunitas Anda.</p>
     </div>
   </section>
 </template>
 
 <style scoped>
 .cta {
-  background-color: #7e57c2;
+  background-color: #f38302;
   color: white;
   padding: 80px 0;
   text-align: center;
