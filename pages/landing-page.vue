@@ -13,14 +13,11 @@
     <!-- Access Section -->
     <AccessSection />
 
-    <!-- Testimonials Section -->
-    <TestimonialsSection />
+    <!-- Feature Section -->
+    <FeatureSection />
 
-    <!-- FAQ Section -->
-    <FAQSection />
-
-    <!-- CTA Section -->
-    <CTASection />
+    <!-- About Section -->
+    <AboutSection />
   </div>
 </template>
 
@@ -28,8 +25,7 @@
 import Navbar from '~/components/landing-page/Navbar.vue';
 import HeroSection from '~/components/landing-page/HeroSection.vue';
 import WelcomeSection from '~/components/landing-page/WelcomeSection.vue';
-import AccessSection from '~/components/landing-page/AccessSection.vue';
-import TestimonialsSection from '~/components/landing-page/TestimonialsSection.vue';
+import FeatureSection from '~/components/landing-page/FeatureSection.vue';
 import AboutSection from '~/components/landing-page/AboutSection.vue';
 
 export default {
@@ -38,9 +34,8 @@ export default {
     Navbar,
     HeroSection,
     WelcomeSection,
-    AccessSection,
-    TestimonialsSection,
-    AboutSection
+    FeatureSection,
+    AboutSection,
   }
 }
 </script>
