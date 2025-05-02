@@ -1,17 +1,19 @@
 <template>
   <section class="welcome container">
     <div class="welcome-image">
-      <!-- Placeholder for 3D character image -->
+      <svg width="150" height="150" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="30" r="10" fill="#FFC107" /> <!-- Kepala -->
+        <rect x="40" y="40" width="20" height="30" fill="#4CAF50" /> <!-- Badan -->
+        <line x1="40" y1="40" x2="30" y2="60" stroke="#000" stroke-width="2" /> <!-- Tangan kiri -->
+        <line x1="60" y1="40" x2="70" y2="60" stroke="#000" stroke-width="2" /> <!-- Tangan kanan -->
+        <line x1="45" y1="70" x2="45" y2="90" stroke="#000" stroke-width="2" /> <!-- Kaki kiri -->
+        <line x1="55" y1="70" x2="55" y2="90" stroke="#000" stroke-width="2" /> <!-- Kaki kanan -->
+      </svg>
     </div>
     <div class="welcome-content">
-      <h2>Welcome to the exclusive millionaires program.</h2>
-      <p>Join our exclusive program designed for ambitious individuals who want to transform their lives and achieve financial freedom.</p>
-      <div class="benefits">
-        <div class="benefit-item">Benefit number explanation #1</div>
-        <div class="benefit-item">Benefit number explanation #2</div>
-        <div class="benefit-item">Benefit number explanation #3</div>
-      </div>
-      <a href="#" class="btn" style="background-color: #7e57c2; color: white; margin-top: 20px;">Apply Now</a>
+      <h2>SELAMAT DATANG</h2>
+      <p>Aplikasi berbasis web yang dirancang untuk mempermudah pengelolaan data warga, arus kas, kartu keluarga (KK),
+        dan pengajuan surat secara efisien dan terorganisir.</p>
     </div>
   </section>
 </template>

@@ -30,8 +30,7 @@ import HeroSection from '~/components/landing-page/HeroSection.vue';
 import WelcomeSection from '~/components/landing-page/WelcomeSection.vue';
 import AccessSection from '~/components/landing-page/AccessSection.vue';
 import TestimonialsSection from '~/components/landing-page/TestimonialsSection.vue';
-import FAQSection from '~/components/landing-page/FAQSection.vue';
-import CTASection from '~/components/landing-page/CTASection.vue';
+import AboutSection from '~/components/landing-page/AboutSection.vue';
 
 export default {
   name: 'App',
@@ -41,8 +40,7 @@ export default {
     WelcomeSection,
     AccessSection,
     TestimonialsSection,
-    FAQSection,
-    CTASection
+    AboutSection
   }
 }
 </script>

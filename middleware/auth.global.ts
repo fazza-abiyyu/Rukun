@@ -10,9 +10,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
   // Cek apakah halaman yang diminta adalah halaman publik
   const isPublicPage = publicPages.includes(to.path);
 
-  // Jika halaman bukan publik dan pengguna belum login, redirect ke halaman login
+  // Jika pengguna belum login dan tidak mengakses halaman publik, redirect ke landing page
   if (!isPublicPage && !isAuthenticated) {
-    return navigateTo('/auth/login', { redirectCode: 302 });
+    return navigateTo('/landing-page', { redirectCode: 302 });
   }
 
   // Jika pengguna sudah login, cegah akses ke halaman login/registrasi
