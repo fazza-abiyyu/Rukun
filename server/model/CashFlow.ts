@@ -53,7 +53,7 @@ export class CashFlow {
             data: {
                 title: data.title,
                 description: data.description,
-                date: data.date,
+                date: new Date(data.date),
                 category: data.Category,
                 amount: data.amount,
                 create_by: data.create_by,

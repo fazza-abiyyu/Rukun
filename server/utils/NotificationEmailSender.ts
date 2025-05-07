@@ -22,7 +22,7 @@ export async function NotificationEmailSender(title: string, description: string
 
     // Email message
     const mailOptions = (toEmail: string) => ({
-        rom: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`,
+        from: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`,
         to: toEmail, // Recipient email
         subject: "New Notification", // Email subject
         html: `
