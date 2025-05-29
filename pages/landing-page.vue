@@ -8,45 +8,41 @@
     <HeroSection />
 
     <!-- Welcome Section -->
-    <WelcomeSection />
-
-    <!-- Access Section -->
-    <AccessSection />
-
-    <!-- Testimonials Section -->
-    <TestimonialsSection />
+    <FeaturesSection />
 
     <!-- FAQ Section -->
-    <FAQSection />
+    <FaqSection />
 
-    <!-- CTA Section -->
-    <CTASection />
+    <FooterSection />
+
+
   </div>
 </template>
 
 <script>
 import Navbar from '~/components/landing-page/Navbar.vue';
 import HeroSection from '~/components/landing-page/HeroSection.vue';
-import WelcomeSection from '~/components/landing-page/WelcomeSection.vue';
-import AccessSection from '~/components/landing-page/AccessSection.vue';
-import TestimonialsSection from '~/components/landing-page/TestimonialsSection.vue';
-import AboutSection from '~/components/landing-page/AboutSection.vue';
+import FeaturesSection from '~/components/landing-page/FeaturesSection.vue';
+import FaqSection from '~/components/landing-page/FAQSection.vue';
+import FooterSection from '~/components/landing-page/FooterSection.vue';
 
 export default {
   name: 'App',
   components: {
     Navbar,
     HeroSection,
-    WelcomeSection,
-    AccessSection,
-    TestimonialsSection,
-    AboutSection
+    FeaturesSection,
+    FaqSection,
+    FooterSection
   }
 }
 </script>
 
 <script setup>
 // Terapkan layout khusus untuk halaman landing-page
+import FeaturesSection from "~/components/landing-page/FeaturesSection.vue";
+import FooterSection from "~/components/landing-page/FooterSection.vue";
+
 definePageMeta({
   layout: 'landing', // Gunakan layout khusus tanpa header/sidebar
 });
