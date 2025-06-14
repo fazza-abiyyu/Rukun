@@ -290,7 +290,7 @@ const handleSubmit = async () => {
     })
 
     $toast('Berhasil mendaftarkan akun', 'success');
-    return navigateTo('/login')
+    return navigateTo('/auth/login')
   } catch (error: any) {
     console.log(error)
     $toast('Gagal mendaftarkan akun', 'error');
