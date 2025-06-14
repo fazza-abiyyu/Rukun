@@ -244,7 +244,7 @@
           <!-- End Form -->
           <p class="mt-5 text-sm text-gray-600 text-center">
             Sudah punya akun?
-            <NuxtLink to="/login"
+            <NuxtLink to="/auth/login"
                       class="text-orange-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium">Masuk
               disini</NuxtLink>
           </p>
