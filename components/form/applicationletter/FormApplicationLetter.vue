@@ -106,7 +106,7 @@ const handleSubmit = async () => {
 
     $toast('Surat Pengajuan Berhasil di Kirim!', 'success');
     clearForm();
-    router.push('/application-letter');
+    router.push('/applicationletter');
   } catch (error: any) {
     $toast('Nomer Induk Kependudukan (NIK) tidak ditemukan.', 'error');
   } finally {
