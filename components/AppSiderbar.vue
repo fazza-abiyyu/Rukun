@@ -133,6 +133,20 @@
               </NuxtLink>
             </li>
 
+            <li class="hs-accordion" id="events-accordion">
+              <NuxtLink
+                  class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                  to="/events" active-class="bg-gray-100">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 1V3M5 1V3M2 5H14M3 3H13C13.5523 3 14 3.44772 14 4V14C14 14.5523 13.5523 15 13 15H3C2.44772 15 2 14.5523 2 14V4C2 3.44772 2.44772 3 3 3Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="8" cy="9" r="1" fill="black"/>
+                  <circle cx="11" cy="9" r="1" fill="black"/>
+                  <circle cx="8" cy="12" r="1" fill="black"/>
+                </svg>
+                Events
+              </NuxtLink>
+            </li>
+
             <li class="hs-accordion" id="notifications-accordion" v-if="userRole === 'Admin'">
               <NuxtLink
                   class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
@@ -174,6 +188,8 @@
                 Pengguna
               </NuxtLink>
             </li>
+
+
             <li style="position: absolute; bottom: 80px; width: 90%;">
               <button
                   class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100"

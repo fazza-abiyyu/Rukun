@@ -12,12 +12,54 @@
         <div class="mt-5">
           <form @submit.prevent="handleSubmit">
             <div class="grid gap-y-4">
+              <!-- NIK Search -->
+              <div>
+                <label for="nik" class="block text-sm mb-2">NIK</label>
+                <div class="relative">
+                  <input v-model="nik" type="text" id="nik" name="nik"
+                         @input="handleNikInput"
+                         placeholder="Masukkan NIK (16 digit)"
+                         maxlength="16"
+                         class="py-3 px-4 pr-10 block w-full border border-gray-200 rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none">
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                    <svg v-if="isSearchingCitizen" class="animate-spin h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <svg v-else-if="citizenData" class="h-4 w-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg v-else class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                  </div>
+                </div>
+                
+                <!-- Citizen Data Display -->
+                <div v-if="citizenData" class="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <h4 class="text-sm font-medium text-green-800 mb-2">Data Warga Ditemukan:</h4>
+                  <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div><span class="font-medium">Nama:</span> {{ citizenData.name }}</div>
+                    <div><span class="font-medium">NIK:</span> {{ citizenData.nik }}</div>
+                    <div><span class="font-medium">Alamat:</span> {{ citizenData.address }}</div>
+                    <div><span class="font-medium">No. HP:</span> {{ citizenData.phone || '-' }}</div>
+                  </div>
+                </div>
+                
+                <div v-else-if="nikSearched && !isSearchingCitizen" class="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p class="text-sm text-red-800">Data warga dengan NIK tersebut tidak ditemukan.</p>
+                </div>
+              </div>
+              <!-- End NIK Search -->
+
               <!-- Form Group -->
               <div>
                 <label for="username" class="block text-sm mb-2">Nama Lengkap</label>
                 <div class="relative">
                   <input v-model="username" type="text" id="username" name="username"
+                         :readonly="!!citizenData"
                          placeholder="Masukan Nama Lengkap"
+                         :class="citizenData ? 'bg-gray-50' : ''"
                          class="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none" required>
                   <div class="hidden absolute inset-y-0 end-0 pointer-events-none pe-3">
                     <svg class="size-5 text-red-500" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
@@ -257,6 +299,7 @@
 <script setup lang="ts">
 const { $toast } = useNuxtApp();
 
+const nik = ref<string | null>(null)
 const username = ref<string | null>(null)
 const email = ref<string | null>(null)
 const password = ref<string | null>(null)
@@ -264,6 +307,9 @@ const confirmPassword = ref<string | null>(null)
 const isAgree = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
 const confirmPasswordError = ref<string | null>(null)
+const isSearchingCitizen = ref<boolean>(false)
+const citizenData = ref<any>(null)
+const nikSearched = ref<boolean>(false)
 
 
 const isConfirmPassword = computed(() => {
@@ -277,12 +323,45 @@ const isConfirmPassword = computed(() => {
   return isSame
 })
 
+const handleNikInput = async () => {
+  if (nik.value && nik.value.length === 16) {
+    try {
+      isSearchingCitizen.value = true
+      nikSearched.value = false
+      
+      const response = await $fetch(`/api/citizens/search?nik=${nik.value}`)
+      
+      if (response.data) {
+        citizenData.value = response.data
+        username.value = response.data.name
+      } else {
+        citizenData.value = null
+        username.value = null
+      }
+      
+      nikSearched.value = true
+    } catch (error) {
+      console.error('Error searching citizen:', error)
+      citizenData.value = null
+      username.value = null
+      nikSearched.value = true
+    } finally {
+      isSearchingCitizen.value = false
+    }
+  } else {
+    citizenData.value = null
+    username.value = null
+    nikSearched.value = false
+  }
+}
+
 const handleSubmit = async () => {
   try {
     isLoading.value = true
     await $fetch('/api/auth/register', {
       method: 'POST',
       body: {
+        nik: nik.value,
         username: username.value,
         email: email.value,
         password: password.value,
