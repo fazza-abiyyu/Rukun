@@ -329,7 +329,7 @@ const handleNikInput = async () => {
       isSearchingCitizen.value = true
       nikSearched.value = false
       
-      const response = await $fetch(`/api/citizens/search?nik=${nik.value}`)
+      const response : any = await $fetch(`/api/citizens/search?nik=${nik.value}`)
       
       if (response.data) {
         citizenData.value = response.data

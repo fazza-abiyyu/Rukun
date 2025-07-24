@@ -126,7 +126,7 @@ onMounted(async () => {
 const fetchUsers = async () => {
   try {
     isLoadingUsers.value = true;
-    const response = await useFetchApi('/api/auth/users', {
+    const response : any = await useFetchApi('/api/auth/users', {
       method: 'GET',
     });
     users.value = response.data || [];
