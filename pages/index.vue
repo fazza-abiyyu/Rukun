@@ -256,7 +256,7 @@
               <ChartDonutChart
                   :series="cashFlowRatioGraph?.cashFlow??[]"
                   :labels="cashFlowRatioGraph?.label??[]"
-                  :colors="chartColors"
+                  :colors="donutChartColors"
               />
             </client-only>
             <!-- Legend Indicator -->
@@ -309,7 +309,8 @@ const recentlyActivitiesData = ref([])
 const statsData = ref([])
 
 // Warna untuk setiap garis pada grafik
-const chartColors = ref(['#426048', '#F38200']); // Warna garis yang berbeda
+const chartColors = ref(['#F38200','#426048']); // Warna garis yang berbeda
+const donutChartColors = ref(['#426048', '#F38200']); // Warna garis yang berbeda
   
 const stats: any = computed(() => statsData.value)
 const cashFlowRatioGraph: any = computed(() => cashFlowDataGraph.value)

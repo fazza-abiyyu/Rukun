@@ -106,7 +106,7 @@ async function fetchCashflowData() {
       amount: data.amount,
     };
   } catch (error) {
-    $toast("Gagal mengambil data Warga.", "error");
+    $toast("Gagal mengambil data Arus Kas.", "error");
   } finally {
     isLoading.value = false;
   }
@@ -121,10 +121,10 @@ const handleSubmit = async () => {
       method: "PUT",
       body: selectedCashflow.value,
     });
-    $toast("Berhasil mengubah data Warga.", "success");
+    $toast("Berhasil mengubah data Arus Kas.", "success");
     router.push("/citizen");
   } catch (error) {
-    $toast("Gagal mengubah data Warga.", "error");
+    $toast("Gagal mengubah data Arus Kas.", "error");
   } finally {
     isLoading.value = false;
   }
