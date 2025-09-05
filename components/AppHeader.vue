@@ -9,6 +9,22 @@
       </div>
 
       <div class="w-full flex items-center justify-end ms-auto lg:justify-between gap-x-1 md:gap-x-3">
+        <!-- Sidebar Toggle Button for Mobile -->
+        <button type="button" 
+                class="lg:hidden size-[38px] inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-xl border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+                aria-haspopup="dialog" 
+                aria-expanded="false" 
+                aria-controls="hs-application-sidebar" 
+                aria-label="Toggle navigation"
+                data-hs-overlay="#hs-application-sidebar"
+                @click="toggleSidebar">
+          <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" x2="21" y1="6" y2="6"/>
+            <line x1="3" x2="21" y1="12" y2="12"/>
+            <line x1="3" x2="21" y1="18" y2="18"/>
+          </svg>
+        </button>
+        <!-- End Sidebar Toggle -->
         <div class="hidden lg:block">
 
         </div>
@@ -68,6 +84,42 @@ const {logout, useAuthUser} = useAuth()
 
 const user = computed(() => useAuthUser().value as User)
 const greeting = ref("");
+
+// Toggle sidebar manually
+const toggleSidebar = () => {
+  try {
+    const sidebar = document.getElementById('hs-application-sidebar');
+    const backdrop = document.getElementById('hs-application-sidebar-backdrop');
+    
+    if (sidebar) {
+      const isHidden = sidebar.classList.contains('-translate-x-full') || sidebar.classList.contains('hidden');
+      
+      if (isHidden) {
+        // Show sidebar
+        sidebar.classList.remove('-translate-x-full', 'hidden');
+        sidebar.classList.add('translate-x-0', 'hs-overlay-open');
+        
+        // Show backdrop
+        if (backdrop) {
+          backdrop.classList.remove('opacity-0', 'hidden');
+          backdrop.classList.add('opacity-100');
+        }
+      } else {
+        // Hide sidebar
+        sidebar.classList.add('-translate-x-full', 'hidden');
+        sidebar.classList.remove('translate-x-0', 'hs-overlay-open');
+        
+        // Hide backdrop
+        if (backdrop) {
+          backdrop.classList.add('opacity-0', 'hidden');
+          backdrop.classList.remove('opacity-100');
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Manual sidebar toggle error:', error);
+  }
+};
 
 const handleLogout = async () => {
   try {

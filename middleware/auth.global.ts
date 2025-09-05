@@ -21,13 +21,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return navigateTo('/');
   }
 
-  // Jika Admin biasa mencoba mengakses halaman user, arahkan ke user dashboard
+  // Perbaikan logic role - Admin bisa akses semua, User hanya dashboard user
   if (userRole === 'Admin' && to.path.startsWith('/admin')) {
-    return navigateTo('/user/dashboard');
+    // Admin boleh akses admin page
+    return;
   }
 
-  // Jika user biasa mencoba mengakses halaman admin, arahkan ke user dashboard
+  // User biasa tidak bisa akses halaman admin
   if (userRole === 'User' && to.path.startsWith('/admin')) {
-    return navigateTo('/user/dashboard');
+    return navigateTo('/');
   }
 });

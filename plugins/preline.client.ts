@@ -4,23 +4,56 @@ import HSComboBox from "@preline/combobox";
 
 declare global {
     interface Window {
-        HSComboBox: typeof HSComboBox; // Menambahkan HSComboBox ke dalam window global
-        HSStaticMethods: IStaticMethods; // Menambahkan HSStaticMethods ke dalam window global
+        HSComboBox: typeof HSComboBox;
+        HSStaticMethods: IStaticMethods;
     }
-}
-
-// Memastikan bahwa kode hanya dijalankan di lingkungan browser
-if (typeof window !== 'undefined') {
-    window.HSComboBox = HSComboBox; // Menambahkan HSComboBox ke window secara eksplisit
 }
 
 // Mendefinisikan plugin Nuxt
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.hook("page:finish", () => {
-        // Memastikan HSStaticMethods dan autoInit ada sebelum memanggilnya
-        if (window.HSStaticMethods?.autoInit) {
-            window.HSComboBox.autoInit(); // Memanggil autoInit dari HSComboBox
-            window.HSStaticMethods.autoInit(); // Memanggil autoInit dari HSStaticMethods
+    // Hanya jalankan di client side
+    if (!process.client) return;
+
+    // Set global variables
+    if (typeof window !== 'undefined') {
+        window.HSComboBox = HSComboBox;
+    }
+
+    // Fungsi untuk safe initialization
+    const initPreline = () => {
+        try {
+            // Tunggu sampai DOM ready
+            if (document.readyState !== 'complete') {
+                window.addEventListener('load', initPreline);
+                return;
+            }
+
+            // Pastikan Preline tersedia
+            if (window.HSStaticMethods?.autoInit) {
+                // Cleanup existing overlays first
+                const overlays = document.querySelectorAll('.hs-overlay');
+                overlays.forEach(overlay => {
+                    overlay.classList.remove('hs-overlay-open');
+                });
+
+                // Initialize components
+                window.HSComboBox?.autoInit?.();
+                window.HSStaticMethods.autoInit();
+                
+                console.log('Preline initialized successfully');
+            }
+        } catch (error) {
+            console.warn('Preline initialization skipped due to error:', error);
         }
+    };
+
+    // Initialize on app mounted
+    nuxtApp.hook("app:mounted", () => {
+        setTimeout(initPreline, 200);
+    });
+
+    // Re-initialize on page changes
+    nuxtApp.hook("page:finish", () => {
+        setTimeout(initPreline, 100);
     });
 });

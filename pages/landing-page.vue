@@ -17,7 +17,7 @@
 
 
   </div>
-</template>
+</template> 
 
 <script>
 import Navbar from '~/components/landing-page/Navbar.vue';

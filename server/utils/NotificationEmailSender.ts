@@ -22,7 +22,7 @@ export async function NotificationEmailSender(title: string, description: string
 
     // Email message
     const mailOptions = (toEmail: string) => ({
-        rom: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`,
+        from: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`,
         to: toEmail, // Recipient email
         subject: "New Notification", // Email subject
         html: `
@@ -63,15 +63,20 @@ export async function NotificationEmailSender(title: string, description: string
                 .header p {
                     margin: 2px 0;
                 }
+                .content {
+                    margin: 20px 0;
+                    text-align: center;
+                }
                 .content p {
                     margin: 10px 0;
+                    font-size: 16px;
                 }
-                .signature {
-                    margin-top: 40px;
-                    text-align: right;
-                }
-                .signature p {
-                    margin: 5px 0;
+                .info-box {
+                    background-color: #ffeaa7;
+                    border-left: 4px solid #ff9800;
+                    padding: 15px;
+                    margin: 15px 0;
+                    border-radius: 4px;
                 }
                 .footer {
                     margin-top: 20px;
@@ -85,10 +90,19 @@ export async function NotificationEmailSender(title: string, description: string
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>${title}</h1>
-                    <p>Deskripsi : ${description}</p>
-                    <p>Tanggal Acara: ${date}</p>
-                    <p>Dibuat oleh: ${creator?.username}</p>
+                    <h1>📢 Notifikasi Baru</h1>
+                    <p>Anda memiliki notifikasi baru dari sistem RUKUN</p>
+                </div>
+
+                <div class="content">
+                    <div class="info-box">
+                        <h2 style="color: #ff9800; margin-top: 0;">${title}</h2>
+                        <p><strong>Deskripsi:</strong> ${description}</p>
+                        <p><strong>Tanggal Acara:</strong> ${date}</p>
+                        <p><strong>Dibuat oleh:</strong> ${creator?.username}</p>
+                    </div>
+                    
+                    <p>Silakan login ke sistem RUKUN untuk informasi lebih lanjut.</p>
                 </div>
 
                 <div class="footer">

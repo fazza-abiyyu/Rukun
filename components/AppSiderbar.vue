@@ -1,13 +1,15 @@
 <template>
+  <!-- Backdrop -->
+  <div id="hs-application-sidebar-backdrop" 
+       class="hs-overlay-backdrop transition-opacity duration-300 fixed inset-0 z-50 bg-gray-900/50 opacity-0 hidden lg:!hidden"
+       @click="closeSidebar"></div>
+       
   <!-- Sidebar -->
-  <div id="hs-application-sidebar" class="hs-overlay  [--auto-close:lg]
-    hs-overlay-open:translate-x-0
-    -translate-x-full transition-all duration-300 transform
-    w-[260px] h-full
-    hidden
-    fixed inset-y-0 start-0 z-[60]
-    bg-white border-e border-gray-200
-    lg:block lg:translate-x-0 lg:end-auto lg:bottom-0" role="dialog" tabindex="-1" aria-label="Sidebar">
+  <div id="hs-application-sidebar" 
+       class="hs-overlay [--auto-close:lg] hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform w-[260px] h-full hidden fixed inset-y-0 start-0 z-[60] bg-white border-e border-gray-200 lg:block lg:translate-x-0 lg:end-auto lg:bottom-0" 
+       role="dialog" 
+       tabindex="-1" 
+       aria-label="Sidebar">
     <div class="relative flex flex-col h-full max-h-full">
       <div class="px-6 pt-4">
         <!-- Logo -->
@@ -15,7 +17,7 @@
         <!-- End Logo -->
       </div>
 
-      <!-- Content -->
+      <!-- Content --> 
       <div
           class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300">
         <nav class="hs-accordion-group p-3 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
@@ -202,6 +204,26 @@ const userRole = useCookie('user_role').value;
 
 const { logout } = useAuth()
 const { $toast } = useNuxtApp();
+
+// Function to close sidebar
+const closeSidebar = () => {
+  try {
+    const sidebar = document.getElementById('hs-application-sidebar');
+    const backdrop = document.getElementById('hs-application-sidebar-backdrop');
+    
+    if (sidebar) {
+      sidebar.classList.add('-translate-x-full', 'hidden');
+      sidebar.classList.remove('translate-x-0', 'hs-overlay-open');
+    }
+    
+    if (backdrop) {
+      backdrop.classList.add('opacity-0', 'hidden');
+      backdrop.classList.remove('opacity-100');
+    }
+  } catch (error) {
+    console.warn('Sidebar close error:', error);
+  }
+};
 
 const handleLogout = async () => {
   try {

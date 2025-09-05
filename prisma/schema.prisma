@@ -138,7 +138,7 @@ model ApplicationLetter {
 model Notification {
   id          Int      @id @unique @default(autoincrement())
   title       String
-  description String
+  description String @db.Text
   date        DateTime @default(now())
   create_by   Int
   create_at   DateTime @default(now())

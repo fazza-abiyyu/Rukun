@@ -286,7 +286,7 @@
             Aktivitas Penambahan Arus Kas Terbaru
           </h2>
         </div>
-        <!-- End Header -->
+        <!-- End Header --> 
 
         <div id="recently-activities" class="h-full w-full mt-2 overflow-auto">
           <client-only>
