@@ -1113,14 +1113,7 @@ export async function ApplicationLetterEmailSender(email: string, title: string,
         from: `Pemerintah Desa Rukun <${config.MAIL_FROM_EMAIL ?? ""}>`,
         to: email,
         subject: `Konfirmasi Pengajuan Surat - ${category.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}`,
-        html: emailContent,
-        attachments: [
-            {
-                filename: 'logo-desa.png',
-                path: './public/logo-desa.png', // Path ke logo desa jika ada
-                cid: 'logo-desa' // untuk reference di HTML
-            }
-        ]
+        html: emailContent
     };
 
     try {
