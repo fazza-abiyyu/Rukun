@@ -35,7 +35,7 @@ export enum Category {
 export enum CategoryLetter {
     SuratPengantarKTP = 'Surat Pengantar KTP',
     SuratKeteranganDomisili = 'Surat Keterangan Domisili',
-    SuratKeteranganUsaha = 'Surat Keterangan Usaha=',
+    SuratKeteranganUsaha = 'Surat Keterangan Usaha',
     SuratPengantarNikah = 'Surat Pengantar Nikah',
     SuratKeteranganTidakMampu = 'Surat Keterangan Tidak Mampu'
 }

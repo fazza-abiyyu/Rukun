@@ -37,7 +37,7 @@
               <option value="SuratKeteranganDomisili">Surat Keterangan Domisili</option>
               <option value="SuratKeteranganUsaha">Surat Keterangan Usaha</option>
               <option value="SuratPengantarNikah">Surat Pengantar Nikah</option>
-              <option value="SuratKeteranganTidakMampu">SuratKeteranganTidakMampu</option>
+              <option value="SuratKeteranganTidakMampu">Surat Keterangan Tidak Mampu</option>
             </select>
           </div>
 
