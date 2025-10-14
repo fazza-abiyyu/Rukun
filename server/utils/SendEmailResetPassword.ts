@@ -1,12 +1,12 @@
-import nodemailer from 'nodemailer';
-import { configOptionsMailer } from '~/server/config/mailer';
-
 export const SendEmailResetPassword = async (to: string, subject: string, text: string, html: string) => {
+    const nodemailer = await import('nodemailer');
+    const { configOptionsMailer, getDefaultMailFromHeader } = await import('~/server/config/mailer');
     const config = useRuntimeConfig();
     let transporter = nodemailer.createTransport(configOptionsMailer);
 
-    const mailOptions = {
-        from: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`,
+    const defaultFrom = getDefaultMailFromHeader();
+    const mailOptions: any = {
+        from: defaultFrom || `${config.APP_NAME ?? ''} <${config.SMTP_USER ?? ''}>`,
         to,
         subject,
         text,

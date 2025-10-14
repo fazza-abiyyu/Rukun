@@ -1,15 +1,16 @@
-import nodemailer from "nodemailer";
-import {configOptionsMailer} from "~/server/config/mailer";
-
-const config = useRuntimeConfig()
-
 export async function SendEmailRegister(toEmail : string, fullName : string) {
     // Buat transporter
+    // Create transporter and build mailOptions
+    const nodemailer = await import('nodemailer');
+    const { configOptionsMailer, getDefaultMailFromHeader } = await import('~/server/config/mailer');
+    const config = useRuntimeConfig();
+
     let transporter = nodemailer.createTransport(configOptionsMailer);
 
     // Pesan email
-    const mailOptions = {
-        from: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`, // Ganti dengan pengirim email Anda
+    const defaultFrom = getDefaultMailFromHeader();
+    const mailOptions: any = {
+        from: defaultFrom || `${config.APP_NAME ?? ''} <${config.SMTP_USER ?? ''}>`, // Fallbacks handled
         to: toEmail, // Email penerima
         subject: "Pendaftaran Berhasil", // Subjek email
         html: `

@@ -1109,8 +1109,10 @@ export async function ApplicationLetterEmailSender(email: string, title: string,
     }
 
     // Email message
+    const { getDefaultMailFromHeader } = await import('~/server/config/mailer');
+    const defaultFrom = getDefaultMailFromHeader();
     const mailOptions = {
-        from: `Pemerintah Desa Rukun <${config.MAIL_FROM_EMAIL ?? ""}>`,
+        from: defaultFrom || `Pemerintah Desa Rukun <${config.SMTP_USER ?? ''}>`,
         to: email,
         subject: `Konfirmasi Pengajuan Surat - ${category.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}`,
         html: emailContent

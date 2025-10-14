@@ -1,11 +1,12 @@
-import nodemailer from 'nodemailer';
-import {configOptionsMailer} from '~/server/config/mailer';
 import {PrismaClient} from '@prisma/client';
 
 const prisma = new PrismaClient();
-const config = useRuntimeConfig();
 
 export async function NotificationEmailSender(title: string, description: string, date: string, create_by: number) {
+    const nodemailer = await import('nodemailer');
+    const {configOptionsMailer, getDefaultMailFromHeader} = await import('~/server/config/mailer');
+    const config = useRuntimeConfig();
+
     // Create a transporter
     const transporter = nodemailer.createTransport(configOptionsMailer);
 
@@ -21,8 +22,9 @@ export async function NotificationEmailSender(title: string, description: string
     });
 
     // Email message
+    const defaultFrom = getDefaultMailFromHeader();
     const mailOptions = (toEmail: string) => ({
-        from: `${config.APP_NAME ?? ""} <${config.MAIL_FROM_EMAIL ?? ""}>`,
+        from: defaultFrom || `${config.APP_NAME ?? ''} <${config.SMTP_USER ?? ''}>`,
         to: toEmail, // Recipient email
         subject: "New Notification", // Email subject
         html: `
