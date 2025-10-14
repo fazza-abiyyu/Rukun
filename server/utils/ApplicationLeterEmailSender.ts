@@ -11,7 +11,7 @@ export async function ApplicationLetterEmailSender(email: string, title: string,
     const date = new Date();
 
     // Retrieve citizen information by NIK
-    const citizen = await prisma.citizen.findUnique({
+    const citizenRaw = await prisma.citizen.findUnique({
         where: { nik },
         select: {
             id: true,
@@ -22,9 +22,20 @@ export async function ApplicationLetterEmailSender(email: string, title: string,
         }
     });
 
-    if (!citizen) {
+    if (!citizenRaw) {
         throw new Error('NIK tidak ditemukan');
     }
+
+    // Convert gender to Indonesian
+    const genderMap = {
+        Male: 'Laki-laki',
+        Female: 'Perempuan'
+    };
+
+    const citizen = {
+    ...citizenRaw,
+    gender: genderMap[citizenRaw.gender] || citizenRaw.gender
+};
 
     // Retrieve the email of the user who created the application letter
     const user = await prisma.user.findUnique({
