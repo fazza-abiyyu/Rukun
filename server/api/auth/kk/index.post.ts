@@ -1,6 +1,7 @@
 import { KK } from '~/server/model/KK';
 import { LogRequest } from '~/types/AuthType';
 import { ActionLog } from '~/types/TypesModel';
+import { prisma } from '~/server/config/db';
 
 export default defineEventHandler(async (event) => {
     // Check if user exists
@@ -16,6 +17,16 @@ export default defineEventHandler(async (event) => {
         // Read the request body
         const data = await readBody(event);
 
+        const exsistingKK = await prisma.kK.findUnique({
+            where: {
+                kk: data.kk
+            }
+        });
+
+        if (exsistingKK) {
+            setResponseStatus(event, 409);
+            return { code: 409, message: 'Data KK dengan nomor tersebut sudah terdaftar.' };
+        }
         // Assign user ID from the token for create_by field
         const newData = {
             ...data,

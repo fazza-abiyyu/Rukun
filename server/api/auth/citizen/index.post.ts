@@ -1,6 +1,7 @@
 import { Citizen } from '~/server/model/Citizen';
 import { LogRequest } from "~/types/AuthType";
 import { ActionLog } from "~/types/TypesModel";
+import { prisma } from '~/server/config/db';
 
 export default defineEventHandler(async (event) => {
     // Check if user exists
@@ -16,6 +17,17 @@ export default defineEventHandler(async (event) => {
         // Read the request body
         const data = await readBody(event);
         console.log('Data yang diterima:', data);
+
+        const exsistingCitizen = await prisma.citizen.findUnique({
+            where: {
+                nik: data.nik
+            }
+        });
+
+        if (exsistingCitizen) {
+            setResponseStatus(event, 409);
+            return { code: 409, message: 'Data warga dengan NIK tersebut sudah terdaftar.' };
+        }
 
         // Assign user ID from the token for create_by field
         const newData = {
